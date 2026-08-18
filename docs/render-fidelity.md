@@ -6,41 +6,58 @@ This document explains how the headless Scribus pipeline achieves byte-identical
 
 ## Print fonts (current policy)
 
-All templates render with **two locally vendored, SIL-OFL font families**:
+All templates render with **two font families**, provisioned differently
+because their licences differ:
 
-- **Barlow Semi Condensed** — the single primary font for every template (body,
-  headlines, captions, CTA, impressum). The four weights used are Regular, Bold,
-  Black, and ExtraBold (ExtraBold is provisioned but currently unused). It
-  replaces the proprietary **Gotham Narrow**, which has been **fully removed**
-  from all templates — no `template.sla`, `build.py`, `*-original.sla`,
-  `shared/ci.yml`, or `brand.py` references it any more.
-- **Vollkorn** — retained as the **accent / pull-quote** font. The templates use
-  exactly two italic faces: **Vollkorn Black Italic** (headline accents) and
-  **Vollkorn Bold Italic** (the `*-zweigeteilt` flyers' white pull-quote).
+- **Gotham Narrow** — the brand's primary font for every template (body,
+  headlines, captions, CTA, impressum). Four faces are used: **Book** (body),
+  **Bold** (sub-headings, impressum prefix), **Black** (bold emphasis inside
+  body copy) and **Ultra** (headlines, Störer). **Proprietary — never
+  committed.** It lives in the gitignored drop zone `fonts/Gotham Narrow/` on
+  the maintainer's host, and `Dockerfile.claude` installs it from there. This
+  is why the site must **not** offer it for download; the template pages point
+  users at their Landesbüro instead.
+- **Vollkorn** — the **accent / pull-quote** font. The templates use exactly
+  three italic faces: **Vollkorn Black Italic** (headline accents), **Vollkorn
+  Bold Italic** (the `*-zweigeteilt` flyers' white pull-quote) and, on the
+  postcard, **Gotham Narrow Ultra Italic** for the caps sub-heading. SIL-OFL,
+  so it **is** committed and **is** offered for download
+  (`bin/build-font-zip` → `site/public/fonts/gruene-vorlagen-schriften.zip`).
 
-### Why these fonts are vendored locally (the print-pipeline exception)
+History: Gotham Narrow → Barlow Semi Condensed (2026-06, free interim) →
+Raleway -3 (2026-06) → **back to Gotham Narrow**. The interim faces each ran
+wider and taller than Gotham, which is why that era carried compensations that
+are now reverted: the project-wide `DEFAULT_KERN = -3` tracking, two widened
+frames in the `*-zweigeteilt` flyers, and the tightened `Überschrift
+Dunkelgrün` leading in `zeitung-a4`.
+
+### Why Vollkorn is vendored locally (the print-pipeline exception)
 
 The workspace rule is "no vendoring of third-party dependencies — use CDN or a
 package manager." The print pipeline is a **deliberate, documented exception**:
-Scribus renders **locally and offline** and cannot pull a webfont, so the TTFs
-must be on the build host's fontconfig at render time. Both families are **SIL
-Open Font License**, so redistribution inside the repo is license-clean.
+Scribus renders **locally and offline** and cannot pull a webfont, so the font
+files must be on the build host's fontconfig at render time. Vollkorn is **SIL
+Open Font License**, so redistribution inside the repo is license-clean:
 
-The TTFs are therefore committed (tracked via `.gitignore` exceptions), the same
-justification for both families:
-
-- `fonts/barlow-semi-condensed/` — the 4 Barlow TTFs + `OFL.txt`.
 - `fonts/vollkorn/` — `Vollkorn-BlackItalic.ttf`, `Vollkorn-BoldItalic.ttf` +
   `OFL.txt` (genuine static instances from the FAlthausen/Vollkorn-Typeface
   upstream; see "Why static, not variable, Vollkorn" below).
+- `fonts/barlow-semi-condensed/` — the 4 Barlow TTFs + `OFL.txt`. No template
+  uses Barlow any more; it is kept because `test_headline_stack.py` reads its
+  real ascent (1.000 em) as a metric-reader fixture.
 
-`Dockerfile.claude` `COPY`s both committed dirs and installs them into
-`/usr/local/share/fonts/gruene/`, so a clean checkout + `docker build`
-reproduces the exact render environment **without** the gitignored host drop
-zone. The drop-zone block is kept only for the maintainer's legacy proprietary
-Gotham faces, and it **explicitly skips any `Vollkorn-*` file** so the committed
+`Dockerfile.claude` installs the committed dirs into
+`/usr/local/share/fonts/gruene/` and, separately, the proprietary drop zone.
+The drop-zone block **explicitly skips any `Vollkorn-*` file** so the committed
 `fonts/vollkorn/` statics are the single source of truth (a competing Vollkorn
 variable font in the drop zone would otherwise win fontconfig resolution).
+
+Because Gotham cannot be committed, a clean checkout **cannot** reproduce the
+render environment on its own — `tools/render_pipeline.py::_verify_brand_fonts`
+therefore refuses to render unless `fc-list` reports at least 5 Gotham
+Narrow / Vollkorn faces, rather than letting Scribus fall back to DejaVu
+silently. CI never renders templates (see "Local-only rendering"), so it does
+not need the fonts.
 
 ---
 
@@ -50,12 +67,9 @@ Without the brand fonts, Scribus falls back to DejaVu Sans for every missing fam
 
 | Font missing | Drift on worst page |
 |---|---|
-| Barlow Semi Condensed (body, headlines, captions) | full layout difference per page |
+| Gotham Narrow (body, headlines, captions) | ~55,000 px / page at 96 dpi |
 | Vollkorn Black/Bold Italic (accents, pull-quote) | ~7,000 px / page at 96 dpi |
 | Both missing | Full layout difference — essentially unrecognisable |
-
-> Historical note: before the Barlow swap the primary font was Gotham Narrow
-> (~55,000 px/page drift when missing). Gotham has since been fully removed.
 
 Once both families are installed and `fc-cache -f` is run, headless renders are **0 px different** from the user's Scribus desktop export.
 
@@ -68,18 +82,22 @@ Note: Scribus builds a per-user font cache at `~/.config/scribus/checkfonts150.x
 ### Font files
 
 - **Location in container:** `/usr/local/share/fonts/gruene/`
-- **What's installed (committed, reproducible):**
-  - `BarlowSemiCondensed-{Regular,Bold,Black,ExtraBold}.ttf` — the 4 print
-    weights (Scribus reads the TTF name table, so all four resolve natively; no
-    fontconfig alias is needed for Barlow)
+- **What's installed from the proprietary drop zone (NOT committed):**
+  - `Gotham Narrow {Book,Bold,Black,Ultra}.otf` + `Gotham Narrow Ultra
+    Italic.otf` — the faces the templates reference. Scribus reads the OTF name
+    table, so `Gotham Narrow Book` / `… Ultra` resolve natively; no fontconfig
+    alias is needed.
+- **What's installed from the committed dirs (reproducible):**
   - `Vollkorn-BlackItalic.ttf`, `Vollkorn-BoldItalic.ttf` — the two accent
     italics (static instances; see "Why static, not variable Vollkorn" below)
+  - `BarlowSemiCondensed-*.ttf` — unused by templates, kept as a metric fixture
 - **Committed source in repo (the reproducible exception):**
-  - `fonts/barlow-semi-condensed/*.ttf` + `OFL.txt`
   - `fonts/vollkorn/*.ttf` + `OFL.txt`
-- **Legacy drop zone:** `/root/workspace/fonts/` (gitignored; user-controlled).
-  Retained only for the maintainer's proprietary Gotham faces. The Dockerfile
-  install **skips `Vollkorn-*`** here so the committed statics own Vollkorn.
+  - `fonts/barlow-semi-condensed/*.ttf` + `OFL.txt`
+- **Proprietary drop zone:** `fonts/Gotham Narrow/` (gitignored;
+  user-controlled), installed by `Dockerfile.claude` or at container runtime by
+  `install-brand-fonts` from the bind-mounted workspace. The drop-zone install
+  **skips `Vollkorn-*`** so the committed statics own Vollkorn.
 
 ### Fontconfig alias (Vollkorn only)
 
@@ -88,22 +106,24 @@ Note: Scribus builds a per-user font cache at `~/.config/scribus/checkfonts150.x
 - **What it does:** maps the `Vollkorn Black Italic` / `Vollkorn Bold Italic`
   family names (as referenced in Scribus SLAs) to the actual files'
   `family=Vollkorn + style="Black Italic" / "Bold Italic"`. Without this alias,
-  fontconfig cannot match the lookup and Scribus falls back to DejaVu. Barlow
-  needs no such alias — its name table exposes the weights as families directly.
+  fontconfig cannot match the lookup and Scribus falls back to DejaVu. Gotham
+  Narrow needs no such alias — its name table exposes the faces as families
+  directly (`fc-match "Gotham Narrow Ultra"` resolves natively).
 
 ### Verification
 
 ```bash
-# Barlow faces (expect >= 4) and family resolution
-fc-list | grep -ci 'barlow semi condensed'
-fc-match "Barlow Semi Condensed"          # -> a BarlowSemiCondensed-*.ttf
+# Gotham Narrow faces (expect >= 4) and family resolution
+fc-list | grep -ci 'gotham narrow'
+fc-match "Gotham Narrow Book"             # -> Gotham Narrow Book.otf
+fc-match "Gotham Narrow Ultra"            # -> Gotham Narrow Ultra.otf
 
 # Vollkorn accent italics (expect the genuine statics, NOT DejaVu / a variable font)
 fc-match "Vollkorn Black Italic"          # -> Vollkorn-BlackItalic.ttf: "Vollkorn" "Black Italic"
 fc-match "Vollkorn Bold Italic"           # -> Vollkorn-BoldItalic.ttf:  "Vollkorn" "Bold Italic"
 
 # pdffonts on any rendered preview/baseline should show ONLY
-# BarlowSemiCondensed-* and Vollkorn-* — zero DejaVu/Gotham/Minion/Times.
+# GothamNarrow-* and Vollkorn-* — zero DejaVu/Minion/Times.
 ```
 
 ---

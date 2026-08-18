@@ -71,7 +71,7 @@ class Brand:
     layers: list[DocumentLayer]
     default_doc_attrs: dict[str, str]
     default_pdf_attrs: dict[str, str]
-    deffont: str = "Raleway Regular"
+    deffont: str = "Gotham Narrow Book"
     defsize: float = 12.0
     column_gap_default_pt: float = 11.0
     bleed_mm: float = 3.0
@@ -142,7 +142,7 @@ class Brand:
             layers=layers,
             default_doc_attrs=default_doc_attrs,
             default_pdf_attrs=default_pdf_attrs,
-            deffont="Raleway Regular",
+            deffont="Gotham Narrow Book",
             defsize=12.0,
             column_gap_default_pt=11.0,
             bleed_mm=3.0,

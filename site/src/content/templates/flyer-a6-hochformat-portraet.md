@@ -59,10 +59,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Hochformat Portrait Ordner/26-03-Flyer
   A6 Hochformat Portrait.idml
-previews_for_sla: 608ca38507a639e4d5a7e40a4e552a6028f46721deba09ed0a3bf5ea852cb40c
+previews_for_sla: e35206745f84997731c2c3548866dfcaadb19dc4b3724888d705b5fd663f41f7
 title: Flyer A6 Hochformat – Porträt-Cover
 version: 0.1.0
-build_py_sha256: 497e488591be5f247eb43181d487a9bd4dd6e6f4e49ad9b58007aa954d919542
+build_py_sha256: c6f69edea427b81bc910b0eb591525b0785e02b0cb37b77d649b0ac4b74dbe11
 _downloads:
 - label: Burgenland
   bundesland: bgld

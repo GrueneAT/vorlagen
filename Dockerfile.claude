@@ -86,12 +86,14 @@ RUN pip3 install --break-system-packages --no-cache-dir \
         'SimpleIDML==1.3.1' \
         'pdfplumber==0.11.9'
 
-# Proprietary drop zone (Gotham Narrow). Source files live at
-# /root/workspace/fonts/ (gitignored; user-controlled drop zone) and are NOT
-# part of the public repo. Gotham is no longer referenced by any template (all
-# replaced by Barlow), so the drop zone is retained only so the maintainer's
-# legacy proprietary faces remain available; the build no longer hard-fails on
-# their absence.
+# Proprietary drop zone (Gotham Narrow) — the brand's primary print font and
+# the one every template references. Source files live under fonts/Gotham
+# Narrow/ (gitignored; user-controlled drop zone) and are NOT part of the
+# public repo, because the licence forbids redistribution. A checkout without
+# the drop zone therefore CANNOT render correctly; the render pipeline's
+# fc-list gate (tools/render_pipeline.py::_verify_brand_fonts) fails loudly in
+# that case rather than letting Scribus fall back to DejaVu. CI never renders
+# templates, so it does not need them.
 #
 # IMPORTANT: this block must NOT install Vollkorn. The committed fonts/vollkorn/
 # block below is the single source of truth for the two accent italics. A host
@@ -112,9 +114,14 @@ RUN set -e && \
     fc-cache -f && \
     N=$(fc-list | grep -ciE 'gotham narrow' || true) && \
     echo "Brand drop-zone fonts installed: $N Gotham faces (Vollkorn-* skipped — owned by fonts/vollkorn/)" && \
+    if [ "$N" -lt 4 ]; then \
+        echo "NOTE: Gotham Narrow absent — renders will be wrong until the drop zone is filled" >&2; \
+    fi && \
     rm -rf /tmp/fonts-staging
 
-# Barlow Semi Condensed (SIL-OFL) — the single print font for all templates.
+# Barlow Semi Condensed (SIL-OFL) — no longer used by any template; kept
+# because tools/sla_lib/tests/test_headline_stack.py reads its real ascent
+# (1.000 em) as a metric-reader fixture.
 # These TTFs ARE committed to the repo (fonts/barlow-semi-condensed/, a tracked
 # .gitignore exception) because Scribus renders locally and cannot pull a
 # webfont. Deliberate print-pipeline vendoring exception, same justification as
@@ -133,23 +140,6 @@ RUN install -m 644 /tmp/barlow-staging/*.ttf /usr/local/share/fonts/gruene/ && \
     fc-match "Barlow Semi Condensed" | grep -qi barlow || \
         { echo "fc-match did not resolve to Barlow" >&2; exit 1; } && \
     echo "Barlow installed: $BN faces" && rm -rf /tmp/barlow-staging
-
-# Raleway (SIL-OFL) — the print font for the "Raleway -3" brand set. Committed
-# under fonts/raleway/ (tracked .gitignore exception); Scribus renders locally
-# and cannot pull a webfont. Static per-weight TTFs (Regular/Bold/ExtraBold/
-# Black); Scribus reads the name table so "Raleway Regular/Bold/Black" resolve
-# natively. Sanity-check on the bare family + face count (fc-match resolves
-# "Raleway Regular" to DejaVu by design — a per-weight check would misfire).
-COPY fonts/raleway/ /tmp/raleway-staging/
-RUN install -m 644 /tmp/raleway-staging/*.ttf /usr/local/share/fonts/gruene/ && \
-    fc-cache -f && \
-    RN=$(fc-list | grep -ci 'raleway' || true) && \
-    if [ "$RN" -lt 4 ]; then \
-        echo "RALEWAY INSTALL FAILED: $RN faces (expected >= 4)" >&2; exit 1; \
-    fi && \
-    fc-match "Raleway" | grep -qi raleway || \
-        { echo "fc-match did not resolve to Raleway" >&2; exit 1; } && \
-    echo "Raleway installed: $RN faces" && rm -rf /tmp/raleway-staging
 
 # Vollkorn accent italics (SIL-OFL, Friedrich Althausen) — the two faces the
 # templates use: "Vollkorn Black Italic" (headline accents) and "Vollkorn Bold

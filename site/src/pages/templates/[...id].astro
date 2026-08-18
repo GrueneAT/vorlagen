@@ -33,21 +33,25 @@ const catLabel = t.data.category_label ?? 'Sonstige';
   <h1 class="gat-headline">{t.data.title}</h1>
   <p>{t.data.description}</p>
 
-  {/* Prominenter Schrift-Hinweis: die Vorlagen sind in Raleway + Vollkorn
-      gesetzt; ohne installierte Schriften werden sie falsch dargestellt.
-      Rendert auf jeder Template-Seite. */}
+  {/* Prominenter Schrift-Hinweis: die Vorlagen sind in Gotham Narrow +
+      Vollkorn gesetzt; ohne installierte Schriften werden sie falsch
+      dargestellt. Wortlaut ist mit dem Bundesbüro abgestimmt — bitte nicht
+      umformulieren. Gotham Narrow ist proprietär und darf hier NICHT zum
+      Download angeboten werden (deshalb der Verweis auf das Landesbüro);
+      Vollkorn ist SIL-OFL und liegt als Download bei. Rendert auf jeder
+      Template-Seite. */}
   <div class="gat-callout gat-callout--warn app-font-notice">
     <p style="margin: 0 0 0.5rem 0;">
-      <strong>Wichtig — Schriften zuerst installieren:</strong> Diese Vorlage ist in
-      <strong>Raleway</strong> (Text &amp; Headlines) und <strong>Vollkorn</strong>
-      (kursive Akzente) gesetzt. Beide Schriften müssen <strong>vor dem Öffnen
-      heruntergeladen und auf deinem Rechner installiert</strong> sein — sonst
-      wird die Vorlage mit einer Ersatzschrift falsch dargestellt (verschobene
-      Umbrüche, falsche Abstände).
+      <strong>Wichtig – Schriften zuerst installieren:</strong> Damit die Vorlage
+      korrekt dargestellt wird, müssen die benötigten Schriften vor dem Öffnen des
+      Dokuments heruntergeladen und auf deinem Rechner installiert sein. Bitte wendet
+      euch dafür an euer Landesbüro. Andernfalls kann es passieren, dass die Vorlage
+      mit einer Ersatzschrift angezeigt wird. Das kann zu verschobenen Zeilenumbrüchen,
+      falschen Abständen und anderen Darstellungsfehlern führen.
     </p>
     <p style="margin: 0;">
       <a href={url('/fonts/gruene-vorlagen-schriften.zip')} class="app-font-notice__dl">
-        ↓ Schriften herunterladen (Raleway + Vollkorn, inkl. Installations-Anleitung)
+        ↓ Vollkorn herunterladen (freie Akzentschrift, inkl. Installations-Anleitung)
       </a>
     </p>
   </div>

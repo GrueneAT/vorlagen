@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""Build site/public/fonts/gruene-vorlagen-schriften.zip.
+
+The templates are set in Gotham Narrow (headlines + body) and Vollkorn (italic
+accents). Only Vollkorn goes into the download: it is SIL-OFL and may be
+redistributed, while Gotham Narrow is a proprietary licence and must NOT be
+offered for download on the site — the template pages point at the Landesbüro
+for it instead.
+
+Run after touching fonts/vollkorn/ or the install instructions, then commit the
+regenerated zip.
+"""
+from __future__ import annotations
+
+import pathlib
+import sys
+import zipfile
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+SRC = ROOT / "fonts" / "vollkorn"
+OUT = ROOT / "site" / "public" / "fonts" / "gruene-vorlagen-schriften.zip"
+
+# Fixed timestamp so rebuilding without content changes produces identical
+# bytes (zip stores mtimes; a moving one would churn the committed artifact).
+ZIP_DATE = (2026, 1, 1, 0, 0, 0)
+
+README = """Grüne-Vorlagen — Schriften installieren
+=======================================
+
+Die Vorlagen sind in zwei Schriften gesetzt. Damit sie korrekt dargestellt
+werden, müssen BEIDE auf deinem Rechner installiert sein:
+
+  • Gotham Narrow  — Haupttext und Headlines. Die Hausschrift ist
+                     lizenzpflichtig und kann hier nicht zum Download
+                     angeboten werden. Bitte wendet euch dafür an euer
+                     Landesbüro.
+  • Vollkorn       — kursive Akzent-/Zitatschrift (Bold Italic, Black
+                     Italic). Liegt diesem Archiv bei.
+
+Ohne die installierten Schriften zeigt Scribus eine Ersatzschrift an — das
+führt zu verschobenen Zeilenumbrüchen, falschen Abständen und anderen
+Darstellungsfehlern.
+
+Installation
+------------
+Windows : alle .ttf markieren → Rechtsklick → „Installieren".
+macOS   : alle .ttf öffnen → „Schrift installieren" (Schriftsammlung).
+Linux   : .ttf nach ~/.fonts/ kopieren und `fc-cache -f` ausführen.
+
+Danach Scribus/das Programm neu starten, damit die Schriften erkannt werden.
+
+Lizenz
+------
+Vollkorn steht unter der SIL Open Font License 1.1 (siehe beiliegende
+OFL.txt) und darf frei verwendet und weitergegeben werden.
+Quelle: https://fonts.google.com/specimen/Vollkorn
+"""
+
+
+def main() -> int:
+    files = sorted(SRC.glob("*.ttf")) + sorted(SRC.glob("OFL.txt"))
+    if not files:
+        print(f"FATAL: no font files under {SRC}", file=sys.stderr)
+        return 1
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED) as z:
+        for f in files:
+            info = zipfile.ZipInfo(f"Vollkorn/{f.name}", date_time=ZIP_DATE)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            z.writestr(info, f.read_bytes())
+        info = zipfile.ZipInfo("LIESMICH-Schriften-installieren.txt",
+                               date_time=ZIP_DATE)
+        info.compress_type = zipfile.ZIP_DEFLATED
+        z.writestr(info, README.encode("utf-8"))
+    print(f"wrote {OUT.relative_to(ROOT)}")
+    with zipfile.ZipFile(OUT) as z:
+        for n in z.namelist():
+            print(f"  {n}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
