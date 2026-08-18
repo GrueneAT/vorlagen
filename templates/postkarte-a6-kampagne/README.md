@@ -1,6 +1,9 @@
-# Kampagnen-Postkarte A6
+# Postkarte A6 – Variante 1
 
-Zweiseitige A6-Postkarte für Kampagnen, Petitionen, Events.
+Zweiseitige A6-Postkarte für Kampagnen, Petitionen, Events. Die Vorderseite
+besteht aus dem grünen Hintergrund plus Text (Headline, Call-to-Action,
+Störer) — kein Bildplatzhalter. Die Variante mit Bildband oben ist
+`postkarte-a6-zweigeteilt` (Variante 2); die Rückseite ist in beiden gleich.
 
 ## So nutzt du die Vorlage
 
