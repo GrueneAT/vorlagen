@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from sla_lib.builder.headline import (  # noqa: E402
+    _ASCENT_EM_RECORDED,
+    _resolve_ttf,
     font_ascent_mm,
     font_ascent_pt,
     headline_stack,
@@ -38,6 +40,37 @@ def _baselines_pt(frames: list[TextFrame], fonts: list[str], sizes: list[float])
     for frame, font, size in zip(frames, fonts, sizes):
         out.append(frame.y_mm * MM_TO_PT + font_ascent_pt(font, size))
     return out
+
+
+class TestRecordedAscentsMatchRealFonts(unittest.TestCase):
+    """The recorded ascent table must never drift from the real fonts.
+
+    ``_ASCENT_EM_RECORDED`` exists so CI can build documents without the
+    proprietary Gotham faces. That only stays honest if every recorded value
+    still equals what the licensed font actually reports — so on any host that
+    HAS a face installed, re-measure it and fail on drift. Faces that are not
+    installed here are skipped rather than assumed correct.
+    """
+
+    def test_every_recorded_ascent_matches_its_font(self) -> None:
+        checked = 0
+        for family, recorded in sorted(_ASCENT_EM_RECORDED.items()):
+            try:
+                _resolve_ttf(family)
+            except FileNotFoundError:
+                continue  # face not installed on this host
+            with self.subTest(family=family):
+                measured = font_ascent_pt(family, 1000.0) / 1000.0
+                self.assertAlmostEqual(
+                    measured, recorded, places=3,
+                    msg=(f"{family}: recorded {recorded} but the installed "
+                         f"font reports {measured:.4f} — update the table"),
+                )
+            checked += 1
+        self.assertGreater(
+            checked, 0,
+            "no recorded face was resolvable — the guard verified nothing",
+        )
 
 
 class TestFontAscentReader(unittest.TestCase):

@@ -125,6 +125,36 @@ def _resolve_ttf(family: str) -> str:
     return path
 
 
+# Recorded hhea.ascent / unitsPerEm per family, used ONLY when the font file
+# itself cannot be reached. Gotham Narrow is proprietary and therefore not
+# committed (see .gitignore), so CI — which runs build_doc() via
+# structural_check — has no file to measure. Without this table every
+# headline_stack() call would die there with FileNotFoundError.
+#
+# These are not guesses: each value was read from the licensed face with
+# fontTools. ``test_headline_stack`` re-measures every entry whenever the real
+# font IS installed and fails on drift, so the table cannot silently rot.
+_ASCENT_EM_RECORDED: dict[str, float] = {
+    # Gotham Narrow — every face shares one ascent.
+    "Gotham Narrow Book": 0.800,
+    "Gotham Narrow Bold": 0.800,
+    "Gotham Narrow Black": 0.800,
+    "Gotham Narrow Ultra": 0.800,
+    "Gotham Narrow Book Italic": 0.800,
+    "Gotham Narrow Black Italic": 0.800,
+    "Gotham Narrow Ultra Italic": 0.800,
+    # Vollkorn (committed, but fc-match needs the family alias to resolve the
+    # style-word form — record it so a missing alias cannot break the build).
+    "Vollkorn Black Italic": 0.952,
+    "Vollkorn Bold Italic": 0.952,
+    # Barlow Semi Condensed (committed; kept as the metric fixture).
+    "Barlow Semi Condensed Regular": 1.000,
+    "Barlow Semi Condensed Bold": 1.000,
+    "Barlow Semi Condensed Black": 1.000,
+    "Barlow Semi Condensed ExtraBold": 1.000,
+}
+
+
 @functools.lru_cache(maxsize=64)
 def _ascent_em(family: str) -> float:
     """Font ascent as a fraction of the em (hhea.ascent / unitsPerEm).
@@ -132,13 +162,31 @@ def _ascent_em(family: str) -> float:
     Scribus FLOP=1 places the first baseline one hhea ascent below the frame
     top; the hhea metric is what reproduces the rendered ink (verified against
     the old Gotham/Vollkorn 0.15 calibration: 0.952 - 0.800 = 0.152).
+
+    Measures the installed font when it can be resolved; falls back to
+    ``_ASCENT_EM_RECORDED`` when it cannot (proprietary faces are absent from
+    CI). An unknown family with no file is an error, not a default — guessing
+    an ascent silently mis-places every baseline in the stack.
     """
     # Imported lazily so that ``import sla_lib.builder`` never hard-requires
     # fontTools — only the headline-metric path (local render/authoring) needs
     # it. Keeps CI test collection working even if fontTools is absent.
-    from fontTools.ttLib import TTFont
+    try:
+        from fontTools.ttLib import TTFont
 
-    ttf = TTFont(_resolve_ttf(family), lazy=True)
+        path = _resolve_ttf(family)
+    except (FileNotFoundError, ImportError):
+        try:
+            return _ASCENT_EM_RECORDED[family]
+        except KeyError:
+            raise FileNotFoundError(
+                f"cannot resolve font family {family!r} to a font file and no "
+                f"recorded ascent exists for it. Install the face (see "
+                f"shared/fonts/README.md) or add it to _ASCENT_EM_RECORDED "
+                f"with a value measured from the real font."
+            ) from None
+
+    ttf = TTFont(path, lazy=True)
     try:
         units_per_em = ttf["head"].unitsPerEm
         ascent = ttf["hhea"].ascent
