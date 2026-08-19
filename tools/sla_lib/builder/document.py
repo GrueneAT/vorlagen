@@ -149,7 +149,7 @@ class Document:
                  facing_pages: bool = False,
                  column_gap_default_pt: float = 11.0,
                  unit: str = "mm",
-                 deffont: str = "Raleway Regular",
+                 deffont: str = "Gotham Narrow Book",
                  defsize: float = 12,
                  first_page_num: int = 1,
                  palette_replaces_ci: bool = False,
@@ -796,7 +796,7 @@ class Document:
             cs = etree.SubElement(doc, "CHARSTYLE")
             cs.set("CNAME", "")
             cs.set("FONT", self.ci.styles.get("ci/default",
-                BrandStyle("ci/default", "Raleway Regular", 12)).font)
+                BrandStyle("ci/default", "Gotham Narrow Book", 12)).font)
             cs.set("FONTSIZE", "12")
             cs.set("FCOLOR", "Black")
 

@@ -9,9 +9,9 @@ between two stacked lines is therefore::
 
     gap = (frame_top_{k+1} - frame_top_k) + ascent(font_{k+1}) - ascent(font_k)
 
-The old per-template ``y_mm`` were frozen constants tuned for Gotham's ascent.
-Barlow (ascent 1.000 em) and Vollkorn (0.952 em) have different ascents, so the
-same frame tops yield UNEVEN gaps — the top gap collapses wherever a Barlow line
+The old per-template ``y_mm`` were frozen constants tuned for a single ascent.
+Gotham Narrow (ascent 0.800 em) and Vollkorn (0.952 em) differ, so the same
+frame tops yield UNEVEN gaps — the top gap collapses wherever a Gotham line
 sits above a Vollkorn line. ``headline_stack`` solves the gap equation from the
 REAL installed-font ascents (fontTools on the fc-matched TTF) so every
 inter-baseline gap equals the target leading by construction, regardless of the
@@ -45,7 +45,7 @@ def _fmt_linesp(value: float) -> str:
 
 # Repo font directory holding the committed print-pipeline TTFs (the sanctioned
 # vendoring exception). fc-match resolves family aliases at render time, but its
-# style-word queries (e.g. "Raleway Regular") sometimes fall back
+# style-word queries (e.g. "Gotham Narrow Book") sometimes fall back
 # to DejaVu; this directory is the deterministic fallback for ascent metrics.
 _REPO_FONTS_DIR = Path(__file__).resolve().parents[3] / "fonts"
 
@@ -53,16 +53,21 @@ _REPO_FONTS_DIR = Path(__file__).resolve().parents[3] / "fonts"
 # back to a non-matching family. Keyed by lower-cased family fragment.
 _FONT_FILE_HINTS: tuple[tuple[str, str, str], ...] = (
     # (family fragment, weight/style fragment, filename substring)
+    # Gotham Narrow is proprietary and therefore NOT committed (see
+    # .gitignore) — these hints only resolve on a host whose drop zone
+    # holds the faces. On a clean checkout fc-match is the only route,
+    # which is why the render pipeline gates on fc-list up front.
+    ("gotham narrow", "ultra italic", "Gotham Narrow Ultra Italic"),
+    ("gotham narrow", "ultra", "Gotham Narrow Ultra"),
+    ("gotham narrow", "black italic", "Gotham Narrow Black Italic"),
+    ("gotham narrow", "black", "Gotham Narrow Black"),
+    ("gotham narrow", "bold", "Gotham Narrow Bold"),
+    ("gotham narrow", "", "Gotham Narrow Book"),
     ("barlow semi condensed", "black", "BarlowSemiCondensed-Black"),
     ("barlow semi condensed", "extrabold", "BarlowSemiCondensed-ExtraBold"),
     ("barlow semi condensed", "extra bold", "BarlowSemiCondensed-ExtraBold"),
     ("barlow semi condensed", "bold", "BarlowSemiCondensed-Bold"),
     ("barlow semi condensed", "", "BarlowSemiCondensed-Regular"),
-    ("raleway", "black", "Raleway-Black"),
-    ("raleway", "extrabold", "Raleway-ExtraBold"),
-    ("raleway", "extra bold", "Raleway-ExtraBold"),
-    ("raleway", "bold", "Raleway-Bold"),
-    ("raleway", "", "Raleway-Regular"),
     ("vollkorn", "black", "Vollkorn-BlackItalic"),
     ("vollkorn", "", "Vollkorn-BoldItalic"),
 )
@@ -99,8 +104,10 @@ def _repo_font_file(family: str) -> str | None:
     name = family.lower()
     for frag, style_frag, filesub in _FONT_FILE_HINTS:
         if frag in name and (not style_frag or style_frag in name):
-            for ttf in _REPO_FONTS_DIR.rglob(f"*{filesub}*.ttf"):
-                return str(ttf)
+            # .otf as well as .ttf: the Gotham Narrow faces are OpenType.
+            for pattern in (f"*{filesub}*.ttf", f"*{filesub}*.otf"):
+                for font_file in _REPO_FONTS_DIR.rglob(pattern):
+                    return str(font_file)
     return None
 
 
@@ -118,6 +125,36 @@ def _resolve_ttf(family: str) -> str:
     return path
 
 
+# Recorded hhea.ascent / unitsPerEm per family, used ONLY when the font file
+# itself cannot be reached. Gotham Narrow is proprietary and therefore not
+# committed (see .gitignore), so CI — which runs build_doc() via
+# structural_check — has no file to measure. Without this table every
+# headline_stack() call would die there with FileNotFoundError.
+#
+# These are not guesses: each value was read from the licensed face with
+# fontTools. ``test_headline_stack`` re-measures every entry whenever the real
+# font IS installed and fails on drift, so the table cannot silently rot.
+_ASCENT_EM_RECORDED: dict[str, float] = {
+    # Gotham Narrow — every face shares one ascent.
+    "Gotham Narrow Book": 0.800,
+    "Gotham Narrow Bold": 0.800,
+    "Gotham Narrow Black": 0.800,
+    "Gotham Narrow Ultra": 0.800,
+    "Gotham Narrow Book Italic": 0.800,
+    "Gotham Narrow Black Italic": 0.800,
+    "Gotham Narrow Ultra Italic": 0.800,
+    # Vollkorn (committed, but fc-match needs the family alias to resolve the
+    # style-word form — record it so a missing alias cannot break the build).
+    "Vollkorn Black Italic": 0.952,
+    "Vollkorn Bold Italic": 0.952,
+    # Barlow Semi Condensed (committed; kept as the metric fixture).
+    "Barlow Semi Condensed Regular": 1.000,
+    "Barlow Semi Condensed Bold": 1.000,
+    "Barlow Semi Condensed Black": 1.000,
+    "Barlow Semi Condensed ExtraBold": 1.000,
+}
+
+
 @functools.lru_cache(maxsize=64)
 def _ascent_em(family: str) -> float:
     """Font ascent as a fraction of the em (hhea.ascent / unitsPerEm).
@@ -125,13 +162,31 @@ def _ascent_em(family: str) -> float:
     Scribus FLOP=1 places the first baseline one hhea ascent below the frame
     top; the hhea metric is what reproduces the rendered ink (verified against
     the old Gotham/Vollkorn 0.15 calibration: 0.952 - 0.800 = 0.152).
+
+    Measures the installed font when it can be resolved; falls back to
+    ``_ASCENT_EM_RECORDED`` when it cannot (proprietary faces are absent from
+    CI). An unknown family with no file is an error, not a default — guessing
+    an ascent silently mis-places every baseline in the stack.
     """
     # Imported lazily so that ``import sla_lib.builder`` never hard-requires
     # fontTools — only the headline-metric path (local render/authoring) needs
     # it. Keeps CI test collection working even if fontTools is absent.
-    from fontTools.ttLib import TTFont
+    try:
+        from fontTools.ttLib import TTFont
 
-    ttf = TTFont(_resolve_ttf(family), lazy=True)
+        path = _resolve_ttf(family)
+    except (FileNotFoundError, ImportError):
+        try:
+            return _ASCENT_EM_RECORDED[family]
+        except KeyError:
+            raise FileNotFoundError(
+                f"cannot resolve font family {family!r} to a font file and no "
+                f"recorded ascent exists for it. Install the face (see "
+                f"shared/fonts/README.md) or add it to _ASCENT_EM_RECORDED "
+                f"with a value measured from the real font."
+            ) from None
+
+    ttf = TTFont(path, lazy=True)
     try:
         units_per_em = ttf["head"].unitsPerEm
         ascent = ttf["hhea"].ascent

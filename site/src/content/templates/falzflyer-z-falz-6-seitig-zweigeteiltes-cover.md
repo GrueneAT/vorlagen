@@ -65,10 +65,10 @@ category_label: Falzflyer
 category: falzflyer
 idml_source: ../../../../../originals/26-03-Leporello z-Falz 99x210 6-seitig zweigeteiltes
   Cover Ordner/26-03-Leporello z-Falz 99x210 6-seitig zweigeteiltes Cover.idml
-previews_for_sla: c540c13c3a53e9248438d7393dcb130993d1640a34d0c2abdfacbb9b587f3c24
+previews_for_sla: 65438121d02686d067bc4beb3e80167706386794c9cb3acaf7f11c0a6a6c5f56
 title: Falzflyer Z-Falz 6-seitig – Zweigeteiltes Cover
 version: 0.1.0
-build_py_sha256: 2538bd9a62db3209265be32f281f8052922ba3f2c2927cfcaf38c113b7854c6a
+build_py_sha256: 9549eb2bf1729ee7c9cb41e17c17cace5d80e4b81a4b468a8856e205e3708f4d
 _downloads:
 - label: Burgenland
   bundesland: bgld

@@ -2,7 +2,7 @@
 id: yvz4l
 title: Schrift-Tooling auf Raleway nachziehen (Barlow-Reste entfernen, Render-Guard-Bug
   fixen)
-status: open
+status: obsolete
 priority: high
 labels:
 - fonts
@@ -32,3 +32,21 @@ Die **Tooling-Schicht** ist aber nur halb migriert. Ein blindes „Barlow/Gotham
 ## Verifikation (Pflicht)
 
 Repräsentative Templates in Scribus neu rendern und PDFs gegen Baselines vergleichen (pdffonts + pdfplumber-Baseline), bevor gemerged wird. Keine reinen String-Replaces ohne Render-Check — Fidelity-sensibel.
+
+---
+
+## Hinfaellig (2026-08-18)
+
+Die Marke ist wieder auf **Gotham Narrow** — die Raleway-Umstellung ist
+komplett zurueckgenommen. Damit erledigt sich diese Aufgabe von selbst:
+
+1. **Render-Guard-Bug** — der Guard prueft `gotham narrow|vollkorn` und
+   schuetzt damit wieder genau die Schriften, die tatsaechlich gerendert
+   werden. Kein Fix noetig.
+2. **Barlow-Fallback in headline.py** — die Barlow-Eintraege bleiben absichtlich
+   stehen; `test_headline_stack.py` liest Barlows echten Ascent (1.000 em) als
+   Metrik-Fixture. Stattdessen sind die **Raleway**-Eintraege entfernt.
+3. **Vendored Barlow** — bleibt aus demselben Grund; `fonts/raleway/` ist
+   entfernt.
+
+Siehe den Gotham-Rueckbau (Schriften zurueck auf Gotham Narrow).

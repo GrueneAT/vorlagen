@@ -1,8 +1,8 @@
 ---
 id: postkarte-a6-kampagne
 version: 0.2.0
-build_py_sha256: 5b847f95eb356ca7c082b1b27958f2fd83f7585b29469117691bd520e3321c04
-title: Kampagnen-Postkarte A6
+build_py_sha256: bd45d8f285fafb1238eef7a1afef5e5ff5bdb568db94448a3ebb7f9231e56f27
+title: Postkarte A6 – Variante 1
 format: A6
 orientation: portrait
 pages: 2
@@ -11,13 +11,14 @@ audience:
 - bezirksgruppe
 - landesgruppe
 - ortsgruppe
-description: Zweiseitige A6-Kampagnen-Postkarte für Wahlaufrufe und Direktansprache.
+description: 'Zweiseitige A6-Kampagnen-Postkarte. Vorderseite ohne Bildfeld: grüner
+  Hintergrund mit Botschaft, Call-to-Action und Störer.'
 build:
   script: build.py
   output: template.sla
 original_sla: ../../postkarte-vorlage-original.sla
 sla_diff_strict: false
-previews_for_sla: 9043edd4a8309b18b6c25551aeb6e66b4abab6affed78aeebb311fe595bb73dd
+previews_for_sla: c1187aa0e5e1102c0d12571db9b402577dd5cfdbd341fad2aa6bf9bf951e8236
 brand_overrides:
 - id: brand:line_spacing_0.9
   reason: Production template auto-generated from postkarte-vorlage-original.sla;
@@ -91,10 +92,6 @@ slots:
     description: Impressum-Block, gesetzlich vorgeschrieben
     multiline: true
     anname: Impressum (1-zeilig)
-  hero:
-    type: image
-    description: Hauptbild Vorderseite (optional, sonst Vollfarbe)
-    optional: true
   logo:
     type: image
     description: Grünen-Logo (Vorderseite, zentriert unten)
@@ -109,8 +106,8 @@ preflight:
   cmyk_only: true
   min_image_dpi: 300
 category: postkarte
-category_label: Postkarte
-variant_label: A6 Kampagne
+category_label: Postkarten
+variant_label: Variante 1
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -147,17 +144,21 @@ _previews:
   src: /templates/postkarte-a6-kampagne/page-02.png
 ---
 
-# So nutzt du die Postkarten-Vorlage
+# So nutzt du die Postkarten-Vorlage (Variante 1)
 
-Eine zweiseitige A6-Postkarte für Kampagnen, Petitionen und Events — Vorderseite
-mit Botschaft, Rückseite mit Erklärtext und QR-Code.
+Eine zweiseitige A6-Postkarte für Kampagnen, Petitionen und Events. Die
+Vorderseite kommt ohne Bildfläche aus: grüner Hintergrund, Botschaft,
+Call-to-Action und Störer. Die Rückseite trägt Erklärtext und QR-Code.
+
+Wenn du oben ein Bild zeigen willst, nimm **Variante 2** — dort ist die
+Vorderseite zweigeteilt (Bildband oben, Text auf Grün darunter).
 
 ## Schritt für Schritt
 
 1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
-2. **Inhalte ersetzen** — Texte überschreiben, Logo bei Bedarf einsetzen. Die
+2. **Inhalte ersetzen** — Texte überschreiben, Logo bei Bedarf tauschen. Die
    Rahmen sind beschriftet: ein Klick zeigt unten rechts den Namen, z. B.
    „Headline", „Störer-Text", „Erklärtext Rückseite" oder „Kampagnen-URL".
 3. **QR-Code einsetzen** — den Platzhalter „QR-Code" auf der Rückseite durch dein

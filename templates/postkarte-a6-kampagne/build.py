@@ -10,11 +10,9 @@ sys.path.insert(0, str(HERE.parents[1] / 'tools'))
 from sla_lib.builder import (  # noqa: E402
     Brand, Document, DocumentLayer, TextFrame, ImageFrame, Polygon, Run,
     ParaStyle, CharStyle, SoftShadow,
-    # Issue #12 — constraints
-    inside,
 )
 from sla_lib.builder.blocks import PageBackground  # noqa: E402
-from sla_lib.builder import library, pack_inline_image  # noqa: E402  (issue #13)
+from sla_lib.builder import pack_inline_image  # noqa: E402  (issue #13)
 
 
 def build_template():
@@ -31,7 +29,7 @@ def build_template():
         author='',
         facing_pages=False,
         column_gap_default_pt=11,
-        deffont='Raleway Black',
+        deffont='Gotham Narrow Black',
         defsize=12,
         first_page_num=1,
         hcms=True,
@@ -46,17 +44,17 @@ def build_template():
 
     doc.add_color('Green', rgb=(153, 102, 51))
 
-    doc.add_char_style(CharStyle(name='Default Character Style', font='Raleway Black', fcolor='Black', fontfeatures='', features='inherit', language='de', scolor='Black', bgcolor='None', fontsize=12, kern=0, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, fshade=100, hyph_word_min=3, sshade=100, bgshade=100, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1, scaleh=100, scalev=100, baseline_offset=0, is_default=True))
-    doc.add_char_style(CharStyle(name='Default Character Style (2)', font='Raleway Regular', fcolor='Black', fontfeatures='-clig', features='inherit', language='de', scolor='Black', bgcolor='None', fontsize=12, kern=0, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, fshade=100, hyph_word_min=3, sshade=100, bgshade=100, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1, scaleh=100, scalev=100, baseline_offset=0))
+    doc.add_char_style(CharStyle(name='Default Character Style', font='Gotham Narrow Black', fcolor='Black', fontfeatures='', features='inherit', language='de', scolor='Black', bgcolor='None', fontsize=12, kern=0, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, fshade=100, hyph_word_min=3, sshade=100, bgshade=100, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1, scaleh=100, scalev=100, baseline_offset=0, is_default=True))
+    doc.add_char_style(CharStyle(name='Default Character Style (2)', font='Gotham Narrow Book', fcolor='Black', fontfeatures='-clig', features='inherit', language='de', scolor='Black', bgcolor='None', fontsize=12, kern=0, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, fshade=100, hyph_word_min=3, sshade=100, bgshade=100, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1, scaleh=100, scalev=100, baseline_offset=0))
     doc.add_para_style(ParaStyle(name='Default Paragraph Style', bcolor='None', bullet='0', linesp=15, space_before_pt=0, space_after_pt=0, first_indent_pt=0, left_indent_pt=0, right_indent_pt=0, paragraph_effect_offset=0, align=0, linesp_mode=0, drop_lines=2, hyph_consecutive_lines=2, direction=0, bshade=100, numeration=0, drop_cap=False, is_default=True))
-    doc.add_para_style(ParaStyle(name='Fließtext', font='Raleway Regular', fcolor='White', language='de', fontfeatures='-clig', fontsize=12, linesp=13, align=1, linesp_mode=0))
-    doc.add_para_style(ParaStyle(name='Impressum', font='Raleway Regular', language='de', fontfeatures='-clig', fontsize=5, linesp=6))
-    doc.add_para_style(ParaStyle(name='Default Paragraph Style (2)', font='Raleway Regular', bcolor='None', fontfeatures='-clig', bullet='0', linesp=15, space_before_pt=0, space_after_pt=5, first_indent_pt=0, left_indent_pt=0, right_indent_pt=0, paragraph_effect_offset=0, align=0, linesp_mode=0, drop_lines=2, hyph_consecutive_lines=2, direction=0, bshade=100, numeration=0, drop_cap=False))
-    doc.add_para_style(ParaStyle(name='Schrift rosa Kreis', font='Raleway Black', fcolor='White', language='de', fontfeatures='-clig', fontsize=10, linesp=11, kern=0, align=1, linesp_mode=0))
-    doc.add_para_style(ParaStyle(name='Headline sehr wichtig', font='Raleway Black', fcolor='White', language='de', fontfeatures='-clig', features='', fontsize=27, linesp=23, kern=1, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, align=1, linesp_mode=0, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1))
-    doc.add_para_style(ParaStyle(name='Kontaktmöglichkeiten', font='Raleway Regular', language='de', fontfeatures='-clig', fontsize=8, linesp=10, linesp_mode=0))
+    doc.add_para_style(ParaStyle(name='Fließtext', font='Gotham Narrow Book', fcolor='White', language='de', fontfeatures='-clig', fontsize=12, linesp=13, align=1, linesp_mode=0))
+    doc.add_para_style(ParaStyle(name='Impressum', font='Gotham Narrow Book', language='de', fontfeatures='-clig', fontsize=5, linesp=6))
+    doc.add_para_style(ParaStyle(name='Default Paragraph Style (2)', font='Gotham Narrow Book', bcolor='None', fontfeatures='-clig', bullet='0', linesp=15, space_before_pt=0, space_after_pt=5, first_indent_pt=0, left_indent_pt=0, right_indent_pt=0, paragraph_effect_offset=0, align=0, linesp_mode=0, drop_lines=2, hyph_consecutive_lines=2, direction=0, bshade=100, numeration=0, drop_cap=False))
+    doc.add_para_style(ParaStyle(name='Schrift rosa Kreis', font='Gotham Narrow Ultra', fcolor='White', language='de', fontfeatures='-clig', fontsize=10, linesp=11, kern=0, align=1, linesp_mode=0))
+    doc.add_para_style(ParaStyle(name='Headline sehr wichtig', font='Gotham Narrow Ultra', fcolor='White', language='de', fontfeatures='-clig', features='', fontsize=27, linesp=23, kern=1, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, align=1, linesp_mode=0, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1))
+    doc.add_para_style(ParaStyle(name='Kontaktmöglichkeiten', font='Gotham Narrow Book', language='de', fontfeatures='-clig', fontsize=8, linesp=10, linesp_mode=0))
     doc.add_para_style(ParaStyle(name='Headline Emphasis', font='Vollkorn Black Italic', fcolor='Gelb', language='de', fontfeatures='-clig', fontsize=27, linesp=23, align=1, linesp_mode=0))
-    doc.add_para_style(ParaStyle(name='Unterüberschrift', font='Raleway Regular', fcolor='White', language='de', fontfeatures='-clig', features='', fontsize=13, linesp=16, space_after_pt=0, kern=0, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, align=1, linesp_mode=0, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1))
+    doc.add_para_style(ParaStyle(name='Unterüberschrift', font='Gotham Narrow Book', fcolor='White', language='de', fontfeatures='-clig', features='', fontsize=13, linesp=16, space_after_pt=0, kern=0, txt_underline_pos=-0.1, txt_underline_width=-0.1, txt_strike_pos=-0.1, txt_strike_width=-0.1, align=1, linesp_mode=0, txt_shadow_x=5, txt_shadow_y=-5, txt_outline=1))
 
     doc.add_master(
         name='Normal',
@@ -93,17 +91,6 @@ def build_template():
 
     page0.add(PageBackground.for_page(105, 148, color='Dunkelgrün',
                                        line_color='Black', line_width_pt=1))
-
-    page0.add(ImageFrame(
-        x_mm=10.499999999999977,
-        y_mm=10.499999999999979,
-        w_mm=83.99999999999983,
-        h_mm=126.99999999999999,
-        layer=0,
-        image='',
-        line_width_pt=3.83527559055118,
-        anname="P1 Hero",  # issue #13 — anchor for build_preview() inject
-    ))
 
     page0.add(ImageFrame(
         x_mm=42.18263536891868,
@@ -242,7 +229,7 @@ def build_template():
         trail_style='Impressum',
         col_gap_mm=0,
         runs=[
-            Run(text='Impressum:', font='Raleway Bold', fcolor='White', features='inherit', fshade=100),
+            Run(text='Impressum:', font='Gotham Narrow Bold', fcolor='White', features='inherit', fshade=100),
             Run(text=' Medieninhaber und Herausgeber: Die Grünen Niederösterreich, Daniel-GranStraße 48, 3100 St. Pölten. ·  Druck: Druckerei mit Postanschrift · Evtl. Hinweis auf Umweltzeichens wenn zutreffend', fcolor='White', fshade=100),
         ],
     ))
@@ -381,31 +368,15 @@ def build_template():
 
 
 def build_preview():
-    """Gallery preview SLA — clean template + library demo content injected.
+    """Gallery preview SLA.
 
-    Mutates the empty hero ImageFrame (84×127mm portrait at line 86 of the
-    original module-level code) with library demo bytes. Per ecosystem
-    Finding 6.2 (DRY mutation, no layout duplication).
+    Variante 1 has no image slot: the front is the green background plus the
+    campaign text, so there is nothing to inject and the preview equals the
+    clean template. Kept as a named function because the render pipeline
+    always builds template-preview.sla. (Variante 2 — the split front — is a
+    separate template and does carry a photo slot.)
     """
-    doc = build_template()
-    INJECT_MAP = {
-        # anname → (library_id, target_w_mm, target_h_mm)
-        "P1 Hero": ("themen_klimaschutz_solar", 84, 127),
-    }
-    for page in doc.pages:
-        for frame in page.items:
-            if isinstance(frame, ImageFrame) and frame.anname in INJECT_MAP:
-                lib_id, w, h = INJECT_MAP[frame.anname]
-                img = library.load(lib_id, optional=True)
-                if img is None:
-                    continue  # library bytes not yet generated
-                # inject_into_frame handles crop + pack + sets scale_type=0
-                # (Scribus ScaleAuto). The crop already matches the frame
-                # aspect via crop_for_frame, so RATIO=1 fills exactly.
-                library.inject_into_frame(
-                    frame, img, target_w_mm=w, target_h_mm=h
-                )
-    return doc
+    return build_template()
 
 
 # Public alias for structural_check (Issue #12, D13). Mirrors the clean
@@ -417,16 +388,13 @@ build_doc = build_template
 # ---------------------------------------------------------------------------
 # Issue #12 — module-level CONSTRAINTS list (read by structural_check).
 #
-# Production template auto-generated from postkarte-vorlage-original.sla;
-# only 2 ANNAMEs are exposed in the source SLA (P1 Hero, Seitenhintergrund).
-# CONSTRAINTS use string-anname references because the production build
-# does not expose Frame locals.
+# Production template auto-generated from postkarte-vorlage-original.sla.
+# The front's only remaining named object is Seitenhintergrund: the P1 Hero
+# photo frame was removed with the "Variante 1" redesign (front = green
+# background + campaign text, no image placeholder), and with it the
+# hero_inside_page_bg constraint it anchored.
 # ---------------------------------------------------------------------------
-CONSTRAINTS = [
-    # P1 Hero photo frame must sit inside the Seitenhintergrund (page bg)
-    # — sanity check that the demo-content slot doesn't bleed off-page.
-    inside("P1 Hero", "Seitenhintergrund", name="hero_inside_page_bg"),
-]
+CONSTRAINTS = []
 
 
 if __name__ == "__main__":

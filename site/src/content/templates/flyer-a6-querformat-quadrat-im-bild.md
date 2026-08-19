@@ -56,10 +56,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Querformat Quadrat in Bild Ordner/26-03-Flyer
   A6 Querformat Quadrat in Bild.idml
-previews_for_sla: 4241de1d1d6d2711a11745d4b1bf64f9161f47de703b61fb1e2c94f7c755592b
+previews_for_sla: 76765425e56a5f5ada81a6d71ed8f9bcf0f762e5f42c6927b145bbe8d3eaa26c
 title: Flyer A6 Querformat – Quadrat im Bild
 version: 0.1.0
-build_py_sha256: 9fe560b6741aa3f8fb4a9bbcd4dbeeee7e4a6bdc4ba1715bc9162b1312993012
+build_py_sha256: 3f7b4b818c1f38557c85b3945a41a46e75797fbcb8102ec50d59ea3241e4d6d9
 _downloads:
 - label: Burgenland
   bundesland: bgld
