@@ -59,6 +59,38 @@ Narrow / Vollkorn faces, rather than letting Scribus fall back to DejaVu
 silently. CI never renders templates (see "Local-only rendering"), so it does
 not need the fonts.
 
+### How CI builds documents without the fonts
+
+"CI does not render" is not the same as "CI does not touch the templates".
+`structural_check --all` (a gate in `.github/workflows/pages.yml`) executes
+every template's `build_doc()`, and `headline_stack()` solves its baseline
+correction from the **real ascent of the installed font** — so a naive
+build on a font-less runner dies with:
+
+```
+FileNotFoundError: cannot resolve font family 'Gotham Narrow Ultra' to a TTF
+```
+
+`tools/sla_lib/builder/headline.py::_ASCENT_EM_RECORDED` closes that gap: it
+records `hhea.ascent / unitsPerEm` per face and is consulted **only** when the
+font file cannot be resolved. The local render path is unaffected — it still
+measures the installed font, because that is the authority.
+
+Two properties keep this honest rather than a fudge:
+
+- The values are measured, not assumed. Gotham Narrow is 0.800 em across every
+  face, Vollkorn 0.952, Barlow 1.000 — read from the licensed files with
+  fontTools.
+- `test_headline_stack.py::test_every_recorded_ascent_matches_its_font`
+  re-measures every recorded face on any host that HAS it installed and fails
+  on drift. Faces absent from that host are skipped, never assumed correct, and
+  the test fails outright if it could not verify a single face. So the table
+  cannot silently rot away from the real fonts.
+
+An unknown family with no resolvable file is still a hard error. Defaulting an
+ascent would mis-place every baseline in the stack — a silently wrong layout is
+worse than a failed build.
+
 ---
 
 ## Why fonts must be installed
