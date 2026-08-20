@@ -44,10 +44,19 @@ const catLabel = t.data.category_label ?? 'Sonstige';
     <p style="margin: 0 0 0.5rem 0;">
       <strong>Wichtig – Schriften zuerst installieren:</strong> Damit die Vorlage
       korrekt dargestellt wird, müssen die benötigten Schriften vor dem Öffnen des
-      Dokuments heruntergeladen und auf deinem Rechner installiert sein. Bitte wendet
-      euch dafür an euer Landesbüro. Andernfalls kann es passieren, dass die Vorlage
-      mit einer Ersatzschrift angezeigt wird. Das kann zu verschobenen Zeilenumbrüchen,
-      falschen Abständen und anderen Darstellungsfehlern führen.
+      Dokuments heruntergeladen und auf deinem Rechner installiert sein.
+    </p>
+    {/* Die Handlungsaufforderung steht bewusst als eigener Block: der Satz ist
+        das, was Nutzer:innen tun müssen, und ginge im Fließtext unter. Kein
+        <mark>, weil der Warn-Callout selbst schon blassgelb (#fdf3d2) ist —
+        ein gelbes Highlight hätte darauf kaum Kontrast. */}
+    <p class="app-font-notice__action">
+      <strong>Bitte wendet euch dafür an euer Landesbüro.</strong>
+    </p>
+    <p style="margin: 0 0 0.5rem 0;">
+      Andernfalls kann es passieren, dass die Vorlage mit einer Ersatzschrift
+      angezeigt wird. Das kann zu verschobenen Zeilenumbrüchen, falschen
+      Abständen und anderen Darstellungsfehlern führen.
     </p>
     <p style="margin: 0;">
       <a href={url('/fonts/gruene-vorlagen-schriften.zip')} class="app-font-notice__dl">
