@@ -58,10 +58,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Hochformat Quadrat in Bild Ordner/26-03-Flyer
   A6 Hochformat Quadrat in Bild.idml
-previews_for_sla: ab1688f91b8ae31519ed974e99341a67d7bbf38a3b15c192b83a8e9dceb14296
+previews_for_sla: 268ed7b7262972560e3e06adc1fe7450288bb5f1cead4dcace3eb4f67d6d6c24
 title: Flyer A6 Hochformat – Quadrat im Bild
 version: 0.1.0
-build_py_sha256: 870663657d1fb182f3fa757a56f6cb92ed7603b6252a8d870f93f1ee0d38bc7c
+build_py_sha256: 3dbc0c82c3195e6fd679710b0d2a73dc610d83d9f8600b2e2ade0544623f923c
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -118,7 +118,12 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick
    auf einen Rahmen zeigt unten rechts seinen Namen, so erkennst du, was wofür
    gedacht ist. Die Vorschaubilder oben zeigen alle Seiten der Vorlage.
-3. **Impressum prüfen** — der Impressums-Block ist gesetzlich vorgeschrieben.
+3. **Gelbe Akzente anpassen** — die gelben Striche und Kreise liegen auf einer
+   eigenen Ebene „Gelbe Akzente" (*Fenster → Ebenen*). Sie liegen über dem Text,
+   sind also direkt anklickbar. Wenn du sie beim Textbearbeiten nicht im Weg
+   haben willst, blende die Ebene kurz aus oder sperre sie — und umgekehrt:
+   sperre die untere Ebene, wenn du nur die Akzente verschieben willst.
+4. **Impressum prüfen** — der Impressums-Block ist gesetzlich vorgeschrieben.
    Angaben ergänzen, nicht löschen.
-4. **Als PDF exportieren** — *Datei → Exportieren → Als PDF speichern*. Fertig
+5. **Als PDF exportieren** — *Datei → Exportieren → Als PDF speichern*. Fertig
    für die Druckerei.

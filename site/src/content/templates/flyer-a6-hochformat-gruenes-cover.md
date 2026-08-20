@@ -56,10 +56,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Hochformat gruenes Cover Ordner/26-03-Flyer
   A6 Hochformat gruenes Cover.idml
-previews_for_sla: 69f161c8e30ae881dfd69d7611398781b0fb8570d31f9cad707de2ad72063efd
+previews_for_sla: f96ce52c6334ae03e7c350f82c451665d3e798a25779daa00728455953495fba
 title: Flyer A6 Hochformat – Grünes Cover
 version: 0.1.0
-build_py_sha256: 2df37c59639df5f2ce154db5752206aef031e4624619de894f702bcfc6583e94
+build_py_sha256: f2061e78aac5a682be67a8deeb69814db7b0daddcc562eb75d66300ad40dc024
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -116,7 +116,12 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick
    auf einen Rahmen zeigt unten rechts seinen Namen, so erkennst du, was wofür
    gedacht ist. Die Vorschaubilder oben zeigen alle Seiten der Vorlage.
-3. **Impressum prüfen** — der Impressums-Block ist gesetzlich vorgeschrieben.
+3. **Gelbe Akzente anpassen** — die gelben Striche und Kreise liegen auf einer
+   eigenen Ebene „Gelbe Akzente" (*Fenster → Ebenen*). Sie liegen über dem Text,
+   sind also direkt anklickbar. Wenn du sie beim Textbearbeiten nicht im Weg
+   haben willst, blende die Ebene kurz aus oder sperre sie — und umgekehrt:
+   sperre die untere Ebene, wenn du nur die Akzente verschieben willst.
+4. **Impressum prüfen** — der Impressums-Block ist gesetzlich vorgeschrieben.
    Angaben ergänzen, nicht löschen.
-4. **Als PDF exportieren** — *Datei → Exportieren → Als PDF speichern*. Fertig
+5. **Als PDF exportieren** — *Datei → Exportieren → Als PDF speichern*. Fertig
    für die Druckerei.

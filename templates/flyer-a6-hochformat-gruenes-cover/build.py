@@ -85,6 +85,11 @@ def build_template() -> Document:
         facing_pages=False,
         layers=[
             DocumentLayer(name='Ebene 1'),
+            # Eigene Ebene fuer die gelben Akzente (Striche/Kreise):
+            # sie gehoeren laut Original UEBER den Text, und eine eigene
+            # Ebene macht sie in Scribus anwaehlbar, ohne dass man sich
+            # durch den Text darunter klicken muss.
+            DocumentLayer(name='Gelbe Akzente'),
         ],
         extra_doc_attrs={
             'DPIn':  'ISO Coated v2 300% (basICColor)',
@@ -273,7 +278,7 @@ def _add_page_0(doc: Document, page0) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u13ca',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     # h_mm widened 24.1173mm→43.7444mm: Scribus clips lines when frame_h < 2 explicit lines × line height (leading=36.41pt; IDML overflows silently)
@@ -362,7 +367,7 @@ def _add_page_1(doc: Document, page1) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u11e3',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page1.add(PolyLine(
@@ -374,7 +379,7 @@ def _add_page_1(doc: Document, page1) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u11e4',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page1.add(TextFrame(
@@ -450,7 +455,7 @@ def _add_page_2(doc: Document, page2) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u11e2',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     # playbook squiggle_realign.py: x_mm 48.6007->48.5288, y_mm 23.0943->22.0786 (track word 'auch')
@@ -463,7 +468,7 @@ def _add_page_2(doc: Document, page2) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u11e5',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page2.add(TextFrame(
@@ -532,7 +537,7 @@ def _add_page_3(doc: Document, page3) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u126c',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page3.add(PolyLine(
@@ -544,7 +549,7 @@ def _add_page_3(doc: Document, page3) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u126e',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page3.add(TextFrame(
@@ -571,7 +576,7 @@ def _add_page_3(doc: Document, page3) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u1286',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     # h_mm widened 17.9915mm→24.6944mm: Scribus clips lines when frame_h < 2 explicit lines × line height (leading=27.00pt; IDML overflows silently)
@@ -625,7 +630,7 @@ def _add_page_3(doc: Document, page3) -> None:  # overrides task-3 stub
         w_mm=3.6,
         h_mm=3.6,
         anname='u1312',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page3.add(Polygon(
@@ -677,7 +682,7 @@ def _add_page_4(doc: Document, page4) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u1269',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     # h_mm widened 57.5516mm→63.5000mm: Scribus clips lines when frame_h < 11 explicit lines × line height (leading=14.30pt; IDML overflows silently)
@@ -786,7 +791,7 @@ def _add_page_5(doc: Document, page5) -> None:  # overrides task-3 stub
         w_mm=3.6,
         h_mm=3.6,
         anname='u14e4',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
 
