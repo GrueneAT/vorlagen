@@ -85,6 +85,11 @@ def build_template() -> Document:
         facing_pages=False,
         layers=[
             DocumentLayer(name='Ebene 1'),
+            # Eigene Ebene fuer die gelben Akzente (Striche/Kreise):
+            # sie gehoeren laut Original UEBER den Text, und eine eigene
+            # Ebene macht sie in Scribus anwaehlbar, ohne dass man sich
+            # durch den Text darunter klicken muss.
+            DocumentLayer(name='Gelbe Akzente'),
         ],
         extra_doc_attrs={
             'DPIn':  'ISO Coated v2 300% (basICColor)',
@@ -357,7 +362,7 @@ def _add_page_1(doc: Document, page1) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u678',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     # playbook squiggle_realign.py: x_mm 122.819->122.3739, y_mm 39.5->38.9285 (track word 'modi')
@@ -370,7 +375,7 @@ def _add_page_1(doc: Document, page1) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u679',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page1.add(TextFrame(
@@ -440,7 +445,7 @@ def _add_page_2(doc: Document, page2) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u677',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     # playbook squiggle_realign.py: x_mm 47.5693->47.4974, y_mm 23.3405->22.3231 (track word 'auch')
@@ -453,7 +458,7 @@ def _add_page_2(doc: Document, page2) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u67b',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page2.add(TextFrame(
@@ -506,7 +511,7 @@ def _add_page_3(doc: Document, page3) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u962',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     # h_mm widened 17.9915mm→24.6944mm: Scribus clips lines when frame_h < 2 explicit lines × line height (leading=27.00pt; IDML overflows silently)
@@ -544,7 +549,7 @@ def _add_page_3(doc: Document, page3) -> None:  # overrides task-3 stub
         line_color='None',
         line_width_pt=0,
         anname='u948',
-        layer=2,  # in front of text (selectable in Scribus)
+        layer=1,  # Ebene 'Gelbe Akzente' — ueber dem Text, eigene Ebene
         fill='Gelb',
     ))
     page3.add(TextFrame(
