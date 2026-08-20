@@ -895,3 +895,19 @@ h3.gat-headline {
     min-height: 44px;
   }
 }
+
+/* ---- Schrift-Hinweis auf den Template-Seiten -------------------- */
+/* Die Handlungsaufforderung ("Bitte wendet euch dafür an euer Landesbüro.")
+   ist der einzige Satz im Hinweis, der eine Aktion verlangt — sie bekommt
+   deshalb einen eigenen, kräftig abgesetzten Block. Dunkelgrün auf Weiss
+   statt eines gelben <mark>: der umgebende Warn-Callout ist selbst blassgelb
+   (#fdf3d2), ein gelbes Highlight haette darauf kaum Kontrast. */
+.app-font-notice__action {
+  margin: 0 0 0.6rem 0;
+  padding: 0.55rem 0.8rem;
+  background: var(--gat-web-green-deep);
+  color: #fff;
+  border-radius: var(--gat-web-radius-card);
+  font-size: 1.05em;
+  line-height: 1.35;
+}
