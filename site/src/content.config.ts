@@ -60,4 +60,31 @@ const experiments = defineCollection({
   }),
 });
 
-export const collections = { templates, experiments };
+// Anleitungs-Abschnitte für /anleitung/ — übernommen von der GGS-NÖ-Seite
+// "Scribus – Druckvorlagen & Downloads", die diese Site ersetzt. Ein
+// Markdown-File = ein Abschnitt; Reihenfolge über `order`. Prosa steht im
+// Body, die Buttons darunter kommen aus `links`.
+const anleitung = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/anleitung' }),
+  schema: z.object({
+    order: z.number(),
+    title: z.string(),
+    // Optional: rendert den Abschnitt als Design-System-Callout statt als
+    // schlichten Block (z.B. der Schriften-Hinweis).
+    callout: z.enum(['info', 'warn']).optional(),
+    links: z
+      .array(
+        z.object({
+          label: z.string(),
+          href: z.string(),
+          // 'internal' → Pfad wird mit BASE_URL präfixiert,
+          // 'download'  → interner Pfad + Download-Pfeil,
+          // 'external'  → unverändert, öffnet in neuem Tab.
+          kind: z.enum(['internal', 'download', 'external']),
+        })
+      )
+      .optional(),
+  }),
+});
+
+export const collections = { templates, experiments, anleitung };

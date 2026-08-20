@@ -911,3 +911,197 @@ h3.gat-headline {
   font-size: 1.05em;
   line-height: 1.35;
 }
+
+/* ============================================================
+ * Anleitungsseite (/anleitung/) — Video-Grid, Video-Modal,
+ * Schritt-Blöcke. Übernimmt die Inhalte der GGS-NÖ-Seite
+ * "Scribus – Druckvorlagen & Downloads".
+ * ============================================================ */
+.app-section-head {
+  margin-top: 2.5rem;
+}
+
+/* ---- Video-Karten ---------------------------------------------- */
+.app-video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+.app-video-card {
+  background: white;
+  border-radius: var(--gat-web-radius-card);
+  box-shadow: var(--gat-web-shadow);
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s;
+}
+.app-video-card:hover,
+.app-video-card:focus-visible {
+  transform: translateY(-2px);
+}
+.app-video-card__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--gat-web-surface-sunk);
+  overflow: hidden;
+}
+.app-video-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Play-Badge mittig über dem Poster. */
+.app-video-card__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.app-video-card__play-bg {
+  fill: var(--gat-color-dunkelgruen);
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+.app-video-card__play-arrow {
+  fill: #fff;
+}
+.app-video-card:hover .app-video-card__play-bg,
+.app-video-card:focus-visible .app-video-card__play-bg {
+  opacity: 1;
+}
+.app-video-card__duration {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--gat-web-radius-control);
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 0.78em;
+  font-variant-numeric: tabular-nums;
+}
+.app-video-card__body {
+  padding: 1rem;
+}
+/* Element-qualifiziert, weil der .gat-headline-Override oben
+   (h3.gat-headline) sonst mit hoeherer Spezifitaet gewinnt. */
+h3.app-video-card__title {
+  margin: 0;
+  font-size: 1rem;
+}
+.app-video-card__desc {
+  margin: 0.4rem 0 0 0;
+  color: var(--gat-web-text-mute);
+  font-size: 0.9em;
+}
+
+/* ---- Video-Modal ------------------------------------------------ */
+/* Spiegelt .app-lightbox: der Dialog selbst ist nur Rahmen, der Inhalt
+   trägt die Optik. */
+.app-video-modal {
+  /* Breite so deckeln, dass das 16:9-Frame plus Kopfzeile immer in die
+     Viewport-Hoehe passt — sonst ragt das Video auf flachen Fenstern
+     unten heraus. */
+  max-width: 96vw;
+  width: min(1100px, 96vw, calc((100vh - 8rem) * 16 / 9));
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  overflow: visible;
+}
+.app-video-modal::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+}
+/* Kopfzeile ueber dem Video: Titel links, Schliessen-Pille rechts.
+   Bewusst im Fluss statt absolut positioniert — so ueberdeckt nichts
+   das Video und auf schmalen Screens rutscht nichts aus dem Bild. */
+.app-video-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+.app-video-modal__title {
+  color: #fff;
+  font-weight: bold;
+  min-width: 0;
+}
+/* Gleiche Optik wie .app-lightbox__close. */
+.app-video-modal__close {
+  flex: none;
+  white-space: nowrap;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: var(--gat-web-radius-control);
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.app-video-modal__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background: #000;
+  border-radius: var(--gat-web-radius-card);
+  overflow: hidden;
+}
+.app-video-modal__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---- Schritt-Blöcke --------------------------------------------- */
+.app-steps {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+/* Ohne .gat-callout-Variante: weiße Karte wie im restlichen Grid. */
+.app-step:not([class*='gat-callout']) {
+  background: white;
+  border-radius: var(--gat-web-radius-card);
+  box-shadow: var(--gat-web-shadow);
+  padding: 1.25rem;
+}
+/* Siehe h3.app-video-card__title — gleiche Spezifitaets-Begruendung. */
+h3.app-step__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+.app-step__body > :first-child {
+  margin-top: 0;
+}
+.app-step__body > :last-child {
+  margin-bottom: 0;
+}
+.app-step__links {
+  list-style: none;
+  margin: 0.9rem 0 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.app-step__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-weight: bold;
+}
+
+@media (max-width: 640px) {
+  .app-video-grid {
+    grid-template-columns: 1fr;
+  }
+}

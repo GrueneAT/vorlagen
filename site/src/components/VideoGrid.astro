@@ -1,0 +1,77 @@
+---
+/**
+ * Karten-Grid der Video-Anleitungen. Datenquelle ist src/data/videos.ts —
+ * dort Videos ergänzen/tauschen, hier ist nichts zu ändern.
+ *
+ * Braucht ein <VideoModal id={modalId} /> auf derselben Seite; die Karten
+ * sind dessen Trigger.
+ */
+import {
+  posterFor,
+  posterFallbackFor,
+  watchUrl,
+  type AnleitungsVideo,
+} from '../data/videos';
+
+interface Props {
+  videos: AnleitungsVideo[];
+  /** DOM-ID des zugehörigen <VideoModal>. */
+  modalId: string;
+}
+
+const { videos, modalId } = Astro.props as Props;
+---
+<div class="app-video-grid">
+  {videos.map(v => (
+    <a
+      class="app-video-card"
+      href={watchUrl(v)}
+      data-video-target={modalId}
+      data-video-id={v.youtube}
+      data-video-title={v.title}
+      aria-label={`Video abspielen: ${v.title}`}
+    >
+      <div class="app-video-card__media">
+        <img
+          src={posterFor(v)}
+          alt=""
+          loading="lazy"
+          width="1280"
+          height="720"
+          data-fallback={posterFallbackFor(v)}
+        />
+        <span class="app-video-card__play" aria-hidden="true">
+          <svg viewBox="0 0 68 48" width="52" height="37" focusable="false">
+            <path
+              class="app-video-card__play-bg"
+              d="M66.5 7.7a8.6 8.6 0 0 0-6-6.1C55.2 0 34 0 34 0S12.8 0 7.5 1.6a8.6 8.6 0 0 0-6 6.1A90 90 0 0 0 0 24a90 90 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6.1C12.8 48 34 48 34 48s21.2 0 26.5-1.6a8.6 8.6 0 0 0 6-6.1A90 90 0 0 0 68 24a90 90 0 0 0-1.5-16.3z"
+            />
+            <path class="app-video-card__play-arrow" d="M27 34V14l18 10-18 10z" />
+          </svg>
+        </span>
+        {v.duration && <span class="app-video-card__duration">{v.duration}</span>}
+      </div>
+      <div class="app-video-card__body">
+        <h3 class="gat-headline app-video-card__title">{v.title}</h3>
+        {v.description && <p class="app-video-card__desc">{v.description}</p>}
+      </div>
+    </a>
+  ))}
+</div>
+
+<script is:inline>
+  // maxresdefault existiert nicht für jedes YouTube-Video — einmalig auf
+  // hqdefault zurückfallen (das gibt es immer).
+  document.addEventListener(
+    'error',
+    function (ev) {
+      var img = ev.target;
+      if (!img || img.tagName !== 'IMG') return;
+      var fb = img.getAttribute('data-fallback');
+      if (!fb || img.src === fb) return;
+      img.removeAttribute('data-fallback');
+      img.src = fb;
+    },
+    true
+  );
+</script>

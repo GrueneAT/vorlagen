@@ -2,6 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Lightbox from '../../components/Lightbox.astro';
+import VideoGrid from '../../components/VideoGrid.astro';
+import VideoModal from '../../components/VideoModal.astro';
+import { videos } from '../../data/videos';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -117,4 +120,18 @@ const catLabel = t.data.category_label ?? 'Sonstige';
       <Content />
     </>
   )}
+
+  {/* Video-Tutorials von der GGS-NÖ-Seite, die diese Site ersetzt. Sie
+      stehen bewusst auf jeder Vorlagen-Seite und nicht nur unter
+      /anleitung/: wer direkt auf einer Vorlage landet, soll ohne Umweg
+      sehen, wie man sie bearbeitet und exportiert. Quelle der Liste ist
+      src/data/videos.ts — hier ist beim Ergänzen nichts zu tun. */}
+  <h2 class="gat-headline app-section-head">Video-Anleitungen</h2>
+  <p>
+    So bearbeitet ihr die Vorlage in Scribus und exportiert sie als Druck-PDF.
+    Alle Schritte inklusive Schriften, Farbraum und Druck-Checkliste findet ihr
+    in der <a href={url('/anleitung/')}>ausführlichen Anleitung</a>.
+  </p>
+  <VideoGrid videos={videos} modalId="template-video" />
+  <VideoModal id="template-video" />
 </Base>

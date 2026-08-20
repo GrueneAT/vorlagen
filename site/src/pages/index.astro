@@ -46,6 +46,19 @@ for (const g of groups.values()) {
   <h1 class="gat-headline">Vorlagen-Galerie</h1>
   <p>Skelett-Vorlagen für Falzflyer, Plakate, Postkarten, Zeitungen und mehr. Datei runterladen, in Scribus öffnen, eigene Inhalte einsetzen.</p>
 
+  {/* Einstieg für alle, die Scribus noch nicht installiert haben. Die
+      Anleitung samt Video-Tutorials ist von der GGS-NÖ-Seite übernommen,
+      die diese Site ersetzt. */}
+  <a href={url('/anleitung/')} class="app-cta app-cta--first">
+    <span>
+      <strong class="app-cta__title">Neu bei Scribus? Hier geht's los.</strong>
+      <span class="app-cta__sub">
+        Schritt-für-Schritt-Anleitung mit Video-Tutorials, Schriften, Farbraum und Druck-Checkliste.
+      </span>
+    </span>
+    <span class="app-cta__action">Zur Anleitung →</span>
+  </a>
+
   <h2 class="gat-headline" style="margin-top: 2.5rem;">Vorlagen-Typen</h2>
   <p style="color: var(--gat-web-text-mute); margin-top: -0.25rem;">{orderedCategories.length} Typen · {templates.length} Varianten</p>
 
