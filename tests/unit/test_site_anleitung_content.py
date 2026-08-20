@@ -70,6 +70,26 @@ def test_every_video_has_a_title():
         assert "title:" in entry, f"Video ohne Titel: {entry}"
 
 
+def test_legacy_design_notice_matches_the_data():
+    """Der Hinweis "im alten Design aufgenommen" haengt am `legacyDesign`-Flag.
+
+    Solange noch ein Video so markiert ist, muss VideoGrid.astro den Hinweis
+    rendern. Sind alle Videos neu aufgenommen (kein Flag mehr), muss er
+    verschwinden — sonst behauptet die Seite dauerhaft etwas Falsches.
+    """
+    grid = (SITE / "src" / "components" / "VideoGrid.astro").read_text(encoding="utf-8")
+    any_legacy = "legacyDesign: true" in _videos_array()
+
+    assert "hasLegacyDesign" in grid, "VideoGrid rendert den Hinweis nicht mehr bedingt"
+    if any_legacy:
+        assert "alte" in grid and "Design" in grid, "Hinweis-Text fehlt in VideoGrid.astro"
+    else:
+        pytest.fail(
+            "Kein Video mehr als legacyDesign markiert — Hinweis in VideoGrid.astro "
+            "und diesen Test entfernen."
+        )
+
+
 # ---------------------------------------------------------------------------
 # Anleitungs-Abschnitte
 # ---------------------------------------------------------------------------

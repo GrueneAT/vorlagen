@@ -922,6 +922,13 @@ h3.gat-headline {
 }
 
 /* ---- Video-Karten ---------------------------------------------- */
+/* Hinweis ueber dem Grid, dass die Videos im alten Design aufgenommen
+   wurden. Sitzt in VideoGrid.astro und erscheint damit ueberall, wo
+   Videos ausgespielt werden (Anleitung + Vorlagen-Detailseiten). */
+.app-video-notice {
+  margin: 1.25rem 0 0 0;
+}
+
 /* 220px Mindestbreite, damit die vier Tutorials auf Desktop-Breite in
    einer Reihe stehen — so lagen sie auch auf der GGS-Seite. */
 .app-video-grid {

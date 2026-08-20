@@ -20,7 +20,21 @@ interface Props {
 }
 
 const { videos, modalId } = Astro.props as Props;
+
+// Der Hinweis haengt am Datenbestand, nicht an der Seite: sobald kein
+// Video mehr als `legacyDesign` markiert ist, verschwindet er von selbst.
+const hasLegacyDesign = videos.some(v => v.legacyDesign);
 ---
+{hasLegacyDesign && (
+  <p class="gat-callout gat-callout--info app-video-notice">
+    <strong>Hinweis zu den Videos:</strong> Die Aufnahmen zeigen noch das alte
+    Design. Inhaltlich stimmen sie weiterhin — die gezeigten Arbeitsschritte in
+    Scribus sind unverändert richtig, nur die Optik der Vorlagen hat sich
+    geändert. Neue Videos werden im aktuellen Design produziert und hier nach
+    und nach ersetzt.
+  </p>
+)}
+
 <div class="app-video-grid">
   {videos.map(v => (
     <a
