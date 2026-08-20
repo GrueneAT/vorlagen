@@ -1,0 +1,113 @@
+---
+/**
+ * YouTube-Video-Overlay — dasselbe Muster wie Lightbox.astro, nur für
+ * Videos statt Bilder. Baut auf dem Design-System-`<dialog class="gat-modal">`
+ * auf (Focus-Trap, Esc, Backdrop kommen vom Element selbst).
+ *
+ * Auf der GGS-Seite öffneten die Videos ebenfalls als Popup statt inline —
+ * das Verhalten bleibt hier erhalten.
+ *
+ * Markup-Grundgerüst pro Seite einmal einbinden:
+ *
+ *   <VideoModal id="video-modal" />
+ *
+ * Trigger sind beliebige Elemente mit den passenden Daten-Attributen —
+ * bevorzugt ein `<a>` auf die watch-URL, damit es ohne JS trotzdem
+ * funktioniert:
+ *
+ *   <a href="https://www.youtube.com/watch?v=…"
+ *      data-video-target="video-modal"
+ *      data-video-id="…"
+ *      data-video-title="…">…</a>
+ *
+ * Der iframe wird bewusst erst beim Öffnen erzeugt und beim Schließen
+ * wieder entfernt: so lädt YouTube nichts, solange niemand ein Video
+ * startet, und die Wiedergabe stoppt zuverlässig beim Schließen.
+ * Eingebettet wird über youtube-nocookie.com (kein Tracking-Cookie vor
+ * dem Klick).
+ */
+
+interface Props {
+  /** DOM-ID des Dialogs; muss seitenweit eindeutig sein. */
+  id: string;
+}
+
+const { id } = Astro.props as Props;
+---
+<dialog id={id} class="gat-modal gat-modal--wide gat-modal--blur app-video-modal" aria-label="Video">
+  <div class="app-video-modal__inner">
+    <div class="app-video-modal__head">
+      <div class="app-video-modal__title" data-video-title-out></div>
+      <button type="button" class="app-video-modal__close" aria-label="Schließen" data-video-close>Schließen ✕</button>
+    </div>
+    <div class="app-video-modal__frame" data-video-frame></div>
+  </div>
+</dialog>
+
+<script is:inline define:vars={{ id }}>
+  (function () {
+    var dialog = document.getElementById(id);
+    if (!dialog) return;
+    var frame = dialog.querySelector('[data-video-frame]');
+    var titleOut = dialog.querySelector('[data-video-title-out]');
+    var closeBtn = dialog.querySelector('[data-video-close]');
+    if (!frame || !titleOut || !closeBtn) return;
+
+    function open(youtubeId, title) {
+      if (!youtubeId) return;
+      titleOut.textContent = title || '';
+      // iframe frisch aufbauen — src-Wechsel auf einem bestehenden iframe
+      // legt sonst History-Einträge an.
+      frame.innerHTML = '';
+      var iframe = document.createElement('iframe');
+      iframe.src =
+        'https://www.youtube-nocookie.com/embed/' +
+        encodeURIComponent(youtubeId) +
+        '?autoplay=1&rel=0&modestbranding=1';
+      iframe.title = title || 'Video';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      frame.appendChild(iframe);
+
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+      // iframe entfernen stoppt die Wiedergabe.
+      frame.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    [].slice
+      .call(document.querySelectorAll('[data-video-target="' + id + '"]'))
+      .forEach(function (el) {
+        el.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          open(el.getAttribute('data-video-id'), el.getAttribute('data-video-title'));
+        });
+      });
+
+    closeBtn.addEventListener('click', close);
+
+    // Backdrop-Klick (Ziel ist der Dialog selbst, nicht der Inhalt).
+    dialog.addEventListener('click', function (ev) {
+      if (ev.target === dialog) close();
+    });
+
+    // Esc kommt vom <dialog>; der close-Event räumt den iframe trotzdem ab,
+    // falls über Esc statt über den Button geschlossen wurde.
+    dialog.addEventListener('close', function () {
+      frame.innerHTML = '';
+      document.body.style.overflow = '';
+    });
+
+    // Public API für seitenspezifische Erweiterungen.
+    dialog.__videoModal = { open: open, close: close };
+  })();
+</script>
