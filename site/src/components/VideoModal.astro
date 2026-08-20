@@ -35,11 +35,13 @@ interface Props {
 const { id } = Astro.props as Props;
 ---
 <dialog id={id} class="gat-modal gat-modal--wide gat-modal--blur app-video-modal" aria-label="Video">
-  <div class="app-video-modal__head">
-    <div class="app-video-modal__title" data-video-title-out></div>
-    <button type="button" class="app-video-modal__close" aria-label="Schließen" data-video-close>Schließen ✕</button>
+  <div class="app-video-modal__inner">
+    <div class="app-video-modal__head">
+      <div class="app-video-modal__title" data-video-title-out></div>
+      <button type="button" class="app-video-modal__close" aria-label="Schließen" data-video-close>Schließen ✕</button>
+    </div>
+    <div class="app-video-modal__frame" data-video-frame></div>
   </div>
-  <div class="app-video-modal__frame" data-video-frame></div>
 </dialog>
 
 <script is:inline define:vars={{ id }}>

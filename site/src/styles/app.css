@@ -922,9 +922,11 @@ h3.gat-headline {
 }
 
 /* ---- Video-Karten ---------------------------------------------- */
+/* 220px Mindestbreite, damit die vier Tutorials auf Desktop-Breite in
+   einer Reihe stehen — so lagen sie auch auf der GGS-Seite. */
 .app-video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
@@ -1004,17 +1006,37 @@ h3.app-video-card__title {
 /* ---- Video-Modal ------------------------------------------------ */
 /* Spiegelt .app-lightbox: der Dialog selbst ist nur Rahmen, der Inhalt
    trägt die Optik. */
+/* Das Design-System setzt auf .gat-modal `inset: 0; margin: 0` — ein
+   schmaler Dialog klebt dadurch oben links statt mittig. Die Lightbox
+   loest das, indem der Dialog den Viewport fuellt und der Inhalt darin
+   zentriert wird; das Video-Modal macht es genauso. */
 .app-video-modal {
-  /* Breite so deckeln, dass das 16:9-Frame plus Kopfzeile immer in die
-     Viewport-Hoehe passt — sonst ragt das Video auf flachen Fenstern
-     unten heraus. */
+  width: 96vw;
   max-width: 96vw;
-  width: min(1100px, 96vw, calc((100vh - 8rem) * 16 / 9));
+  height: 96vh;
+  max-height: 96vh;
+  /* Mit `inset: 0` (vom DS) und definierter Groesse zentriert margin:auto
+     den Dialog im Viewport — ohne das klebt er in der oberen linken Ecke. */
+  margin: auto;
   padding: 0;
   background: transparent;
   box-shadow: none;
   border: none;
   overflow: visible;
+}
+/* Bewusst auf [open] eingeschraenkt: ein ungeschuetztes `display: flex`
+   auf dem <dialog> wuerde das UA-seitige `display: none` fuer den
+   geschlossenen Zustand aushebeln — das Modal waere dann immer sichtbar. */
+.app-video-modal[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Breite so deckeln, dass Kopfzeile + 16:9-Frame immer in die
+   Viewport-Hoehe passen — sonst ragt das Video auf flachen Fenstern
+   unten heraus. */
+.app-video-modal__inner {
+  width: min(1100px, 100%, calc((96vh - 4rem) * 16 / 9));
 }
 .app-video-modal::backdrop {
   background: rgba(0, 0, 0, 0.85);
