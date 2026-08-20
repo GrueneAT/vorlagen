@@ -29,6 +29,16 @@ export interface AnleitungsVideo {
   duration?: string;
   /** Poster-Bild-URL. Leer lassen für das YouTube-Thumbnail. */
   poster?: string;
+  /**
+   * true = im alten Corporate Design aufgenommen. Blendet über dem Grid
+   * den Hinweis ein, dass die Optik veraltet, der gezeigte Ablauf aber
+   * weiterhin korrekt ist.
+   *
+   * Bewusst pro Video statt global: sobald ein Video neu aufgenommen ist,
+   * fällt hier das Flag weg — und wenn keines mehr gesetzt ist,
+   * verschwindet der Hinweis von selbst.
+   */
+  legacyDesign?: boolean;
 }
 
 /**
@@ -54,21 +64,25 @@ export const videos: AnleitungsVideo[] = [
   {
     youtube: 'ZH9z7Cgiuy0',
     title: 'Erste Schritte mit Scribus',
+    legacyDesign: true,
     duration: '17:52',
   },
   {
     youtube: 'GxKJLRHjvIs',
     title: 'Bilder einfügen und verschieben in Scribus',
+    legacyDesign: true,
     duration: '14:45',
   },
   {
     youtube: 'uBMazvTPPLI',
     title: 'PDF-Export einer Scribus-Datei',
+    legacyDesign: true,
     duration: '6:54',
   },
   {
     youtube: '90rbNKbOlMM',
     title: 'Besonderheiten bei der Flyerbearbeitung',
+    legacyDesign: true,
     duration: '3:57',
   },
 ];
