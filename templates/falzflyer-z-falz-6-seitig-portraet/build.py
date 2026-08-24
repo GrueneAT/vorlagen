@@ -3,10 +3,12 @@
 Auto-generated from 26-03-Leporello z-Falz 99x210 6-seitig Portrait.idml by tools/idml_to_dsl.py.
 Hand-edit thereafter; this file is the source of truth.
 
-NOTE: bleed_mm=0 below — emit a trim-only MediaBox so the rendered
-PDF compares directly against the InDesign baseline (which exports
-with trim-only by default). For print prep, restore the IDML's
-authored bleed (preserved in IDML preferences).
+NOTE: bleed_mm=3.0 below — 3 mm Anschnitt an allen vier Kanten,
+wie bei Plakat, Postkarte und Zeitung. Das Artwork liegt bereits im
+Anschnitt (Hintergruende starten bei -3 mm und sind 6 mm groesser als
+das Endformat), es war bisher nur die Dokumenteinstellung, die fehlte.
+Schnitt- und Anschnittmarken sind aktiv, damit die PDF direkt in den
+Druck gehen kann.
 
 Falz lines are NOT emitted by the converter — add manually post-bootstrap
 matching templates/kandidat-falzflyer-din-lang/build.py: import FoldLine
@@ -33,6 +35,7 @@ from sla_lib.builder import (  # noqa: E402
     ParaStyle,
     Anchor,
     pack_inline_image,
+    impressum_edge_geometry,
 )
 
 INJECT_MAP: dict[str, str] = {}
@@ -71,10 +74,6 @@ def build_template() -> Document:
             'DPIn':  'ISO Coated v2 300% (basICColor)',
             'DPIn2': 'ISO Coated v2 300% (basICColor)',
         },
-        extra_pdf_attrs={
-            'cropMarks': '0',
-            'bleedMarks': '0',
-        },
     )
 
     doc.add_color('Endformat', cmyk=(0, 100, 100, 0))
@@ -87,19 +86,19 @@ def build_template() -> Document:
     doc.add_master(
         name="Normal",
         size=(297, 209.99999999999997),
-        bleed_mm=0,
+        bleed_mm=3.0,
         margins_mm=(0.0, 0.0, 0.0, 0.0),
     )
 
     page0 = doc.add_page(
         size=(297, 209.99999999999997),
-        bleed_mm=0,
+        bleed_mm=3.0,
         margins_mm=(0.0, 0.0, 0.0, 0.0),
         master="Normal",
     )
     page1 = doc.add_page(
         size=(297, 209.99999999999997),
-        bleed_mm=0,
+        bleed_mm=3.0,
         margins_mm=(0.0, 0.0, 0.0, 0.0),
         master="Normal",
     )
@@ -681,17 +680,14 @@ def _add_page_1(doc: Document, page1) -> None:  # overrides task-3 stub
         fill='Dunkelgrün',
     ))
     page1.add(TextFrame(
-        x_mm=188,
-        y_mm=139.2,
-        w_mm=10,
-        h_mm=53.4,
+        **impressum_edge_geometry(page_h_mm=210.0, edge_x_mm=198.0),
         anname='u347',
         layer=0,
         rotation_deg=-90,
         style='idml/normalparagraphstyle',
-        runs=[Run(text='Impressum: xxxxxx', font='Gotham Narrow Book', fontsize=6, fcolor='Dunkelgrün', paragraph_style='idml/normalparagraphstyle', paragraph_attrs={'ALIGN': '0', 'LINESPMode': '0', 'LINESP': '7.199999999999999'})],
-        trail_attrs={'LINESPMode': '0', 'LINESP': '7.199999999999999'},
-        vertical_text_align=1,
+        runs=[Run(text='Impressum: xxxxxx', font='Gotham Narrow Book', fontsize=6, fcolor='Dunkelgrün', paragraph_style='idml/normalparagraphstyle', paragraph_attrs={'ALIGN': '0', 'LINESPMode': '0', 'LINESP': '6.0'})],
+        trail_attrs={'LINESPMode': '0', 'LINESP': '6.0'},
+        vertical_text_align=0,
         fill_opacity=0.7,
     ))
     # h_mm widened 23.2833mm→35.2778mm: Scribus clips lines when frame_h < 6 explicit lines × line height (leading=14.30pt; IDML overflows silently)

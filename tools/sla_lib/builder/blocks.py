@@ -1075,3 +1075,76 @@ class _LegacyProxy:
 
 
 legacy = _LegacyProxy()
+
+
+# --- Impressum an der Blattkante -------------------------------------------
+#
+# Referenz ist das Plakat A1 (594 x 841 mm), dessen Impressum als korrekt gilt:
+# um -90 Grad gedreht an der rechten Blattkante, von aussen lesbar, der Text
+# beginnt an der Blattunterkante und laeuft nach oben.
+#
+# Am gerenderten PDF gemessen (Tinten-Bounding-Box, nicht Rahmenmass):
+#   Textunterkante   8.31 mm ueber der Blattunterkante = 0.99 % der Blatthoehe
+#   Textlaenge     371.1  mm                           = 44.1 % der Blatthoehe
+#   Text zur rechten Blattkante 16.2 mm                = 2.73 % der Blattbreite
+#   Zeilenabstand   20 pt bei 20 pt Schrift            = 100 %
+#   VAlign 0 — die Zeilen stapeln vom Bandinnenrand nach aussen
+#
+# Uebernommen wird der Laengenanteil und die Stapelrichtung. Die beiden
+# Randabstaende werden NICHT linear skaliert: 0.99 % bzw. 2.73 % ergaeben auf
+# A6 1.5 mm und 2.9 mm und liegen damit an der Schneidetoleranz. 4 mm ist der
+# Wert, den die Flyer im Original-IDML seitlich schon hatten (gemessen 3.9 mm),
+# und ergibt eine gleichmaessige Ecke.
+IMPRESSUM_LENGTH_FRAC = 0.441
+IMPRESSUM_BOTTOM_GAP_MM = 4.0
+IMPRESSUM_EDGE_GAP_MM = 4.0
+
+
+def impressum_edge_geometry(
+    *,
+    page_h_mm: float,
+    edge_x_mm: float,
+    lines: int = 2,
+    leading_pt: float = 6.0,
+    edge_gap_mm: float = IMPRESSUM_EDGE_GAP_MM,
+    bottom_gap_mm: float = IMPRESSUM_BOTTOM_GAP_MM,
+    length_mm: Optional[float] = None,
+) -> dict:
+    """DSL-Geometrie fuer ein um -90 Grad gedrehtes Impressum an einer Blattkante.
+
+    Liefert ``x_mm``/``y_mm``/``w_mm``/``h_mm`` fuer einen ``TextFrame`` mit
+    ``rotation_deg=-90`` und ``vertical_text_align=0``. Die DSL-Koordinaten
+    sind die *unrotierte* obere linke Ecke; ``TextFrame.to_pageobject``
+    verschiebt sie beim Emittieren. Nach der Transformation gilt fuer die
+    sichtbare Lage:
+
+        Band       x in [x_mm, x_mm + w_mm]
+        Laufweg    y in [y_mm - w_mm, y_mm - w_mm + h_mm]
+
+    Der Text beginnt am sichtbaren unteren Ende und laeuft nach oben; die
+    Textunterkante liegt bei ``y_mm - w_mm + h_mm``. Die Zeilen stapeln vom
+    Bandinnenrand nach aussen, das Band ist deshalb auf ``lines`` Zeilen plus
+    ``edge_gap_mm`` bemessen: bei der erwarteten Zeilenzahl endet die
+    aeusserste Zeile genau ``edge_gap_mm`` vor der Kante. Mehr Zeilen ruecken
+    naeher an die Kante, weniger bleiben weiter innen.
+
+    Args:
+        page_h_mm: Blatthoehe — Bezug fuer Unterkante und Laenge.
+        edge_x_mm: x der Kante, an der das Impressum sitzt. Beim Flyer die
+            Blattkante, beim Falzflyer die Aussenkante des Impressum-Panels.
+        lines: erwartete Zeilenzahl des gesetzten Impressums.
+        leading_pt: Zeilenabstand in pt (Plakat-Regel: gleich der Schriftgroesse).
+        edge_gap_mm: Abstand der aeussersten Zeile von der Kante.
+        bottom_gap_mm: Abstand der Textunterkante von der Blattunterkante.
+        length_mm: Laufweg entlang der Kante. Default: Plakat-Anteil der
+            Blatthoehe.
+    """
+    if length_mm is None:
+        length_mm = round(page_h_mm * IMPRESSUM_LENGTH_FRAC, 4)
+    band_mm = round(edge_gap_mm + lines * leading_pt / 72.0 * 25.4, 4)
+    return {
+        "x_mm": round(edge_x_mm - band_mm, 4),
+        "y_mm": round(page_h_mm - bottom_gap_mm + band_mm - length_mm, 4),
+        "w_mm": band_mm,
+        "h_mm": length_mm,
+    }

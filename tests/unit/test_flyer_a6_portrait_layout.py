@@ -128,14 +128,20 @@ class FlyerA6PortraitLayoutTest(unittest.TestCase):
         self.assertTrue(modes, "ud04 emits no LINESPMode override")
         self.assertEqual(modes, {"0"}, f"ud04 leading mode not Fixed: {modes}")
 
-    def test_impressum_carries_valign_center(self):
-        """Defect 4 — the CenterAlign Impressum frame (u11fd) emits a
-        working VAlign channel (1=center), not ALIGN."""
+    def test_impressum_stacks_from_inner_band_edge(self):
+        """Das Impressum folgt der Plakat-Regel: VAlign=0, die Zeilen stapeln
+        vom Bandinnenrand nach aussen.
+
+        Die IDML-Vorgabe war VerticalJustification=CenterAlign (VAlign=1) —
+        damit haengt die Zeile mittig im Band und wandert mit der Zeilenzahl
+        des jeweiligen Bundeslandes. Das Plakat, das als Referenz gilt, setzt
+        VAlign=0; der aeussere Randabstand ist dann ueber die Bandbreite
+        gesteuert (siehe blocks.impressum_edge_geometry)."""
         po = self.pos.get("u11fd")
         self.assertIsNotNone(po, "Impressum frame u11fd missing")
         self.assertEqual(
-            po.get("VAlign"), "1",
-            "Impressum VerticalJustification=CenterAlign must emit VAlign=1",
+            po.get("VAlign"), "0",
+            "Impressum muss wie beim Plakat vom Bandinnenrand stapeln (VAlign=0)",
         )
 
 
