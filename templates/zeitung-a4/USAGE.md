@@ -7,7 +7,7 @@ passenden Beispielseiten übernimmst und die Inhalte ersetzt.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Beispielseiten ansehen** — im Seitenbedienpanel (*Fenster →

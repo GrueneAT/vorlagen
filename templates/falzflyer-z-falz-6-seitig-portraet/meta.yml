@@ -18,14 +18,6 @@ build:
   output: template.sla
   script: build.py
 brand_overrides:
-- id: brand:bleed_3mm
-  reason: 'IDML-imported leporello template (scaffold). The IDML''s InDesign document was
-    authored with bleed=0 and build.py deliberately emits bleed_mm=0 (see the build.py module
-    docstring) so the rendered PDF compares directly against the InDesign baseline.pdf, which
-    itself exports trim-only. The Quickguide requires a 3mm print bleed; the existing IDML
-    asset predates that requirement. Same gap class as the shipped sibling 26-03-leporello-z-falz-99x210-6-seitig-gruenes-cover
-    which carries the identical brand_overrides block. Resolution path: extend tools/idml_to_dsl.py
-    to inject the brand-required 3mm bleed at scaffold time (deferred).'
 - id: brand:image_text_overlap
   reason: 'IDML-imported leporello template (scaffold). The original InDesign layout deliberately
     overlays text on full-bleed photo backdrops and on decorative brand-color shapes (headline/Zitat
@@ -62,7 +54,7 @@ category_label: 'Falzflyer'
 category: 'falzflyer'
 idml_source: ../../../../../originals/26-03-Leporello z-Falz 99x210 6-seitig Portrait Ordner/26-03-Leporello
   z-Falz 99x210 6-seitig Portrait.idml
-previews_for_sla: 9a18ba1c843eb76a3cb72c86a9405487253bfb834cd809178cff6993e5cb000e
+previews_for_sla: 7d5788782c85a0b02abe0f2873d1d2e374faba8eb98976523aa57856c858fb68
 title: 'Falzflyer Z-Falz 6-seitig – Porträt-Cover'
 version: 0.1.0
-build_py_sha256: 753a269f0cf119182d5016e03397953f855162fb6d479c0f6e5c7bc343033629
+build_py_sha256: 9d327412ad8e1e25095825114f2ea3c559d82b3986ce7e4f81a6bf1cb017deca

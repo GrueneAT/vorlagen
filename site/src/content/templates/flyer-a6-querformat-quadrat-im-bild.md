@@ -56,10 +56,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Querformat Quadrat in Bild Ordner/26-03-Flyer
   A6 Querformat Quadrat in Bild.idml
-previews_for_sla: 9a74ffa02cfc9769d850056c2131505770bedf274bf97f155ce73fb923f055ee
+previews_for_sla: ebf1355e821b00cdd76f78a1bb5aee5ed8d158e59adfb0882c024f4a99f70c58
 title: Flyer A6 Querformat – Quadrat im Bild
 version: 0.1.0
-build_py_sha256: de40a23b0abff96a5a2e13d7496a1b3180bfccdd82dbfc54e692933fca8d985f
+build_py_sha256: 040d7219238c31f4ee3391774a34aafcaea52ef8c1d5dc6f997b2a543b20afc5
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -110,7 +110,7 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick

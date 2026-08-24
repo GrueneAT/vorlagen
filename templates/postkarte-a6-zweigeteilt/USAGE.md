@@ -10,7 +10,7 @@ Vorderseite nur aus dem grünen Hintergrund und dem Text.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die Schriften vorher
    installieren.
 2. **Bild einsetzen** — den leeren Bildrahmen oben (`P1 Hero`) anklicken und

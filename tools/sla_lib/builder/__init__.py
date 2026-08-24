@@ -61,6 +61,7 @@ from .headline import headline_stack, font_ascent_pt, font_ascent_mm
 from .styles import DocumentLayer, ParaStyle, CharStyle, SoftShadow
 from .brand import Brand
 from . import blocks
+from .blocks import impressum_edge_geometry
 from . import library
 from .composites import (
     AlignedRow,
@@ -112,6 +113,7 @@ __all__ = [
     "load_ci",
     "Brand",
     "blocks",
+    "impressum_edge_geometry",
     "library",
     "AlignedRow",
     "AlignedColumn",

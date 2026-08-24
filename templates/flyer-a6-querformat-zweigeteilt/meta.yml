@@ -12,14 +12,6 @@ build:
   output: template.sla
   script: build.py
 brand_overrides:
-- id: brand:bleed_3mm
-  reason: 'IDML-imported flyer template (scaffold). The IDML''s InDesign document
-    was authored with bleed=0 and build.py deliberately emits bleed_mm=0 (see the
-    build.py module docstring) so the rendered PDF compares directly against the InDesign
-    baseline.pdf, which itself exports trim-only. The Quickguide requires a 3mm print
-    bleed; the existing IDML asset predates that requirement. Same gap class as the
-    sibling 26-03 flyer templates. Resolution path: extend tools/idml_to_dsl.py to
-    inject the brand-required 3mm bleed at scaffold time (deferred).'
 - id: brand:font_family
   reason: 'IDML-imported flyer template (scaffold). Text frame ''ub3b'' (the page-5
     Zitat block) renders ''Vollkorn Bold Italic'': the InDesign source story (Story_ub3e.xml)
@@ -68,7 +60,7 @@ category_label: 'Flyer'
 category: 'flyer'
 idml_source: ../../../../originals/26-03-Flyer A6 Querformat zweigeteilt Ordner/26-03-Flyer
   A6 Querformat zweigeteilt.idml
-previews_for_sla: 6e533f7ea4c9ce30b6bd2cc6f78efa9149d8a2a5f648049ec398a41713b29cce
+previews_for_sla: 79577b04a7ddd88f43871f711342cedcc8d29b7742d4803b57dbe5c2b6784aa6
 title: 'Flyer A6 Querformat – Zweigeteilt'
 version: 0.1.0
-build_py_sha256: 536fe8f4571fc99712eb5d2419df709bb5c2f550b688750cb315c52d574e0e07
+build_py_sha256: 1331b5a2b3dc7e21e60b95f47b5016edd6b073f37c5d70402411264a5b4efee4

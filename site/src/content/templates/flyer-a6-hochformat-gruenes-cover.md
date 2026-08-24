@@ -56,10 +56,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Hochformat gruenes Cover Ordner/26-03-Flyer
   A6 Hochformat gruenes Cover.idml
-previews_for_sla: f96ce52c6334ae03e7c350f82c451665d3e798a25779daa00728455953495fba
+previews_for_sla: 4eed4a0054686b6e817b1ea74f0abbffcba6b7f0e6ec7c1512277951c6ddeefe
 title: Flyer A6 Hochformat – Grünes Cover
 version: 0.1.0
-build_py_sha256: f2061e78aac5a682be67a8deeb69814db7b0daddcc562eb75d66300ad40dc024
+build_py_sha256: e811ad94a0f7283b06cef71a1fad7261c8edd3ddac950da22a8388cdf20a7e1c
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -110,7 +110,7 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick

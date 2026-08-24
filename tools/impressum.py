@@ -82,6 +82,9 @@ def find_impressum_frames(root: ET.Element) -> list[ET.Element]:
     return frames
 
 
+BULLET = "\u2022"
+
+
 def _impressum_text(entry: dict) -> str:
     """Build the full impressum string for one Bundesland entry."""
     text = "Impressum: " + entry["impressum"]
@@ -91,52 +94,98 @@ def _impressum_text(entry: dict) -> str:
     return text
 
 
-def _rewrite_story(frame: ET.Element, text: str) -> None:
-    """Replace a frame's story runs with a single impressum ITEXT.
+def _substitute_segments(existing: str, entry: dict) -> str:
+    """Rewrite a bullet-separated impressum body in place.
 
-    The new ITEXT inherits the character attributes of the frame's first
-    existing ITEXT. All existing ITEXT and para nodes are dropped; structural
-    nodes such as StoryText/DefaultStyle/trail are preserved so the Scribus
-    story stays valid.
+    The Zeitung body is a single paragraph of bullet-separated segments::
+
+        Medieninhaber u. Herausgeber: <Adresse> • Redaktion: … • Druck: …
+
+    Only the Landesorganisation belongs to the Bundesland; the remaining
+    segments (Redaktion, Verteiler, Erscheinungstermin, Druck, Fotos) are
+    per-issue boilerplate the Ortsgruppe fills in and must survive the
+    substitution. Replace the value after the first colon of the leading
+    segment, and the Druck segment when the data source supplies one.
+    """
+    segments = existing.split(BULLET)
+    head = segments[0]
+    label, sep, _ = head.partition(":")
+    segments[0] = f"{label}{sep} {entry['impressum']} " if sep else f" {entry['impressum']} "
+
+    druck = (entry.get("druck") or "").strip()
+    if druck:
+        for i, seg in enumerate(segments[1:], start=1):
+            if seg.strip().lower().startswith("druck"):
+                d_label, d_sep, _ = seg.partition(":")
+                segments[i] = f"{d_label}{d_sep} {druck} " if d_sep else f" {druck} "
+                break
+    return BULLET.join(segments)
+
+
+def _paragraphs(story: ET.Element) -> list[list[ET.Element]]:
+    """Split a story's children into paragraphs at ``<para>`` boundaries.
+
+    Returns one list of ITEXT/para nodes per paragraph, in document order.
+    The trailing paragraph (no closing ``<para>``, terminated by ``<trail>``)
+    is included as the last entry.
+    """
+    paras: list[list[ET.Element]] = []
+    current: list[ET.Element] = []
+    for child in story:
+        if child.tag == "ITEXT":
+            current.append(child)
+        elif child.tag == "para":
+            current.append(child)
+            paras.append(current)
+            current = []
+    if current:
+        paras.append(current)
+    return paras
+
+
+def _rewrite_story(frame: ET.Element, entry: dict) -> None:
+    """Substitute the Bundesland impressum into a frame's story.
+
+    Only the **body** paragraph — the last one — is touched. Everything above
+    it survives verbatim: the Zeitung carries an "Impressum" heading plus a
+    spacer paragraph in its own paragraph style, and collapsing the story into
+    a single run (the previous behaviour) dropped both, along with the entire
+    boilerplate tail of the body.
+
+    Within the body paragraph the runs are collapsed into one ITEXT that
+    inherits the character attributes of the body's first run, so the 8 pt
+    weiss of the Zeitung and the 6 pt of the Flyer both carry over. The
+    ``<para>`` nodes are left untouched — they hold the paragraph's line
+    spacing, and re-emitting them empty reset the Zeilenabstand to the style
+    default.
     """
     story = frame.find("StoryText")
     if story is None:
         # Some SLAs nest ITEXT directly; operate on the frame itself.
         story = frame
 
-    first_itext = story.find("ITEXT")
-    carried = {}
-    if first_itext is not None:
-        carried = {
-            k: v for k, v in first_itext.attrib.items() if k not in _CARRIED_SKIP
-        }
+    paras = _paragraphs(story)
+    body = paras[-1] if paras else []
+    body_itexts = [n for n in body if n.tag == "ITEXT"]
+    if not body_itexts:
+        return
 
-    # Find an insertion index: keep leading non-text nodes (DefaultStyle),
-    # remove ITEXT and para, keep a trailing trail/para structural node.
-    children = list(story)
-    insert_at = len(children)
-    for i, child in enumerate(children):
-        if child.tag in ("ITEXT", "para"):
-            insert_at = i
-            break
-
-    for child in children:
-        if child.tag in ("ITEXT", "para"):
-            story.remove(child)
-
-    new_itext = ET.Element("ITEXT", carried)
-    new_itext.set("CH", text)
-    story.insert(insert_at, new_itext)
-
-    # Scribus stories terminate paragraphs with a <para> before <trail>.
-    # If a <trail> exists, place the closing <para> right before it; else
-    # append the <para> at the end.
-    trail = story.find("trail")
-    if trail is not None:
-        trail_idx = list(story).index(trail)
-        story.insert(trail_idx, ET.Element("para"))
+    existing = "".join(n.get("CH", "") for n in body_itexts)
+    if BULLET in existing:
+        text = _substitute_segments(existing, entry)
+    elif len(paras) > 1:
+        # Heading paragraph above — the word "Impressum" is already set there.
+        text = _impressum_text(entry).removeprefix("Impressum: ")
     else:
-        story.append(ET.Element("para"))
+        text = _impressum_text(entry)
+
+    keep = body_itexts[0]
+    carried = {k: v for k, v in keep.attrib.items() if k not in _CARRIED_SKIP}
+    keep.attrib.clear()
+    keep.attrib.update(carried)
+    keep.set("CH", text)
+    for extra in body_itexts[1:]:
+        story.remove(extra)
 
 
 def apply_impressum(sla_path: str | Path, out_path: str | Path, entry: dict) -> int:
@@ -154,9 +203,8 @@ def apply_impressum(sla_path: str | Path, out_path: str | Path, entry: dict) -> 
     if not frames:
         raise RuntimeError(f"no impressum frame found in {sla_path}")
 
-    text = _impressum_text(entry)
     for frame in frames:
-        _rewrite_story(frame, text)
+        _rewrite_story(frame, entry)
 
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)

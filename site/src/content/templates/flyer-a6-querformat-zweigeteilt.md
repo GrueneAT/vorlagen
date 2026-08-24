@@ -70,10 +70,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Querformat zweigeteilt Ordner/26-03-Flyer
   A6 Querformat zweigeteilt.idml
-previews_for_sla: 6e533f7ea4c9ce30b6bd2cc6f78efa9149d8a2a5f648049ec398a41713b29cce
+previews_for_sla: 79577b04a7ddd88f43871f711342cedcc8d29b7742d4803b57dbe5c2b6784aa6
 title: Flyer A6 Querformat – Zweigeteilt
 version: 0.1.0
-build_py_sha256: 536fe8f4571fc99712eb5d2419df709bb5c2f550b688750cb315c52d574e0e07
+build_py_sha256: 1331b5a2b3dc7e21e60b95f47b5016edd6b073f37c5d70402411264a5b4efee4
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -124,7 +124,7 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick

@@ -1,7 +1,7 @@
 ---
 id: zeitung-a4
 version: 0.1.0
-build_py_sha256: 71b73290ffec7d1c98b18606bdc9484391e2ea3b5b7e87e3ef7c977826746f58
+build_py_sha256: 4ee3ae13976e0675d8b9557b024bb5338fd3807b57e467cf8489ecab4c5bdffd
 title: Grüne Zeitung A4
 format: A4
 orientation: portrait
@@ -14,7 +14,7 @@ build:
   script: build.py
   output: template.sla
 original_sla: ../../gruene-zeitung-vorlage-original.sla
-previews_for_sla: 1e627ff09ad7a14de6a56401afc85134469a180fb55d7bd6e8d336b133ab4fac
+previews_for_sla: a552dfe0df02adb58256db9c6c07d8c60e6ab71186575dcfd5235c9b383135f1
 sla_diff_strict: false
 text_render_strict: false
 brand_overrides:
@@ -211,7 +211,7 @@ passenden Beispielseiten übernimmst und die Inhalte ersetzt.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Beispielseiten ansehen** — im Seitenbedienpanel (*Fenster →

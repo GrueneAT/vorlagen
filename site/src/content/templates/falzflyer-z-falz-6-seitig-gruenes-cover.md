@@ -64,10 +64,10 @@ category_label: Falzflyer
 category: falzflyer
 idml_source: ../../../../originals/26-03-Leporello z-Falz 99x210 6-seitig gruenes
   Cover Ordner/26-03-Leporello z-Falz 99x210 6-seitig gruenes Cover.idml
-previews_for_sla: 72968d099ba8a0a2267062c5ed5875c2e5da09d4c6f8447c59627e1f7e79c8a3
+previews_for_sla: 79128d6ecc36f0be12120ed9ce6a239b7f4f4bab9c15e1307b62b2c5d9a942ea
 title: Falzflyer Z-Falz 6-seitig – Grünes Cover
 version: 0.1.0
-build_py_sha256: d886d6152cbbf23b87376d4cd4b206cacd4528139453f3d9b68c3815947c8658
+build_py_sha256: ef2de4ee59236df973d9e516002f93c1a058fd00cf4e50809c5916c80a14971a
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -111,7 +111,7 @@ Z-Falz zu drei Spalten gefaltet. So entstehen sechs Seiten in Lese-Reihenfolge.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick
