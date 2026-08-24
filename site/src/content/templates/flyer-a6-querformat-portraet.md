@@ -56,10 +56,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Querformat Portrait Ordner/26-03-Flyer
   A6 Querformat Portrait.idml
-previews_for_sla: d572896550c4a2ced5008820b523c407a31cb1ace0b148a36d78b02818d13cd7
+previews_for_sla: 402701cd9df40834a3196405c7bcc78f6a1ab73ea31ab8ee446993f08aa6115a
 title: Flyer A6 Querformat – Porträt-Cover
 version: 0.1.0
-build_py_sha256: 570572c718412e36c7d7815dd47462023682f1d509beda91054a2b4d469b3327
+build_py_sha256: d56127cd136058ab9a630c993845f88a82ad6cf7cc9818abbbd4a8c5da1888c6
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -106,7 +106,7 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick

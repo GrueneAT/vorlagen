@@ -59,10 +59,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../originals/26-03-Flyer A6 Hochformat Portrait Ordner/26-03-Flyer
   A6 Hochformat Portrait.idml
-previews_for_sla: e17aac9001b787e36f38593b9823327d43f02b6c2cd494a04d624386db0c43ff
+previews_for_sla: 1be260d83c37fbddc57e88bb2501169cc8dd9a8468cc0bb23be2cbc6b424622c
 title: Flyer A6 Hochformat – Porträt-Cover
 version: 0.1.0
-build_py_sha256: a5c677b7b5897d0daeea04187faec1a97366a8fa6bbd1b96dd8060e3d17a2327
+build_py_sha256: b543fff878f6a704bac4540da876a47824a9a6a52ddbdec1e0b67ac88c7f9653
 _downloads:
 - label: Burgenland
   bundesland: bgld
@@ -113,7 +113,7 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick

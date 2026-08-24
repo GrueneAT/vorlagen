@@ -44,7 +44,7 @@ def build_template():
         doc_page_width_pt=595.275590551181,
         doc_page_height_pt=841.889763779528,
         extra_doc_attrs={'AUTOCHECK': '1', 'DPIn3': 'ISO Coated v2 300% (basICColor)', 'DPInCMYK': 'ISO Coated v2 300% (basICColor)', 'DPPr': 'ISO Coated v2 300% (basICColor)', 'GROUPC': '3', 'GapVertical': '39.9996850393701', 'GuideRad': '9', 'MAJGRID': '100.00062992126', 'MINGRID': '20.0012598425197', 'PAGESIZE': 'A4', 'POLYF': '0.502045814642449', 'SHOWBASE': '1', 'SHOWGRID': '0', 'SHOWGUIDES': '0', 'SHOWMARGIN': '0', 'ScratchBottom': '20.0012598425197', 'ScratchLeft': '100.00062992126', 'ScratchRight': '100.00062992126', 'ScratchTop': '20.0012598425197', 'calligraphicPenAngle': '0', 'dispX': '10.0006299212598', 'dispY': '10.0006299212598', 'renderStack': '2 0 4 1 3'},
-        extra_pdf_attrs={'ImageP': 'Adobe RGB (1998)', 'InfoString': 'Grüne Zeitung Vorlage Scribus.sla', 'PicRes': '600', 'PrintP': 'ISO Coated v2 300% (basICColor)', 'RGBMode': '0', 'RecalcPic': '1', 'SolidP': 'Adobe RGB (1998)', 'UseProfiles2': '1', 'Version': '10', 'bleedMarks': '0', 'useDocBleeds': '0'},
+        extra_pdf_attrs={'ImageP': 'Adobe RGB (1998)', 'InfoString': 'Grüne Zeitung Vorlage Scribus.sla', 'PicRes': '600', 'PrintP': 'ISO Coated v2 300% (basICColor)', 'RGBMode': '0', 'RecalcPic': '1', 'SolidP': 'Adobe RGB (1998)', 'UseProfiles2': '1', 'Version': '10', 'useDocBleeds': '0'},
     )
 
     doc.add_color('Green', rgb=(0, 255, 0))

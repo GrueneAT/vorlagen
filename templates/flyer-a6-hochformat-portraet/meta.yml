@@ -13,14 +13,6 @@ build:
   output: template.sla
   script: build.py
 brand_overrides:
-- id: brand:bleed_3mm
-  reason: 'IDML-imported flyer template (scaffold). The IDML''s InDesign document
-    was authored with bleed=0 and build.py deliberately emits bleed_mm=0 (see the
-    build.py module docstring) so the rendered PDF compares directly against the InDesign
-    baseline.pdf, which itself exports trim-only. The Quickguide requires a 3mm print
-    bleed; the existing IDML asset predates that requirement. Same gap class as the
-    sibling 26-03 flyer templates. Resolution path: extend tools/idml_to_dsl.py to
-    inject the brand-required 3mm bleed at scaffold time (deferred).'
 - id: brand:image_text_overlap
   reason: 'IDML-imported flyer template (scaffold). The original InDesign layout deliberately
     overlays text on full-bleed photo backdrops and on decorative brand-color shapes
@@ -57,7 +49,7 @@ category_label: 'Flyer'
 category: 'flyer'
 idml_source: ../../../../originals/26-03-Flyer A6 Hochformat Portrait Ordner/26-03-Flyer
   A6 Hochformat Portrait.idml
-previews_for_sla: e17aac9001b787e36f38593b9823327d43f02b6c2cd494a04d624386db0c43ff
+previews_for_sla: 1be260d83c37fbddc57e88bb2501169cc8dd9a8468cc0bb23be2cbc6b424622c
 title: 'Flyer A6 Hochformat – Porträt-Cover'
 version: 0.1.0
-build_py_sha256: a5c677b7b5897d0daeea04187faec1a97366a8fa6bbd1b96dd8060e3d17a2327
+build_py_sha256: b543fff878f6a704bac4540da876a47824a9a6a52ddbdec1e0b67ac88c7f9653

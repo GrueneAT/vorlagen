@@ -10,14 +10,6 @@ build:
   output: template.sla
   script: build.py
 brand_overrides:
-- id: brand:bleed_3mm
-  reason: 'IDML-imported flyer template (scaffold). The IDML''s InDesign document
-    was authored with bleed=0 and build.py deliberately emits bleed_mm=0 (see the
-    build.py module docstring) so the rendered PDF compares directly against the InDesign
-    baseline.pdf, which itself exports trim-only. The Quickguide requires a 3mm print
-    bleed; the existing IDML asset predates that requirement. Same gap class as the
-    sibling 26-03 flyer templates. Resolution path: extend tools/idml_to_dsl.py to
-    inject the brand-required 3mm bleed at scaffold time (deferred).'
 - id: brand:image_text_overlap
   reason: 'IDML-imported flyer template (scaffold). The original InDesign layout deliberately
     overlays text on full-bleed photo backdrops and on decorative brand-color shapes
@@ -54,7 +46,7 @@ category_label: 'Flyer'
 category: 'flyer'
 idml_source: ../../../../originals/26-03-Flyer A6 Querformat gruenes Cover Ordner/26-03-Flyer
   A6 gruenes Cover.idml
-previews_for_sla: 9a21df1a87cf1e1d2d707833f9e6b1ca27ac882ba3aa3e0f744a0ac2d68c8578
+previews_for_sla: 6159721e80a7d3138eeec87ce64cd6f7dc78c4fabd1e079e5fedf3a0c4df3d65
 title: 'Flyer A6 Querformat – Grünes Cover'
 version: 0.1.0
-build_py_sha256: ea1380e7dbb448c65b53370237f081294f22ab612e685a6f1d97e0540c4cf520
+build_py_sha256: 0d023cbc6d94d3c5ad041351707e18fad1aa1d1352fad2345978a51a7f61d6d6

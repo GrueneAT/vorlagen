@@ -155,7 +155,7 @@ Vorderseite zweigeteilt (Bildband oben, Text auf Grün darunter).
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Texte überschreiben, Logo bei Bedarf tauschen. Die

@@ -19,10 +19,10 @@ category_label: Flyer
 category: flyer
 idml_source: ../../../../../originals/26-03-Flyer A6 Hochformat zweigeteilt Ordner/26-03-Flyer
   A6 Hochformat zweigeteilt.idml
-previews_for_sla: 7805cdcfc4ef1eeb84a29a8fa81fb407c2781c6536b8f2f4fb63936b4c05ced0
+previews_for_sla: 18b185baf78000f22882da1d5d71eecb0fcfe5abdde4d31c7e1dad5664fa549f
 title: Flyer A6 Hochformat – Zweigeteilt
 version: 0.1.0
-build_py_sha256: ef1018c646e3212ecb81e549966e8c7061474465b9d6dfab389f4f55413d5356
+build_py_sha256: ba123c71437c9ef523f1856eea4188852711edf1039194799206edcd1b1e4926
 brand_overrides:
 - id: brand:bleed_3mm
   reason: 'IDML-imported flyer template (scaffold). The IDML''s InDesign document
@@ -117,7 +117,7 @@ Ein A6-Flyer zum Verteilen — Cover plus Innenseiten.
 
 ## Schritt für Schritt
 
-1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net)
+1. **Vorlage öffnen** — `template.sla` mit [Scribus](https://www.scribus.net/downloads/)
    öffnen (kostenlos für Windows, macOS und Linux). Die oben verlinkten
    Schriften vorher installieren.
 2. **Inhalte ersetzen** — Headline, Fließtext, Fotos und Logo austauschen. Klick
