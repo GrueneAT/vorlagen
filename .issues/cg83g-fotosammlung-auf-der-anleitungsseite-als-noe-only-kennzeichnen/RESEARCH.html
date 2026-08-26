@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Provenance: SHA-256 of the source .md this page was generated from. -->
+<meta name="artifact-source-sha256" content="4279994b1817957325cf7ba2f778589d8908306a16d22b91bb2b97596dbbcd27">
+<meta name="artifact-source-file" content="RESEARCH.md">
+<meta name="artifact-generated-at" content="2026-08-26">
+<!-- Which version of the design system this page was authored against. -->
+<meta name="design-system-version" content="ds-1">
+<title>Research: Fotosammlung als NÖ-only kennzeichnen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://flomotlik.github.io/claude-code/design-system.css">
+</head>
+<body>
+<div class="page">
+
+<header class="row">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">RES</span>Research</p>
+  </div>
+  <div class="body">
+    <h1 class="masthead-title">Fotosammlung auf der Anleitungsseite als NÖ-only kennzeichnen</h1>
+    <p class="masthead-sub">Issue: cg83g-fotosammlung-auf-der-anleitungsseite-als-noe-only-kennzeichnen &middot; Generated 2026-08-26</p>
+  </div>
+</header>
+
+<hr class="rule">
+
+<section class="row" id="strategy">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">01</span>Strategy</p>
+  </div>
+  <div class="body">
+    <h2>Strategy summary</h2>
+    
+<p>Reiner Content-Fix in einer Datei: <code>site/src/content/anleitung/06-fotosammlung.md</code>.
+Das Frontmatter-Schema der <code>anleitung</code>-Collection besitzt bereits ein optionales
+<code>callout: 'info' | 'warn'</code>-Feld, das <code>index.astro</code> automatisch als
+<span class="mark mark-green">DS-Callout-Klasse</span> auf die Sektion rendert &mdash; keine
+Schema-, Astro- oder CSS-&Auml;nderung n&ouml;tig.</p>
+<ul class="points">
+  <li class="point is-note">
+    <p class="point-claim">Vorbild existiert bereits: Schritt 02.</p>
+    <p class="point-detail">„Schriften installieren" nutzt <code>callout: warn</code> f&uuml;r
+      eine &auml;hnliche Einschr&auml;nkung (Landesb&uuml;ro-Zugang) &mdash; Ton und
+      Frontmatter-Muster lassen sich direkt &uuml;bernehmen.</p>
+  </li>
+  <li class="point">
+    <p class="point-claim"><code>callout: info</code> statt <code>warn</code>.</p>
+    <p class="point-detail">Der NÖ-Hinweis ist eine Zugangsinformation, kein Fehlerrisiko &mdash;
+      das Design-System stellt daf&uuml;r eigene <code>--gat-web-callout-info-*</code>-Variablen
+      bereit, live verifiziert gegen die gehostete <code>design-system.css</code>.</p>
+  </li>
+  <li class="point is-risk">
+    <p class="point-claim">Akzeptanzkriterium: Hinweis im Flie&szlig;text, nicht nur im Link-Label.</p>
+    <p class="point-detail">Das bestehende Link-Label „(GGS N&Ouml;, Login n&ouml;tig)" reicht laut
+      Issue nicht &mdash; der Hinweis muss im Body-Text stehen.</p>
+  </li>
+</ul>
+<div class="stats">
+  <div class="stat"><div class="stat-num is-green">1</div><div class="stat-label">Datei ge&auml;ndert</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Neue Komponenten</div></div>
+</div>
+
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="flow">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">02</span>Flow</p>
+  </div>
+  <div class="body">
+    <h2>Task flow &amp; dependencies</h2>
+    
+<div class="flow">
+  <div class="flow-node is-foundation">
+    <span class="n">Schritt 1</span>
+    <span class="t">Titel erg&auml;nzen</span>
+    <span class="d">„Fotosammlung f&uuml;r eure Druckwerke (nur N&Ouml;)" &mdash; ohne Klick erkennbar.</span>
+  </div>
+  <div class="flow-node">
+    <span class="n">Schritt 2</span>
+    <span class="t">Frontmatter: callout: info</span>
+    <span class="d">Analog zu <code>callout: warn</code> in Schritt 02.</span>
+  </div>
+  <div class="flow-node is-key">
+    <span class="n">Schritt 3</span>
+    <span class="t">Body-Text erweitern</span>
+    <span class="d">GGS-N&Ouml;-Login-Pflicht explizit im Flie&szlig;text nennen.</span>
+  </div>
+  <div class="flow-node">
+    <span class="n">Schritt 4</span>
+    <span class="t">Build verifizieren</span>
+    <span class="d"><code>npm run build</code> in <code>site/</code>, gerendertes HTML stichprobenartig pr&uuml;fen.</span>
+  </div>
+</div>
+
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="decisions">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">03</span>Decisions</p>
+  </div>
+  <div class="body">
+    <h2>Key decisions &amp; options</h2>
+    
+<div class="decision">
+  <div class="decision-head">
+    <p class="decision-title">Callout-Variante</p>
+    <span class="lozenge is-chosen">Chosen: info</span>
+  </div>
+  <p class="decision-body"><code>callout: info</code> &mdash; reine Zugangsinformation, keine Warnung
+    vor einem Fehler. Nutzt eigene DS-Farbvariablen, visuell klar von <code>warn</code> unterscheidbar.</p>
+  <p class="decision-body rejected"><code>callout: warn</code> (das einzige Vorbild im Repo,
+    Schritt 02) &mdash; signalisiert im Design-System ein Fehlerrisiko, passt semantisch schlechter.</p>
+</div>
+<div class="decision">
+  <div class="decision-head">
+    <p class="decision-title">Hervorhebung des zentralen Hinweissatzes</p>
+    <span class="lozenge is-chosen">Chosen: bold-Absatz</span>
+  </div>
+  <p class="decision-body">Einfacher <code>**bold**</code>-Satz im Markdown-Body, wie in Schritt 02
+    bereits auf dieser Seite verwendet.</p>
+  <p class="decision-body rejected">Eigene CSS-Klasse wie <code>.app-font-notice__action</code>
+    (Commit 65bb4ef) &mdash; die ist bewusst nur f&uuml;r Template-Detail-Seiten gebaut und
+    verst&ouml;&szlig;t gegen den Constraint „keine neuen Komponenten".</p>
+</div>
+<div class="decision">
+  <div class="decision-head">
+    <p class="decision-title">Schema-/Astro-&Auml;nderung n&ouml;tig?</p>
+    <span class="lozenge is-affirmed">Verified: Nein</span>
+  </div>
+  <p class="decision-body"><code>content.config.ts</code> und <code>index.astro</code> unterst&uuml;tzen
+    <code>callout</code> bereits generisch &mdash; nur die Markdown-Datei &auml;ndert sich.</p>
+</div>
+
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="detail">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">04</span>Detail</p>
+  </div>
+  <div class="body">
+    <h2>Full detail</h2>
+    <details class="detail">
+      <summary>Show full artifact source
+        <span class="summary-hint">click to expand</span></summary>
+      <div class="detail-body">
+        <pre><code id="artifact-source-target"></code></pre>
+      </div>
+    </details>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="provenance">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">05</span>Provenance</p>
+  </div>
+  <div class="body">
+    <h2>Provenance</h2>
+    <p>Generated from the canonical <code>.md</code>. This HTML is never
+       hand-edited &mdash; if the <code>.md</code> changes, regenerate with
+       <code>/issue:view</code>.</p>
+    <footer class="footer">
+      <span>Source: <code>RESEARCH.md</code> &middot;
+        SHA-256 <code>4279994b1817957325cf7ba2f778589d8908306a16d22b91bb2b97596dbbcd27</code></span>
+      <span>Generated 2026-08-26 &middot; design system ds-1</span>
+    </footer>
+  </div>
+</section>
+
+</div>
+
+<!-- Raw artifact source as DATA, never markup. See Section 6. -->
+<script type="application/json" id="artifact-source">
+{"source": "# Research: Fotosammlung auf der Anleitungsseite als N\u00d6-only kennzeichnen\n\n**Researched:** 2026-08-26\n**Issue:** cg83g-fotosammlung-auf-der-anleitungsseite-als-noe-only-kennzeichnen\n**Confidence:** HIGH\n\n<user_constraints>\n## User Constraints (from CONTEXT.md)\nNo CONTEXT.md found for this issue \u2014 no `issue:discuss` run happened. ISSUE.md\nitself carries an explicit \"Constraints\" section, which is treated with the\nsame authority:\n\n- Reine Content-\u00c4nderung, keine neuen Komponenten n\u00f6tig\n- Conventional Commit, keine Werkzeug-Attribution\n</user_constraints>\n\n## Summary\n\nDiese \u00c4nderung ist ein reiner Content-Fix in einer einzigen Datei:\n`site/src/content/anleitung/06-fotosammlung.md`. Das Frontmatter-Schema der\n`anleitung`-Collection (`site/src/content.config.ts`) besitzt bereits ein\noptionales `callout: 'info' | 'warn'`-Feld, und `index.astro` rendert es\nbereits als `gat-callout gat-callout--<wert>`-Klasse auf die `<section>`. Es\ngibt also **kein Schema, keine Astro- oder CSS-\u00c4nderung** zu leisten \u2014 die\nkomplette Aufgabe ist: Titel umbenennen, `callout: info` setzen, den Flie\u00dftext\num den N\u00d6-/GGS-Login-Hinweis erweitern.\n\nEin Pr\u00e4zedenzfall existiert bereits auf derselben Seite: Schritt 02\n(\u201eSchriften installieren\") nutzt `callout: warn`, um auf eine Lizenz-/\nLandesb\u00fcro-Einschr\u00e4nkung hinzuweisen \u2014 stilistisch das n\u00e4chstliegende Vorbild,\nnicht nur strukturell (`callout:`-Feld), sondern auch inhaltlich (Hinweis auf\neine Einschr\u00e4nkung/Zugangsvoraussetzung). F\u00fcr den Fotosammlungs-Hinweis passt\nsemantisch `callout: info` besser als `warn`: `warn` (blassgelb/dunkles Gelb,\nvia `#fdf3d2` / `#b78a1c`) signalisiert im Design-System eine Warnung/Achtung\n(\"etwas kann schiefgehen, wenn ihr das ignoriert\"), w\u00e4hrend der\nN\u00d6-Only-Hinweis eine reine Zugangs-Information ist, kein Fehlerrisiko. `info`\nnutzt eigene DS-Variablen (`--gat-web-callout-info-bg/-border/-text`, verifiziert\n\u00fcber die live gehostete `design-system.css`) und ist damit visuell klar von\n`warn` unterscheidbar.\n\nDer Tonfall der Schritte 01\u201305 ist konsistent: 2. Person Plural (\"ihr\"),\nImperativ, ein `**bold**`-Satz pro Abschnitt f\u00fcr die eine Handlung, die nicht\n\u00fcbersehen werden darf, Halbgeviertstrich `\u2014`, korrekte Umlaute. Titel 04\u201306\nsind unnummeriert-thematisch (\"Fotosammlung f\u00fcr eure Druckwerke (nur N\u00d6)\" o.\u00e4.\nbleibt in dieser Form, keine \"N. Schritt:\"-Pr\u00e4fix n\u00f6tig). Es gibt keine\nanderen Code- oder Doku-Referenzen auf \"Fotosammlung\" im Repo \u2014 die \u00c4nderung\nist vollst\u00e4ndig isoliert.\n\n**Primary recommendation:** Nur `06-fotosammlung.md` \u00e4ndern \u2014 Titel um\n\u201e(nur N\u00d6)\"-Hinweis erg\u00e4nzen, `callout: info` im Frontmatter setzen (nach dem\nVorbild von `callout: warn` in Schritt 02), Body um einen expliziten Satz zum\nGGS-N\u00d6-Login/Zugangsbeschr\u00e4nkung erweitern, `npm run build` in `site/`\nausf\u00fchren und das gerenderte HTML stichprobenartig pr\u00fcfen.\n\n## Codebase Analysis\n\n### Relevant Code\n\n| File | Purpose | Last Modified | Relevance |\n|------|---------|----------------|-----------|\n| `site/src/content/anleitung/06-fotosammlung.md` | Der zu \u00e4ndernde Anleitungsschritt | `8186814` | DAS Edit-Ziel |\n| `site/src/content.config.ts` | Zod-Schema der `anleitung`-Collection (L67\u201390) | \u2014 | Best\u00e4tigt: `callout` existiert bereits, keine Schema\u00e4nderung n\u00f6tig |\n| `site/src/pages/anleitung/index.astro` | Rendert alle Schritte inkl. `callout`-Klasse | \u2014 | Keine \u00c4nderung n\u00f6tig \u2014 Konsum des Frontmatters bereits generisch |\n| `site/src/styles/app.css` (L1093\u20131131) | `.app-step*`-Styles | `65bb4ef` | Erkl\u00e4rt visuellen Effekt von `callout:` (wei\u00dfe Karte vs. DS-Callout-Look) |\n| `site/src/content/anleitung/02-schriften-installieren.md` | Einziger existierender `callout: warn`-Schritt | `cdb585b` | Stilistisches Vorbild f\u00fcr Ton + Frontmatter-Nutzung |\n| `site/src/layouts/Base.astro` (L12) | L\u00e4dt Design-System per CDN (`design-system.gruene.at/design-system.css`) | \u2014 | Best\u00e4tigt: kein Vendoring, `gat-callout` ist bereits verf\u00fcgbar |\n\nAlle Aussagen der vorherigen (abgebrochenen) Recherche in\n`research/codebase.md` wurden gegen die aktuellen Dateien nachgepr\u00fcft und\nsind korrekt: Schema, Astro-Rendering, CSS-Regeln, Ist-Zustand von\n`06-fotosammlung.md`, Ton der Schritte 01\u201305, Isoliertheit der Datei\n(keine weiteren Referenzen auf \u201eFotosammlung\" im Repo, per\n`grep -rn \"Fotosammlung\"` verifiziert).\n\n### Interfaces\n\n<interfaces>\n// site/src/content.config.ts \u2014 anleitung collection (L67\u201390)\nconst anleitung = defineCollection({\n  loader: glob({ pattern: '**/*.md', base: './src/content/anleitung' }),\n  schema: z.object({\n    order: z.number(),\n    title: z.string(),\n    // Optional: rendert den Abschnitt als Design-System-Callout statt als\n    // schlichten Block (z.B. der Schriften-Hinweis).\n    callout: z.enum(['info', 'warn']).optional(),\n    links: z.array(z.object({\n      label: z.string(),\n      href: z.string(),\n      // 'internal' -> BASE_URL-Pr\u00e4fix, 'download' -> interner Pfad + Pfeil,\n      // 'external' -> unver\u00e4ndert, \u00f6ffnet in neuem Tab.\n      kind: z.enum(['internal', 'download', 'external']),\n    })).optional(),\n  }),\n});\nexport const collections = { templates, experiments, anleitung };\n\n// site/src/pages/anleitung/index.astro \u2014 Step-Rendering (Ausschnitt)\nconst sections = (await getCollection('anleitung')).sort((a, b) => a.data.order - b.data.order);\nconst rendered = await Promise.all(\n  sections.map(async s => ({ data: s.data, Content: (await render(s)).Content }))\n);\n// <section class={data.callout ? `gat-callout gat-callout--${data.callout} app-step` : 'app-step'}>\n//   <h3 class=\"gat-headline app-step__title\">{data.title}</h3>\n//   <div class=\"app-step__body\"><Content /></div>\n//   <ul class=\"app-step__links\"> ... </ul>\n// </section>\n</interfaces>\n\n### Aktueller Inhalt der Zieldatei (vor der \u00c4nderung)\n\n```markdown\n---\norder: 6\ntitle: \"Fotosammlung f\u00fcr eure Druckwerke\"\nlinks:\n  - label: \"Zur Fotosammlung (GGS N\u00d6, Login n\u00f6tig)\"\n    href: \"https://ggs-noe.gruene.at/fotosammlung-fuer-social-media-und-druckwerke/\"\n    kind: external\n---\n\nIm Gemeindegruppenservice findet ihr Bilder, die \u00fcber Adobe Stock erworben\nwurden und die ihr somit f\u00fcr Social-Media-Beitr\u00e4ge oder eure Druckwerke\nverwenden k\u00f6nnt.\n```\n\n### Stilistisches Vorbild \u2014 Schritt 02 (callout: warn)\n\n```markdown\n---\norder: 2\ntitle: \"2. Schritt: die richtigen Schriftarten installieren\"\ncallout: warn\nlinks: [ ... ]\n---\n\nDamit die Vorlage korrekt dargestellt wird, m\u00fcssen die ben\u00f6tigten Schriften\n**vor dem \u00d6ffnen** des Dokuments heruntergeladen und auf eurem Rechner\ninstalliert sein. ...\n\n**Bitte wendet euch daf\u00fcr an euer Landesb\u00fcro.**\n```\n\nMuster: ein eigener, knapper `**bold**`-Satz am Ende tr\u00e4gt die zentrale\nHandlungsaufforderung/Einschr\u00e4nkung. F\u00fcr Schritt 06 hei\u00dft das analog: ein\neigener fett gesetzter Satz, der klarstellt, dass nur Gruppen der Gr\u00fcnen\nNieder\u00f6sterreich Zugang haben.\n\n### Reusable Components (nicht neu bauen)\n\n| Bedarf | Existiert bereits | Wo |\n|--------|--------------------|----|\n| Hervorgehobene Hinweisbox pro Schritt | `callout: info \\| warn` im Frontmatter | `content.config.ts` L74 |\n| DS-Callout-CSS (Farbvarianten) | `.gat-callout`, `.gat-callout--info`, `.gat-callout--warn` | Design-System via CDN (`Base.astro` L12) |\n| Rendering des Modifiers | bereits implementiert | `index.astro` |\n| \u201eAufforderungssatz\"-Emphase | schlichter `**bold**`-Absatz | `02-schriften-installieren.md` |\n| Externer Link mit \u2197 + `target=_blank` + `rel=noopener` | `kind: external` | `index.astro` |\n\n### Potential Conflicts\n\nKeine im Code. `grep -rn \"Fotosammlung\" site/src` liefert nur Treffer in\n`06-fotosammlung.md`. Der Titeltext wird nirgends als Anker/TOC-Eintrag\nreferenziert \u2014 `/anleitung/` hat keine In-Page-Navigation. Kein offener PR\nber\u00fchrt `site/src/content/anleitung/`.\n\n## Standard Stack\n\nKein neuer Stack-Bedarf. Das Repo nutzt Astro 5 (Content Collections, Zod-\nSchema) und l\u00e4dt das Gr\u00fcne-AT-Design-System per CDN\n(`https://design-system.gruene.at/design-system.css`, verifiziert live \u2014\nenth\u00e4lt `.gat-callout`, `.gat-callout--info`, `.gat-callout--warn`). Beides\nist bereits vollst\u00e4ndig im Projekt verdrahtet; f\u00fcr dieses Issue wird nichts\nNeues installiert oder verlinkt.\n\n| Library/System | Version | Zweck | Confidence |\n|-----------------|---------|-------|------------|\n| Astro | ^5.0.0 (`site/package.json`) | Content Collections, Rendering | HIGH (codebase) |\n| Gr\u00fcne-AT Design System | live, via CDN | `.gat-callout` Varianten `info`/`warn` | HIGH (live CSS gefetcht und verifiziert) |\n\n## Don't Hand-Roll\n\n| Problem | Nicht bauen | Stattdessen | Warum |\n|---------|-------------|--------------|-------|\n| Hervorgehobene Hinweisbox | Eigene CSS-Klasse/Komponente | `callout: info` im Frontmatter | Existiert bereits, Issue verlangt ausdr\u00fccklich \u201ekeine neuen Komponenten\" |\n| Handlungssatz hervorheben | Neue `.app-*-notice`-Klasse (wie in `templates/[...id].astro`, Commit `65bb4ef`) | Einfacher `**bold**`-Absatz im Markdown-Body | Das ist das Muster, das auf der Anleitungsseite selbst tats\u00e4chlich verwendet wird (Schritt 02); die `.app-font-notice__action`-Klasse ist Template-Detail-Seiten vorbehalten und dort nicht referenziert |\n\n## Architecture Patterns\n\n### Recommended Approach\n\n1. `title` in `06-fotosammlung.md` erweitern, z. B.\n   `\"Fotosammlung f\u00fcr eure Druckwerke (nur N\u00d6)\"` \u2014 sichtbar ohne Klick, wie\n   in den Akzeptanzkriterien gefordert.\n2. `callout: info` ins Frontmatter setzen (nach dem `title`, vor `links`,\n   analog zur Position von `callout: warn` in Schritt 02).\n3. Body-Text um einen zus\u00e4tzlichen, klar hervorgehobenen Satz erg\u00e4nzen, der\n   erkl\u00e4rt: Zugang l\u00e4uft \u00fcber den GGS N\u00d6, ben\u00f6tigt ein Login der Gr\u00fcnen\n   Nieder\u00f6sterreich, Gruppen au\u00dferhalb N\u00d6s haben keinen Zugriff. Ton wie\n   Schritt 02: ein eigener `**bold**`-Satz f\u00fcr den zentralen Hinweis.\n4. Link-Label kann unver\u00e4ndert bleiben (`\"Zur Fotosammlung (GGS N\u00d6, Login\n   n\u00f6tig)\"`) \u2014 der Hinweis MUSS laut Akzeptanzkriterium im Flie\u00dftext stehen,\n   nicht nur im Label.\n5. `cd site && npm run build` ausf\u00fchren, danach `dist/anleitung/index.html`\n   stichprobenartig pr\u00fcfen (`grep -A3 \"gat-callout--info\" dist/anleitung/index.html`),\n   dass der Callout korrekt gerendert wird.\n\n### Anti-Patterns to Avoid\n\n- **Neue CSS-Klasse/Komponente einf\u00fchren:** Verst\u00f6\u00dft gegen den expliziten\n  Constraint \u201ekeine neuen Komponenten n\u00f6tig\". `.app-font-notice__action`\n  (Commit `65bb4ef`) ist bewusst nur f\u00fcr Template-Detail-Seiten gebaut \u2014 hier\n  nicht kopieren.\n- **`content.config.ts` oder `index.astro` anfassen:** Nicht n\u00f6tig, das\n  Rendering ist bereits generisch f\u00fcr `callout` implementiert.\n- **Nummerierungspr\u00e4fix \u201e6. Schritt:\" erg\u00e4nzen:** Bricht mit der bestehenden\n  Konvention (04\u201306 sind unnummeriert-thematisch betitelt).\n\n## Common Pitfalls\n\n### Callout-Variante falsch w\u00e4hlen\n\n**What goes wrong:** `callout: warn` statt `info` verwenden (naheliegend,\nweil es der einzige existierende Pr\u00e4zedenzfall ist), obwohl der Hinweis kein\nFehlerrisiko, sondern eine reine Zugangsinformation ist.\n**Why it happens:** Schritt 02 ist das einzige Vorbild im Repo und nutzt\n`warn`.\n**How to avoid:** `info` verwenden \u2014 semantisch korrekt f\u00fcr einen reinen\nHinweis ohne Warncharakter; visuell im DS klar von `warn` unterscheidbar\n(eigene `--gat-web-callout-info-*`-Variablen statt `#fdf3d2`/`#b78a1c`).\n**Warning signs:** Falls im PR-Review die Farbe/Konnotation als \u201ezu\nalarmierend\" f\u00fcr eine reine Info auff\u00e4llt.\n\n### Hinweis nur im Link-Label statt im Flie\u00dftext\n\n**What goes wrong:** Nur das bestehende Link-Label \u201e(GGS N\u00d6, Login n\u00f6tig)\"\nbelassen und den Hinweis nicht in den Body-Text aufnehmen \u2014 genau der\nIst-Zustand, den das Issue kritisiert.\n**Why it happens:** Das Label existiert schon und wirkt informativ genug.\n**How to avoid:** Akzeptanzkriterium explizit pr\u00fcfen: \u201eDer Login-Hinweis\nsteht im Text, nicht nur im Link-Label.\"\n**Warning signs:** Body-Diff enth\u00e4lt keine neue Erw\u00e4hnung von \u201eN\u00d6\" oder\n\u201eLogin\".\n\n### Build nicht verifiziert\n\n**What goes wrong:** Nur die Markdown-Datei \u00e4ndern, ohne `astro build`\nlaufen zu lassen \u2014 Zod-Schema-Validierung (`callout: z.enum(['info','warn'])`)\nw\u00fcrde einen Tippfehler im Wert sonst erst sp\u00e4t auffallen.\n**How to avoid:** `cd site && npm run build` (Akzeptanzkriterium \u201eBuild l\u00e4uft\ndurch\").\n\n## Environment Availability\n\n| Dependency | Required By | Available | Version | Fallback |\n|------------|--------------|-----------|---------|----------|\n| Node.js/npm | `astro build` | im Container vorhanden (Standard f\u00fcr dieses Repo) | siehe `site/package.json` (`astro ^5.0.0`) | \u2014 |\n| `astro check` | optionaler Typecheck | `npm run check` in `site/package.json` definiert | \u2014 | nicht zwingend f\u00fcr dieses Issue, `build` reicht |\n\nBuild-/Testkommandos (aus `site/package.json`):\n```\nnpm run dev      # astro dev\nnpm run build    # astro build\nnpm run preview  # astro preview\nnpm run check    # astro check\n```\n\n## Project Constraints (from CLAUDE.md)\n\nAus `/Users/florianmotlik/Code/GrueneAT/web-apps/CLAUDE.md` (workspace-weit,\ngilt f\u00fcr dieses Repo unter `/workspace/vorlagen`):\n\n- **Immer im Worktree arbeiten** \u2014 niemals direkt am `main`-Checkout \u00e4ndern.\n  Dieser Auftrag l\u00e4uft bereits im korrekten Worktree\n  (`.worktrees/cg83g-...`); es wurde bereits per `issue-cli` erstellt.\n- **Kein Vendoring von Drittabh\u00e4ngigkeiten** \u2014 best\u00e4tigt bereits eingehalten:\n  Design-System kommt per `<link>` von `design-system.gruene.at`, keine\n  lokale Kopie n\u00f6tig oder zu erstellen.\n- **Keine Werkzeug-Attribution** in Commits/Code/Kommentaren \u2014 gilt auch f\u00fcr\n  den finalen Commit dieses Issues.\n\nAus `/root/.config/claude/CLAUDE.md` (Container-weit):\n- Keine AI-Attribution in Commits/Code (deckt sich mit obigem).\n- Deutsche Fachtexte f\u00fcr Dom\u00e4nenfragen \u2014 dieses RESEARCH.md ist entsprechend\n  auf Deutsch verfasst, Bezeichner/technische Begriffe bleiben englisch.\n- Kein Vendoring \u2014 deckungsgleich mit Workspace-Regel.\n- \u201eWorking beats theoretically better\" / \u201eDon't over-engineer\" \u2014 best\u00e4rkt die\n  Empfehlung, ausschlie\u00dflich das bestehende `callout`-Feld zu nutzen statt\n  neuer Struktur.\n\nRepo-Root von `vorlagen` selbst hat kein eigenes `CLAUDE.md` (nur\nWorkspace-`CLAUDE.md` gilt); `site/CLAUDE.md` existiert nicht (leer/nicht\nvorhanden).\n\n## Sources\n\n### HIGH confidence\n- Codebase-Analyse: `site/src/content.config.ts`, `site/src/pages/anleitung/index.astro`,\n  `site/src/content/anleitung/06-fotosammlung.md`, `site/src/content/anleitung/02-schriften-installieren.md`,\n  `site/src/styles/app.css`, `site/src/layouts/Base.astro` (alle direkt gelesen und verifiziert)\n- `git log`/`git show 65bb4ef` (direkt im Repo gepr\u00fcft)\n- `grep -rn \"Fotosammlung\" site/src` (keine weiteren Referenzen gefunden)\n- Live gefetchte `https://design-system.gruene.at/design-system.css` \u2014 best\u00e4tigt Existenz und\n  unterschiedliche visuelle Definition von `.gat-callout`, `.gat-callout--info`, `.gat-callout--warn`\n\n### MEDIUM confidence\n- (keine \u2014 alle Kernaussagen sind direkt am Code/CSS verifiziert)\n\n### LOW confidence (needs validation)\n- Exakter Wortlaut des neuen Hinweistexts ist eine redaktionelle Entscheidung, keine\n  technische \u2014 Planner/Executor sollte sich am Ton von Schritt 02 orientieren, aber der\n  finale Satz ist nicht vorab \u201everifizierbar\", sondern eine Content-Entscheidung.\n\n## Metadata\n\n**Confidence breakdown:**\n- Codebase: HIGH \u2014 alle Dateien direkt gelesen, Vorg\u00e4nger-Recherche stichprobenartig\n  gegen den aktuellen Stand verifiziert, keine Abweichungen gefunden.\n- Standard Stack: HIGH \u2014 keine neue Library, Astro-Version und DS-CDN-Link direkt gepr\u00fcft.\n- Architecture: HIGH \u2014 Muster ist 1:1 im Code vorhanden (Schritt 02) und wiederverwendbar.\n- Pitfalls: MEDIUM \u2014 Pitfalls sind aus Analogie zum Issue-Text und bestehendem Code\n  abgeleitet, nicht aus externer Recherche (kein externes \u00d6kosystem-Risiko bei einem\n  reinen Markdown-Content-Fix).\n\n**Research date:** 2026-08-26\n**Sub-agents used:** Kein Parallel-Dispatch \u2014 Light-Depth-Recherche f\u00fcr ein kleines\nContent-Issue (1 Effektiv-Agent: Codebase, aufbauend auf abgebrochenem Vorlauf\nin `research/codebase.md`, plus direkte Verifikation von Design-System-CSS statt\nseparatem Ecosystem-Sub-Agent, da kein neuer Stack involviert ist).\n**Raw research files:** `.issues/cg83g-fotosammlung-auf-der-anleitungsseite-als-noe-only-kennzeichnen/research/codebase.md`\n"}
+</script>
+
+<script>
+/* Report script - classic script only. No modules, no fetch, no imports.
+   Permitted: inject the raw artifact source as text + smooth-scroll.
+   FORBIDDEN: any content-revealing logic - the page is fully functional
+   with JavaScript disabled. */
+(function () {
+  "use strict";
+  // Inject the raw artifact source as TEXT (never parsed as markup).
+  var dataEl = document.getElementById("artifact-source");
+  var target = document.getElementById("artifact-source-target");
+  if (dataEl && target) {
+    try {
+      target.textContent = JSON.parse(dataEl.textContent).source || "";
+    } catch (e) {
+      target.textContent = dataEl.textContent;
+    }
+  }
+  // Smooth-scroll for any in-page anchor links.
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      if (el) { ev.preventDefault(); el.scrollIntoView({ behavior: "smooth" }); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
