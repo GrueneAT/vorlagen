@@ -19,13 +19,11 @@ ANLEITUNG_DIR = SITE / "src" / "content" / "anleitung"
 VIDEOS_TS = SITE / "src" / "data" / "videos.ts"
 PUBLIC = SITE / "public"
 
-# The four Scribus tutorials that lived on the GGS page. Kept explicit: if
+# The two Scribus tutorials recorded in the current design. Kept explicit: if
 # one is dropped or swapped, that should be a deliberate edit here too.
 EXPECTED_VIDEO_IDS = {
-    "ZH9z7Cgiuy0",  # Erste Schritte mit Scribus
-    "GxKJLRHjvIs",  # Bilder einfügen und verschieben in Scribus
-    "uBMazvTPPLI",  # PDF-Export einer Scribus-Datei
-    "90rbNKbOlMM",  # Besonderheiten bei der Flyerbearbeitung
+    "SDT9eM9tReU",  # Erste Schritte mit Scribus
+    "3rMFX_VLvpE",  # Export einer Scribus Datei
 }
 
 
@@ -68,26 +66,6 @@ def test_every_video_has_a_title():
     assert len(entries) == len(EXPECTED_VIDEO_IDS)
     for entry in entries:
         assert "title:" in entry, f"Video ohne Titel: {entry}"
-
-
-def test_legacy_design_notice_matches_the_data():
-    """Der Hinweis "im alten Design aufgenommen" haengt am `legacyDesign`-Flag.
-
-    Solange noch ein Video so markiert ist, muss VideoGrid.astro den Hinweis
-    rendern. Sind alle Videos neu aufgenommen (kein Flag mehr), muss er
-    verschwinden — sonst behauptet die Seite dauerhaft etwas Falsches.
-    """
-    grid = (SITE / "src" / "components" / "VideoGrid.astro").read_text(encoding="utf-8")
-    any_legacy = "legacyDesign: true" in _videos_array()
-
-    assert "hasLegacyDesign" in grid, "VideoGrid rendert den Hinweis nicht mehr bedingt"
-    if any_legacy:
-        assert "alte" in grid and "Design" in grid, "Hinweis-Text fehlt in VideoGrid.astro"
-    else:
-        pytest.fail(
-            "Kein Video mehr als legacyDesign markiert — Hinweis in VideoGrid.astro "
-            "und diesen Test entfernen."
-        )
 
 
 # ---------------------------------------------------------------------------
