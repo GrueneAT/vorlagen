@@ -1,7 +1,7 @@
 ---
 id: cg83g
 title: Fotosammlung auf der Anleitungsseite als NOe-only kennzeichnen
-status: open
+status: done
 priority: medium
 labels:
 - documentation
