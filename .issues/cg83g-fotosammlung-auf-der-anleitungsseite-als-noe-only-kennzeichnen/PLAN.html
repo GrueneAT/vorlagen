@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Provenance: SHA-256 of the source .md this page was generated from. -->
+<meta name="artifact-source-sha256" content="6845f8539c59c73b26bde145b1231ffce8dc8ac2dffcc3225b66d02a2816a109">
+<meta name="artifact-source-file" content="PLAN.md">
+<meta name="artifact-generated-at" content="2026-08-26">
+<!-- Which version of the design system this page was authored against. -->
+<meta name="design-system-version" content="ds-1">
+<title>Plan: Fotosammlung als NÖ-only kennzeichnen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://flomotlik.github.io/claude-code/design-system.css">
+</head>
+<body>
+<div class="page">
+
+<header class="row">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">00</span>Plan</p>
+  </div>
+  <div class="body">
+    <h1 class="masthead-title">Plan: Fotosammlung als NÖ-only kennzeichnen</h1>
+    <p class="masthead-sub">Issue: cg83g-fotosammlung-auf-der-anleitungsseite-als-noe-only-kennzeichnen · Generated 2026-08-26</p>
+  </div>
+</header>
+
+<hr class="rule">
+
+<section class="row" id="strategy">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">01</span>Strategy</p>
+    <p class="margin-note">Read this first — der Rest ist Detail.</p>
+  </div>
+  <div class="body">
+    <h2>Strategy summary</h2>
+    <p>Der Anleitungsschritt „Fotosammlung“ soll ohne Klick zeigen, dass die
+       Sammlung nur für Niederösterreich gilt. Die Richtung:
+       <span class="mark mark-green">ausschließlich das bereits vorhandene
+       <code>callout</code>-Feld im Frontmatter nutzen</span> — eine einzige
+       Markdown-Datei ändern, sonst nichts.</p>
+    <ul class="points">
+      <li class="point">
+        <p class="point-claim">Reine Content-Änderung, eine Datei.</p>
+        <p class="point-detail">Das Zod-Schema der <code>anleitung</code>-Collection
+          kennt <code>callout: 'info' | 'warn'</code> bereits, und
+          <code>index.astro</code> rendert es generisch als
+          <code>gat-callout gat-callout--&lt;wert&gt;</code>. Kein Schema-,
+          Astro- oder CSS-Eingriff.</p>
+      </li>
+      <li class="point is-note">
+        <p class="point-claim">Muster existiert bereits auf derselben Seite.</p>
+        <p class="point-detail">Schritt 02 („Schriften installieren“) nutzt
+          <code>callout: warn</code> plus einen abschließenden fett gesetzten
+          Satz für eine Zugangs-Einschränkung — Vorbild für Ton und Aufbau.</p>
+      </li>
+      <li class="point is-risk">
+        <p class="point-claim">Der Hinweis muss in den Fließtext.</p>
+        <p class="point-detail">Der Ist-Zustand trägt die Einschränkung nur im
+          Link-Label „(GGS NÖ, Login nötig)“ — genau das kritisiert das Issue.
+          Das Label bleibt, der Text kommt dazu.</p>
+      </li>
+    </ul>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num is-green">2</div>
+        <div class="stat-label">Tasks</div></div>
+      <div class="stat">
+        <div class="stat-num is-green">1</div>
+        <div class="stat-label">Geänderte Datei</div></div>
+      <div class="stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Neue Komponenten</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="flow">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">02</span>Flow</p>
+  </div>
+  <div class="body">
+    <h2>Task flow &amp; dependencies</h2>
+    <div class="flow">
+      <div class="flow-node is-key">
+        <span class="n">Task 1</span>
+        <span class="t">06-fotosammlung.md als NÖ-only kennzeichnen</span>
+        <span class="d">Titel um „(nur NÖ)“ ergänzen, <code>callout: info</code>
+          setzen, Body um GGS-NÖ-Login-Hinweis erweitern — Wortlaut ist im Plan
+          wörtlich vorgegeben.</span>
+      </div>
+      <div class="flow-node">
+        <span class="n">Task 2</span>
+        <span class="t">Gerendertes HTML gegen die Akzeptanzkriterien prüfen</span>
+        <span class="d">Build laufen lassen und in
+          <code>dist/anleitung/index.html</code> Callout-Klasse, Titelzusatz und
+          Body-Hinweis nachweisen.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="decisions">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">03</span>Decisions</p>
+  </div>
+  <div class="body">
+    <h2>Key decisions &amp; options</h2>
+    <div class="decision">
+      <div class="decision-head">
+        <p class="decision-title">Wie der Hinweis dargestellt wird</p>
+        <span class="lozenge is-chosen">Chosen</span>
+      </div>
+      <p class="decision-body">Das bestehende <code>callout</code>-Feld im
+        Frontmatter nutzen — null neue Struktur, exakt das Muster, das die
+        Anleitungsseite selbst schon verwendet, und deckungsgleich mit dem
+        ISSUE-Constraint „keine neuen Komponenten nötig“.</p>
+      <p class="decision-body rejected">Eigene Hinweis-Klasse nach dem Vorbild
+        von <code>.app-font-notice__action</code> — bewusst
+        Template-Detailseiten vorbehalten, hier neue Struktur ohne Nutzen.</p>
+      <p class="decision-body rejected">Nur das Link-Label schärfen — verletzt
+        das Akzeptanzkriterium „Der Login-Hinweis steht im Text, nicht nur im
+        Link-Label“.</p>
+    </div>
+    <div class="decision">
+      <div class="decision-head">
+        <p class="decision-title">Callout-Variante: <code>info</code> statt <code>warn</code></p>
+        <span class="lozenge is-chosen">Chosen</span>
+      </div>
+      <p class="decision-body"><code>info</code> — der NÖ-Hinweis ist eine reine
+        Zugangsinformation, kein Fehlerrisiko.</p>
+      <p class="decision-body rejected"><code>warn</code> ist der einzige
+        Präzedenzfall im Repo (Schritt 02) und deshalb naheliegend, signalisiert
+        im Design-System aber „hier kann etwas schiefgehen“.</p>
+    </div>
+    <div class="decision">
+      <div class="decision-head">
+        <p class="decision-title">Wortlaut kommt aus dem Plan, nicht vom Executor</p>
+        <span class="lozenge is-note">Note</span>
+      </div>
+      <p class="decision-body">Titel und Hinweistext sind im Plan wörtlich
+        festgelegt. Der Ton der Schritte 01–05 (2. Person Plural,
+        Halbgeviertstrich, ein fett gesetzter Schlusssatz) ist eine
+        redaktionelle Entscheidung — nichts, was sich beim Ausführen ableiten
+        lässt.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="detail">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">04</span>Detail</p>
+  </div>
+  <div class="body">
+    <h2>Full detail</h2>
+    <details class="detail">
+      <summary>Show full artifact source
+        <span class="summary-hint">click to expand</span></summary>
+      <div class="detail-body">
+        <pre><code id="artifact-source-target"></code></pre>
+      </div>
+    </details>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="provenance">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">05</span>Provenance</p>
+  </div>
+  <div class="body">
+    <h2>Provenance</h2>
+    <p>Generated from the canonical <code>.md</code>. This HTML is never
+       hand-edited — if the <code>.md</code> changes, regenerate with
+       <code>/issue:view</code>.</p>
+    <footer class="footer">
+      <span>Source: <code>PLAN.md</code> ·
+        SHA-256 <code>6845f8539c59c73b26bde145b1231ffce8dc8ac2dffcc3225b66d02a2816a109</code></span>
+      <span>Generated 2026-08-26 · design system ds-1</span>
+    </footer>
+  </div>
+</section>
+
+</div>
+
+<!-- Raw artifact source as DATA, never markup. -->
+<script type="application/json" id="artifact-source">
+{"source": "# Plan: Fotosammlung auf der Anleitungsseite als NÖ-only kennzeichnen\n\n<objective>\nWhat this plan accomplishes: Der Anleitungsschritt „Fotosammlung\" auf\n`/anleitung/` weist unübersehbar aus, dass die Sammlung nur für\nNiederösterreich gilt — im Titel, als Design-System-Callout und mit einem\nexpliziten Satz im Fließtext zum GGS-NÖ-Login.\n\nWhy it matters: Anwenderfeedback (GitHub-Issue #158): Die Fotosammlung steht\naktuell als allgemeiner Punkt auf der Seite. Der einzige Hinweis auf die\nEinschränkung steckt im Link-Label „(GGS NÖ, Login nötig)\" — Gruppen außerhalb\nNiederösterreichs klicken sich in eine Sackgasse.\n\nScope:\n- IN: eine einzige Datei — `site/src/content/anleitung/06-fotosammlung.md`\n  (Frontmatter `title` + `callout`, Body-Text).\n- OUT: `site/src/content.config.ts`, `site/src/pages/anleitung/index.astro`,\n  `site/src/styles/app.css`, das Design-System, neue CSS-Klassen oder\n  Komponenten, das bestehende Link-Label, alle anderen Anleitungsschritte.\n\nKein CONTEXT.md vorhanden (kein `issue:discuss`-Lauf) — die Entscheidungen\nfolgen der Constraints-Sektion von ISSUE.md („reine Content-Änderung, keine\nneuen Komponenten nötig\") und den Empfehlungen aus RESEARCH.md.\n</objective>\n\n<strategy>\nRichtung: Das Frontmatter-Schema der `anleitung`-Collection hat bereits ein\noptionales `callout: 'info' | 'warn'`-Feld, und `index.astro` rendert es schon\ngenerisch als `gat-callout gat-callout--<wert>` auf die `<section>`. Schritt 02\n(„Schriften installieren\") nutzt das Muster bereits für einen\nEinschränkungs-Hinweis. Damit ist die gesamte Aufgabe eine Content-Änderung an\ngenau einer Markdown-Datei — kein Schema-, Astro- oder CSS-Eingriff.\n\nStrategische Optionen:\n1. **Bestehendes `callout`-Feld nutzen (gewählt).** Null neue Struktur, exakt\n   das Muster, das die Seite selbst schon verwendet, erfüllt den ISSUE-Constraint\n   „keine neuen Komponenten nötig\".\n2. Eigene Hinweis-Klasse nach dem Vorbild von `.app-font-notice__action`\n   (Commit `65bb4ef`) — verworfen: diese Klasse ist bewusst\n   Template-Detailseiten vorbehalten, hier wäre sie neue Struktur ohne Nutzen.\n3. Nur das Link-Label schärfen — verworfen: verletzt das Akzeptanzkriterium\n   „Der Login-Hinweis steht im Text, nicht nur im Link-Label\".\n\nEntscheidungspunkte:\n- **`info` statt `warn`:** `warn` ist der einzige Präzedenzfall im Repo und\n  deshalb verführerisch, signalisiert im DS aber ein Fehlerrisiko. Der\n  NÖ-Hinweis ist eine reine Zugangsinformation → `info`.\n- **Wortlaut ist im Plan vorgegeben,** nicht dem Executor überlassen: der Ton\n  der Schritte 01–05 (2. Person Plural, Halbgeviertstrich, ein `**bold**`-Satz\n  für die zentrale Aussage) ist redaktionell, nicht ableitbar.\n- **Link-Label bleibt unverändert** — es ist bereits korrekt, der Hinweis\n  gehört zusätzlich in den Fließtext.\n</strategy>\n\n<skills>\nKeine Workspace-Skill ist für dieses Issue einschlägig. Die vorhandenen Skills\n(`experiments`, `idml-import`, `idml-scaffold`, `idml-tune`) betreffen die\nIDML-/Vorlagen-Pipeline, nicht die Astro-Content-Collection der\nAnleitungsseite. Es wird bewusst keine Skill getaggt.\n</skills>\n\n<context>\nIssue: @.issues/cg83g-fotosammlung-auf-der-anleitungsseite-als-noe-only-kennzeichnen/ISSUE.md\nResearch: @.issues/cg83g-fotosammlung-auf-der-anleitungsseite-als-noe-only-kennzeichnen/RESEARCH.md\n\n<interfaces>\n<!-- Executor: diese Verträge direkt verwenden. Den Codebase nicht danach\n     durchsuchen. Beide Dateien sind READ-ONLY für dieses Issue. -->\n\n// site/src/content.config.ts — anleitung collection (bereits vorhanden, NICHT ändern)\nconst anleitung = defineCollection({\n  loader: glob({ pattern: '**/*.md', base: './src/content/anleitung' }),\n  schema: z.object({\n    order: z.number(),\n    title: z.string(),\n    // Optional: rendert den Abschnitt als Design-System-Callout statt als\n    // schlichten Block.\n    callout: z.enum(['info', 'warn']).optional(),\n    links: z.array(z.object({\n      label: z.string(),\n      href: z.string(),\n      kind: z.enum(['internal', 'download', 'external']),\n    })).optional(),\n  }),\n});\n\n// site/src/pages/anleitung/index.astro — Step-Rendering (bereits vorhanden, NICHT ändern)\n// <section class={data.callout ? `gat-callout gat-callout--${data.callout} app-step` : 'app-step'}>\n//   <h3 class=\"gat-headline app-step__title\">{data.title}</h3>\n//   <div class=\"app-step__body\"><Content /></div>\n//   <ul class=\"app-step__links\"> ... </ul>\n// </section>\n\n// Konsequenz: `callout: info` im Frontmatter erzeugt ohne weiteren Eingriff\n// `class=\"gat-callout gat-callout--info app-step\"` im gerenderten HTML.\n// `.gat-callout--info` kommt aus dem per CDN geladenen Design-System\n// (site/src/layouts/Base.astro L12, https://design-system.gruene.at/design-system.css).\n</interfaces>\n\nIst-Zustand von `site/src/content/anleitung/06-fotosammlung.md` (Ausgangspunkt\nder Änderung):\n\n    ---\n    order: 6\n    title: \"Fotosammlung für eure Druckwerke\"\n    links:\n      - label: \"Zur Fotosammlung (GGS NÖ, Login nötig)\"\n        href: \"https://ggs-noe.gruene.at/fotosammlung-fuer-social-media-und-druckwerke/\"\n        kind: external\n    ---\n\n    Im Gemeindegruppenservice findet ihr Bilder, die über Adobe Stock erworben\n    wurden und die ihr somit für Social-Media-Beiträge oder eure Druckwerke\n    verwenden könnt.\n\nKey files:\n@site/src/content/anleitung/06-fotosammlung.md — die einzige zu ändernde Datei\n@site/src/content/anleitung/02-schriften-installieren.md — stilistisches Vorbild\n  (`callout: warn` + abschließender `**bold**`-Satz), NUR lesen, nicht ändern\n</context>\n\n<commit_format>\nFormat: conventional mit Issue-ID-Präfix (`.issues/config.yaml`:\n`commits.format: conventional`, `commits.prefix: true`; deckt sich mit der\nHistory, z. B. `cg83g: docs(issues): research cg83g-...`).\nExample: cg83g: docs(anleitung): mark photo collection as Lower-Austria-only\nPattern: {issue-id}: {type}({scope}): {description}\nCommit-Subject auf Englisch, Inhaltstexte auf Deutsch. KEINE\nWerkzeug-Attribution, kein `Co-Authored-By`, keine Nennung von Tools.\n</commit_format>\n\n<tasks>\n\n<task type=\"auto\">\n  <name>Task 1: 06-fotosammlung.md als NÖ-only kennzeichnen</name>\n  <files>site/src/content/anleitung/06-fotosammlung.md</files>\n  <action>\n  Ersetze den kompletten Inhalt von\n  `site/src/content/anleitung/06-fotosammlung.md` EXAKT durch den folgenden\n  Text. Der Wortlaut ist eine redaktionelle Vorgabe dieses Plans — nicht\n  umformulieren, nicht kürzen, nicht „verbessern\", keine zusätzlichen Absätze\n  ergänzen. Umlaute und der Halbgeviertstrich `—` sind bewusst gesetzt und\n  müssen erhalten bleiben (UTF-8, kein `oe`/`ae`/`ue`, kein `-` statt `—`).\n  Der Block zwischen den beiden Markierungen ist der vollständige, wörtliche\n  Dateiinhalt — beginnend bei Spalte 1, keine Einrückung ergänzen:\n\nBEGIN DATEIINHALT (diese Zeile selbst NICHT übernehmen)\n---\norder: 6\ntitle: \"Fotosammlung für eure Druckwerke (nur NÖ)\"\ncallout: info\nlinks:\n  - label: \"Zur Fotosammlung (GGS NÖ, Login nötig)\"\n    href: \"https://ggs-noe.gruene.at/fotosammlung-fuer-social-media-und-druckwerke/\"\n    kind: external\n---\n\nIm Gemeindegruppenservice der Grünen Niederösterreich findet ihr Bilder, die\nüber Adobe Stock erworben wurden und die ihr somit für Social-Media-Beiträge\noder eure Druckwerke verwenden könnt.\n\nDer Zugang läuft über den GGS NÖ und setzt ein Login der Grünen\nNiederösterreich voraus — Gruppen außerhalb Niederösterreichs können die\nSammlung daher nicht nutzen.\n\n**Diese Sammlung gibt es nur für Niederösterreich.**\nEND DATEIINHALT (diese Zeile selbst NICHT übernehmen)\n\n  Detailvorgaben und Begründungen:\n  - `order: 6` und der gesamte `links:`-Block bleiben unverändert — Label,\n    href und `kind: external` sind bereits korrekt.\n  - `callout: info`, NICHT `warn`. `warn` ist zwar der einzige Präzedenzfall im\n    Repo (Schritt 02), signalisiert im Design-System aber ein Fehlerrisiko. Der\n    NÖ-Hinweis ist eine reine Zugangsinformation. Ein Tippfehler im Wert\n    scheitert an `z.enum(['info','warn'])` beim Build.\n  - `callout` steht nach `title` und vor `links` — analog zur Position in\n    `02-schriften-installieren.md`.\n  - Der `**bold**`-Schlusssatz folgt dem Muster von Schritt 02\n    („**Bitte wendet euch dafür an euer Landesbüro.**\"): ein eigener, knapper\n    Absatz trägt die zentrale Einschränkung.\n  - KEIN Nummerierungspräfix „6. Schritt:\" ergänzen — die Schritte 04–06 sind\n    bewusst unnummeriert-thematisch betitelt.\n  - `site/src/content.config.ts`, `site/src/pages/anleitung/index.astro` und\n    `site/src/styles/app.css` NICHT anfassen: das `callout`-Feld existiert\n    bereits im Schema und wird bereits generisch gerendert. Keine neue\n    CSS-Klasse, keine neue Komponente (expliziter ISSUE-Constraint).\n  </action>\n  <verify>\n  <automated>cd site && npm run build</automated>\n  </verify>\n  <done>\n  - `site/src/content/anleitung/06-fotosammlung.md` hat den Titel\n    \"Fotosammlung für eure Druckwerke (nur NÖ)\"\n  - Frontmatter enthält `callout: info`\n  - Body enthält einen Absatz zu GGS-NÖ-Login und fehlendem Zugang außerhalb\n    Niederösterreichs sowie den `**bold**`-Schlusssatz\n  - `order`- und `links`-Block sind unverändert\n  - `npm run build` in `site/` läuft ohne Fehler durch (Zod-Schema akzeptiert\n    `callout: info`)\n  - `git status --short` zeigt genau eine geänderte Datei unter `site/`\n  </done>\n</task>\n\n<task type=\"auto\">\n  <name>Task 2: Gerendertes HTML gegen die Akzeptanzkriterien prüfen</name>\n  <files>site/dist/anleitung/index.html (nur lesen, Build-Artefakt — nicht committen)</files>\n  <action>\n  Verifiziere am tatsächlich gebauten Output, dass die drei Akzeptanzkriterien\n  aus ISSUE.md erfüllt sind. Keine Quelldatei wird in diesem Task geändert.\n\n  Führe aus (aus dem Repo-Root):\n\n      cd site && npm run build && \\\n      grep -q 'gat-callout gat-callout--info app-step' dist/anleitung/index.html && \\\n      grep -q 'Fotosammlung für eure Druckwerke (nur NÖ)' dist/anleitung/index.html && \\\n      grep -q 'Login der Grünen' dist/anleitung/index.html && \\\n      grep -q 'außerhalb Niederösterreichs' dist/anleitung/index.html && \\\n      echo \"ANLEITUNG OK\"\n\n  Prüfe zusätzlich per Augenschein im Ausschnitt\n  `grep -B2 -A25 'gat-callout--info' dist/anleitung/index.html`:\n  - Der `(nur NÖ)`-Zusatz steht in der `<h3 class=\"gat-headline app-step__title\">`\n    des Fotosammlungs-Abschnitts, ist also ohne Klick sichtbar.\n  - Der Login-/NÖ-Hinweis steht im `app-step__body`, nicht ausschließlich im\n    `app-step__link`-Label.\n  - Umlaute sind korrekt gerendert (keine Mojibake, kein `nur NOe`).\n\n  Falls ein `grep` fehlschlägt: der Fehler liegt in Task 1 — dort korrigieren\n  (Tippfehler im Titel, falscher `callout`-Wert, fehlender Body-Absatz), NICHT\n  die grep-Muster aufweichen und NICHT `dist/` von Hand editieren.\n\n  `site/dist/` ist Build-Output und wird nicht committet — prüfe vor dem Commit\n  mit `git status --short`, dass nur\n  `site/src/content/anleitung/06-fotosammlung.md` in der Änderungsliste steht\n  (plus die Issue-Artefakte, sofern der Workflow sie mitführt).\n  </action>\n  <verify>\n  <automated>cd site && npm run build && grep -q 'gat-callout gat-callout--info app-step' dist/anleitung/index.html && grep -q 'Fotosammlung für eure Druckwerke (nur NÖ)' dist/anleitung/index.html && grep -q 'Login der Grünen' dist/anleitung/index.html && grep -q 'außerhalb Niederösterreichs' dist/anleitung/index.html && echo \"ANLEITUNG OK\"</automated>\n  </verify>\n  <done>\n  - Das Kommando endet mit `ANLEITUNG OK` (Exit 0)\n  - Der Fotosammlungs-Abschnitt trägt im gebauten HTML die Klassen\n    `gat-callout gat-callout--info app-step`\n  - „(nur NÖ)\" steht in der Überschrift des Abschnitts\n  - Der Login-Hinweis steht im Body-Text, nicht nur im Link-Label\n  - `git status --short` listet keine Dateien unter `site/dist/`\n  </done>\n</task>\n\n</tasks>\n\n<verification>\nAbschließende Prüfungen nach allen Tasks:\n- `cd site && npm run build` — Astro-Build inklusive Zod-Schema-Validierung\n- KEIN `npm run check` nötig — `astro check` verlangt `@astrojs/check`, das\n  nicht in `site/package.json` steht, und würde nur einen Installationsdialog\n  auslösen. Es wurde keine `.astro`/`.ts`-Datei angefasst.\n- `git diff --stat` — genau eine geänderte Quelldatei:\n  `site/src/content/anleitung/06-fotosammlung.md`\n- `git diff` — enthält keinerlei Werkzeug-/AI-Attribution\n</verification>\n\n<success_criteria>\nBildet 1:1 die Akzeptanzkriterien aus ISSUE.md ab:\n- Auf `/anleitung/` ist ohne Klick erkennbar, dass die Fotosammlung nur für\n  Niederösterreich ist — der Titel lautet „Fotosammlung für eure Druckwerke\n  (nur NÖ)\" und der Abschnitt ist als `gat-callout--info` hervorgehoben\n- Der Login-Hinweis steht im Fließtext („Der Zugang läuft über den GGS NÖ und\n  setzt ein Login der Grünen Niederösterreich voraus — Gruppen außerhalb\n  Niederösterreichs können die Sammlung daher nicht nutzen.\"), nicht nur im\n  Link-Label\n- Build läuft durch: `cd site && npm run build` endet mit Exit 0\n- Zusatz aus den Constraints: reine Content-Änderung, keine neue Komponente,\n  keine neue CSS-Klasse, kein Schema-Eingriff\n</success_criteria>\n"}
+</script>
+
+<script>
+(function () {
+  "use strict";
+  var dataEl = document.getElementById("artifact-source");
+  var target = document.getElementById("artifact-source-target");
+  if (dataEl && target) {
+    try {
+      target.textContent = JSON.parse(dataEl.textContent).source || "";
+    } catch (e) {
+      target.textContent = dataEl.textContent;
+    }
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      if (el) { ev.preventDefault(); el.scrollIntoView({ behavior: "smooth" }); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
