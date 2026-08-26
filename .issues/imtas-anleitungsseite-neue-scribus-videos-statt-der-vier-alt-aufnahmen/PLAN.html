@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Provenance: SHA-256 of the source .md this page was generated from. -->
+<meta name="artifact-source-sha256" content="58e6761388b16a985a988b358e81d25efea7c9e49eabf7021138861d82aa9137">
+<meta name="artifact-source-file" content="PLAN.md">
+<meta name="artifact-generated-at" content="2026-08-26">
+<!-- Which version of the design system this page was authored against. -->
+<meta name="design-system-version" content="ds-1">
+<title>Plan: Anleitungsseite &mdash; neue Scribus-Videos statt der vier Alt-Aufnahmen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://flomotlik.github.io/claude-code/design-system.css">
+</head>
+<body>
+<div class="page">
+
+<header class="row">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">00</span>Plan</p>
+  </div>
+  <div class="body">
+    <h1 class="masthead-title">Anleitungsseite: neue Scribus-Videos statt der vier Alt-Aufnahmen</h1>
+    <p class="masthead-sub">Issue: imtas-anleitungsseite-neue-scribus-videos-statt-der-vier-alt-aufnahmen &middot; Generated 2026-08-26</p>
+  </div>
+</header>
+
+<hr class="rule">
+
+<section class="row" id="strategy">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">01</span>Strategy</p>
+    <p class="margin-note">Zuerst lesen &mdash; der Rest ist Detail.</p>
+  </div>
+  <div class="body">
+    <h2>Strategy summary</h2>
+    <p>Die vier Alt-Aufnahmen auf <code>/anleitung/</code> weichen zwei Neuaufnahmen im
+       aktuellen Design. Die Richtung:
+       <span class="mark mark-green">ein Array-Austausch in <code>videos.ts</code></span>
+       &mdash; alles Weitere ist bereits datengetrieben gebaut und zieht automatisch nach.
+       Zwei Folgeaenderungen muessen im selben Change mitlaufen, sonst laufen Build und CI
+       auseinander.</p>
+    <ul class="points">
+      <li class="point">
+        <p class="point-claim">Daten statt Markup.</p>
+        <p class="point-detail">Der Hinweis &bdquo;im alten Design aufgenommen&ldquo; haengt an
+          <code>videos.some(v =&gt; v.legacyDesign)</code>. Faellt das Flag weg, verschwindet
+          er von selbst &mdash; <code>VideoGrid.astro</code> und <code>VideoModal.astro</code>
+          bleiben unangetastet.</p>
+      </li>
+      <li class="point is-note">
+        <p class="point-claim">Laufzeiten sind verifiziert.</p>
+        <p class="point-detail">14:38 und 8:39, aus den YouTube-Watch-Seiten
+          (<code>lengthSeconds</code> 878 bzw. 519). Die offene LOW-confidence-Frage der
+          Recherche ist damit beantwortet; die Felder werden gesetzt, nicht weggelassen.</p>
+      </li>
+      <li class="point is-risk">
+        <p class="point-claim">Build allein ist truegerisch gruen.</p>
+        <p class="point-detail">Der Guard-Test <code>test_site_anleitung_content.py</code> ist
+          hart auf die vier alten IDs gekoppelt und failt beim Wegfall von
+          <code>legacyDesign</code> absichtlich. Verifikation faehrt Build UND
+          <code>pytest tests/unit/</code> wie CI.</p>
+      </li>
+    </ul>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Tasks</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Geaenderte Dateien</div></div>
+      <div class="stat"><div class="stat-num is-green">2</div><div class="stat-label">Video-Karten danach</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="flow">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">02</span>Flow</p>
+  </div>
+  <div class="body">
+    <h2>Task flow &amp; dependencies</h2>
+    <div class="flow">
+      <div class="flow-node is-foundation">
+        <span class="n">Task 1</span>
+        <span class="t">videos.ts auf die zwei neuen Scribus-Videos umstellen</span>
+        <span class="d">Array-Austausch, kein legacyDesign, Laufzeiten 14:38 / 8:39.</span>
+      </div>
+      <div class="flow-node is-key">
+        <span class="n">Task 2</span>
+        <span class="t">Guard-Test auf die zwei neuen Video-IDs umstellen</span>
+        <span class="d">EXPECTED_VIDEO_IDS neu, Legacy-Test entfernen &mdash; loest den roten Zwischenzustand aus Task 1.</span>
+      </div>
+      <div class="flow-node">
+        <span class="n">Task 3</span>
+        <span class="t">Video-Grid auf auto-fit mit Kartenobergrenze umstellen</span>
+        <span class="d">repeat(auto-fit, minmax(220px, 320px)) statt auto-fill.</span>
+      </div>
+      <div class="flow-node">
+        <span class="n">Task 4</span>
+        <span class="t">Gesamtverifikation gegen die Akzeptanzkriterien</span>
+        <span class="d">Build, CI-Testlauf und HTML-Assertion auf /anleitung/ plus Detailseite.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="decisions">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">03</span>Decisions</p>
+  </div>
+  <div class="body">
+    <h2>Key decisions &amp; options</h2>
+    <div class="decision">
+      <div class="decision-head">
+        <p class="decision-title">Legacy-Hinweis im Markup</p>
+        <span class="lozenge is-chosen">Chosen</span>
+      </div>
+      <p class="decision-body">Stehen lassen &mdash; ISSUE.md erlaubt das ausdruecklich, der
+        Block rendert ohne <code>legacyDesign</code> einfach nicht mehr. Auch das
+        Interface-Feld bleibt erhalten.</p>
+      <p class="decision-body rejected">Markup und Interface-Feld loeschen &mdash; unnoetiger
+        Diff, wirft eine bewusst gebaute Faehigkeit weg.</p>
+    </div>
+    <div class="decision">
+      <div class="decision-head">
+        <p class="decision-title">Grid-Layout bei nur zwei Karten</p>
+        <span class="lozenge is-chosen">Chosen</span>
+      </div>
+      <p class="decision-body"><code>repeat(auto-fit, minmax(220px, 320px))</code>:
+        <code>auto-fit</code> kollabiert leere Spuren, die Obergrenze verhindert
+        auseinandergezogene Karten auf breiten Viewports.</p>
+      <p class="decision-body rejected"><code>auto-fit</code> mit <code>1fr</code> &mdash;
+        zwei Karten werden auf Ultrawide uebergross. Festes
+        <code>repeat(2, ...)</code> &mdash; bricht die responsive Logik der Datei.</p>
+    </div>
+    <div class="decision">
+      <div class="decision-head">
+        <p class="decision-title">duration setzen statt weglassen</p>
+        <span class="lozenge is-note">Abweichung von RESEARCH.md</span>
+      </div>
+      <p class="decision-body">Die Recherche empfahl Weglassen mangels verlaesslicher Quelle.
+        Inzwischen sind beide Werte verifiziert (878s / 519s) &mdash; die Karten behalten
+        damit ihre bisherige Informationsdichte.</p>
+    </div>
+    <div class="decision">
+      <div class="decision-head">
+        <p class="decision-title">Testrunner-Umfang</p>
+        <span class="lozenge is-risk">Fallstrick</span>
+      </div>
+      <p class="decision-body">Verifiziert wird mit <code>/root/.local/bin/pytest</code>
+        (nicht auf dem Standard-PATH), exakt wie CI:
+        <code>tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py</code>.</p>
+      <p class="decision-body rejected">Zusaetzliches <code>unittest discover</code> auf
+        <code>tests/unit</code> &mdash; die Datei importiert pytest auf Modulebene; unittest
+        laeuft in diesem Repo nur gegen <code>tools/sla_lib/tests</code>.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="detail">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">04</span>Detail</p>
+  </div>
+  <div class="body">
+    <h2>Full detail</h2>
+    <details class="detail">
+      <summary>Show full artifact source
+        <span class="summary-hint">click to expand</span></summary>
+      <div class="detail-body">
+        <pre><code id="artifact-source-target"></code></pre>
+      </div>
+    </details>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="provenance">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">05</span>Provenance</p>
+  </div>
+  <div class="body">
+    <h2>Provenance</h2>
+    <p>Generated from the canonical <code>.md</code>. This HTML is never
+       hand-edited &mdash; if the <code>.md</code> changes, regenerate with
+       <code>/issue:view</code>.</p>
+    <footer class="footer">
+      <span>Source: <code>PLAN.md</code> &middot;
+        SHA-256 <code>58e6761388b16a985a988b358e81d25efea7c9e49eabf7021138861d82aa9137</code></span>
+      <span>Generated 2026-08-26 &middot; design system ds-1</span>
+    </footer>
+  </div>
+</section>
+
+</div>
+
+<!-- Raw artifact source as DATA, never markup. -->
+<script type="application/json" id="artifact-source">
+{"source": "# Plan: Anleitungsseite — neue Scribus-Videos statt der vier Alt-Aufnahmen\n\n<objective>\nWas dieser Plan erreicht: Das `videos`-Array in `site/src/data/videos.ts` wird durch\ngenau zwei neue Scribus-Aufnahmen im aktuellen Corporate Design ersetzt (`SDT9eM9tReU`\n\"Erste Schritte mit Scribus\", `3rMFX_VLvpE` \"Export einer Scribus Datei\"), kein Eintrag\ntraegt mehr `legacyDesign`. Damit verschwindet der Hinweis \"im alten Design aufgenommen\"\nautomatisch (er haengt in `VideoGrid.astro` an `videos.some(v => v.legacyDesign)`). Das\nVideo-Grid wird von `auto-fill` auf `auto-fit` mit moderater Obergrenze umgestellt, damit\nzwei Karten kein halbleeres Vier-Spalten-Raster hinterlassen. Der Guard-Test\n`tests/unit/test_site_anleitung_content.py` wird im selben Change mitgezogen.\n\nWarum das wichtig ist: Die Seite behauptet aktuell dauerhaft, alle Videos seien veraltet\naufgenommen. Sobald die Neuaufnahmen drin sind, ist diese Aussage falsch — und der\nGuard-Test bricht CI, wenn Datenaenderung und Testanpassung auseinanderfallen\n(`npm run build` bleibt dabei truegerisch gruen).\n\nScope IN: `site/src/data/videos.ts` (Array-Austausch), `site/src/styles/app.css`\n(`.app-video-grid` + Kommentar darueber), `tests/unit/test_site_anleitung_content.py`\n(`EXPECTED_VIDEO_IDS`, Entfernen von `test_legacy_design_notice_matches_the_data`).\n\nScope OUT: `VideoGrid.astro` und `VideoModal.astro` werden NICHT angefasst (der\nLegacy-Hinweis-Block darf laut ISSUE.md im Markup bleiben und rendert dann einfach nicht\nmehr; das Modal ist vollstaendig datengetrieben). Ebenfalls OUT: das\n`legacyDesign?: boolean`-Feld im `AnleitungsVideo`-Interface (bleibt als Mechanismus fuer\nkuenftige Alt-Videos erhalten), der Mobile-Breakpoint `@media (max-width: 640px)` fuer\n`.app-video-grid`, jede Aenderung an `pages/anleitung/index.astro` oder\n`pages/templates/[...id].astro`.\n\nKein CONTEXT.md vorhanden (`issue:discuss` wurde nicht durchlaufen) — Entscheidungen\nfolgen ISSUE.md und den Empfehlungen aus RESEARCH.md. Abweichung von RESEARCH.md: die\ndort als \"nicht ermittelbar\" markierten Laufzeiten sind inzwischen verifiziert (aus den\nYouTube-Watch-Seiten: `lengthSeconds` 878 = 14:38 bzw. 519 = 8:39) und werden gesetzt,\nnicht weggelassen.\n</objective>\n\n<strategy>\nRichtung: Eine reine Datenaenderung plus zwei Folgeaenderungen, die sonst still\nauseinanderlaufen. Der Kern ist ein Array-Austausch — alles Weitere ist bereits\ndatengetrieben gebaut und zieht automatisch nach.\n\nStrategische Optionen und Entscheidung:\n\n1. **Legacy-Hinweis entfernen vs. stehen lassen.** ISSUE.md sagt ausdruecklich: der\n   Hinweis-Block darf im Markup bleiben, er rendert bei fehlendem `legacyDesign` einfach\n   nicht mehr. Gewaehlt: stehen lassen. Das haelt den Diff klein und den Mechanismus fuer\n   kuenftige Alt-Videos intakt. Verworfen: Markup + Interface-Feld loeschen — laut\n   Recherche ein unnoetiger Diff, der eine bewusst gebaute Faehigkeit wegwirft.\n\n2. **Grid-Layout.** `.app-video-grid` steht auf `repeat(auto-fill, minmax(220px, 1fr))`;\n   `auto-fill` reserviert bei zwei Karten weiterhin leere Spuren — genau das im\n   Akzeptanzkriterium ausgeschlossene halbleere Raster. Gewaehlt:\n   `repeat(auto-fit, minmax(220px, 320px))` — `auto-fit` kollabiert leere Spuren, die\n   320px-Obergrenze verhindert, dass zwei Karten auf Ultrawide-Monitoren randlos\n   auseinandergezogen werden. Verworfen: nur `auto-fit` mit `1fr` (Karten werden auf\n   breiten Viewports uebergross), und eine feste `grid-template-columns: repeat(2, ...)`\n   (bricht die bestehende, responsive Logik der Datei).\n\n3. **Laufzeiten (`duration`).** RESEARCH.md empfahl Weglassen, weil kein verlaesslicher\n   Wert ermittelbar war. Inzwischen sind beide Werte aus den YouTube-Watch-Seiten\n   verifiziert (878s bzw. 519s). Gewaehlt: `duration: '14:38'` und `duration: '8:39'`\n   setzen — die Karten behalten damit dieselbe Informationsdichte wie bisher.\n\n4. **Verifikationsumfang.** `npm run build` allein reicht nicht: der Guard-Test\n   `tests/unit/test_site_anleitung_content.py` ist hart auf die vier alten IDs gekoppelt\n   und `test_legacy_design_notice_matches_the_data` schlaegt beim Wegfall aller\n   `legacyDesign`-Flags absichtlich fehl (die Fail-Message enthaelt die Handlungsanweisung,\n   den Test zu entfernen). Gewaehlt: Build UND `pytest tests/unit/` wie in CI, plus eine\n   Assertion gegen das gebaute HTML, die alle drei sichtbaren Akzeptanzkriterien\n   (zwei Karten, kein Alt-Design-Hinweis, korrekte watch-URLs) in einem Lauf abdeckt.\n</strategy>\n\n<skills>\nKeine Workspace-Skill ist fuer dieses Issue einschlaegig. `.claude/skills/` enthaelt nur\n`idml-import`, `idml-scaffold`, `idml-tune` und `experiments` — alle betreffen die\nPrint-/IDML-Pipeline, nicht die Astro-Galerie-Site. Es wird bewusst kein Skill getaggt.\n</skills>\n\n<context>\nIssue: @.issues/imtas-anleitungsseite-neue-scribus-videos-statt-der-vier-alt-aufnahmen/ISSUE.md\nResearch: @.issues/imtas-anleitungsseite-neue-scribus-videos-statt-der-vier-alt-aufnahmen/RESEARCH.md\n\nAlle Pfade sind relativ zur Worktree-Wurzel\n`/Users/florianmotlik/Code/GrueneAT/web-apps/vorlagen/.worktrees/imtas-anleitungsseite-neue-scribus-videos-statt-der-vier-alt-aufnahmen`.\nAlle Kommandos werden von dieser Wurzel aus ausgefuehrt. Niemals am Haupt-Checkout\narbeiten.\n\n<interfaces>\n<!-- Executor: diese Contracts direkt verwenden. Nicht im Codebase danach suchen. -->\n\nFrom site/src/data/videos.ts:\nexport interface AnleitungsVideo {\n  youtube: string;        // YouTube-Video-ID (der `v=`-Parameter der watch-URL)\n  title: string;          // Kartentitel\n  description?: string;   // optionale Kurzbeschreibung\n  duration?: string;      // Laufzeit als \"M:SS\", rein informativ auf der Karte\n  poster?: string;        // leer lassen -> YouTube-Thumbnail\n  legacyDesign?: boolean; // true = im alten CD aufgenommen -> blendet den Hinweis ein\n}\nexport function posterFor(v: AnleitungsVideo): string;         // v.poster ?? https://i.ytimg.com/vi/<id>/maxresdefault.jpg\nexport function posterFallbackFor(v: AnleitungsVideo): string; // https://i.ytimg.com/vi/<id>/hqdefault.jpg\nexport function watchUrl(v: AnleitungsVideo): string;          // https://www.youtube.com/watch?v=<id>\nexport const videos: AnleitungsVideo[];  // aktuell 4 Eintraege, alle legacyDesign: true\n\nFrom site/src/components/VideoGrid.astro  (READ-ONLY — nicht aendern):\ninterface Props { videos: AnleitungsVideo[]; modalId: string; }\nconst hasLegacyDesign = videos.some(v => v.legacyDesign);\n// steuert den <p class=\"gat-callout ... app-video-notice\">-Block; wird false, sobald kein\n// Eintrag mehr legacyDesign traegt -> Hinweis rendert nicht mehr. Kein Eingriff noetig.\n// Karte rendert: href={watchUrl(v)}, data-video-target={modalId}, data-video-id={v.youtube},\n// data-video-title={v.title}, Poster via posterFor/posterFallbackFor,\n// {v.duration && <span class=\"app-video-card__duration\">{v.duration}</span>}\n\nFrom site/src/components/VideoModal.astro  (READ-ONLY — nicht aendern):\ninterface Props { id: string; }\n// vollstaendig datengetrieben ueber die data-Attribute der Karten, keine Video-Anzahl\n// fest codiert.\n\nFrom site/src/styles/app.css (Zeile ~936):\n.app-video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }\n// Direkt darueber steht ein Kommentar, der die 220px mit \"die vier Tutorials\" begruendet.\n// Zeile ~1132: @media (max-width: 640px) { .app-video-grid { grid-template-columns: 1fr; } }  -> UNVERAENDERT lassen.\n\nFrom tests/unit/test_site_anleitung_content.py:\nEXPECTED_VIDEO_IDS: set[str]                       # aktuell die 4 alten IDs, hart kodiert\ndef test_video_ids_are_complete() -> None          # ids aus videos.ts == EXPECTED_VIDEO_IDS\ndef test_every_video_has_a_title() -> None         # Anzahl an len(EXPECTED_VIDEO_IDS) gekoppelt, passt sich automatisch an\ndef test_legacy_design_notice_matches_the_data() -> None\n  # any_legacy = \"legacyDesign: true\" in _videos_array()\n  # if not any_legacy: pytest.fail(\"Kein Video mehr als legacyDesign markiert — Hinweis in\n  #   VideoGrid.astro und diesen Test entfernen.\")\n  # -> schlaegt zwingend fehl, sobald legacyDesign aus videos.ts verschwindet: Test loeschen.\ndef _videos_array() -> str                         # Helper, unveraendert lassen\n# `import pytest` bleibt noetig (@pytest.fixture sections), `SITE` bleibt noetig.\n</interfaces>\n\nKey files:\n@site/src/data/videos.ts — primaerer Aenderungsort, das `videos`-Array wird ersetzt\n@site/src/styles/app.css — `.app-video-grid` (Zeile ~936) + der Kommentar darueber\n@tests/unit/test_site_anleitung_content.py — Guard-Test, bricht CI ohne Anpassung\n\nREAD-ONLY (nicht anfassen, kein Diff erwuenscht):\n@site/src/components/VideoGrid.astro — Legacy-Hinweis ist bereits datengetrieben bedingt\n@site/src/components/VideoModal.astro — generisch ueber data-Attribute\n@site/src/pages/anleitung/index.astro — konsumiert nur `videos`\n@site/src/pages/templates/[...id].astro — zweiter Renderort desselben `VideoGrid`, profitiert automatisch mit\n\nUmgebungshinweise (aus RESEARCH.md, verifiziert):\n- `pytest` liegt NICHT auf dem Standard-PATH — immer `/root/.local/bin/pytest` verwenden.\n- `python3 -c \"import pytest\"` schlaegt fehl (System-Python kennt pytest nicht). Deshalb\n  KEIN `python3 -m unittest discover tests/unit` als zweites Gate: die Testdatei\n  importiert pytest auf Modulebene und CI faehrt fuer `tests/unit/` ausschliesslich\n  pytest (`.github/workflows/ci.yml:75`). `python3 -m unittest discover` laeuft in diesem\n  Repo nur gegen `tools/sla_lib/tests` (`.github/workflows/pages.yml:106`) — von diesem\n  Issue nicht beruehrt.\n- `site/node_modules` ist im Worktree bereits installiert; `npm --prefix site run build`\n  laeuft ohne weitere Vorbereitung (Baseline vor der Aenderung: 26 Seiten, gruen).\n- `site/dist/` ist gitignored (`site/.gitignore:2`) — Build-Artefakte werden nie committet.\n- Kein Vendoring: YouTube-Thumbnails und -Embeds bleiben remote referenziert, es wird\n  kein Asset ins Repo kopiert.\n</context>\n\n<commit_format>\nFormat: conventional mit Issue-Prefix (aus `.issues/config.yaml`: `format: conventional`,\n`prefix: true`; Issue-ID `imtas`).\nBeispiel: `imtas: feat(site): replace Anleitung videos with the two new recordings`\nPattern: `imtas: {type}({scope}): {description}`\nTypen: feat, fix, test, refactor, docs, chore. Scope hier sinnvoll: `site` bzw. `tests`.\nCommit-Messages auf Englisch, keinerlei Werkzeug-Attribution (kein \"Claude\", kein\n\"Generated with\", kein `Co-Authored-By`).\n</commit_format>\n\n<tasks>\n\n<task type=\"auto\">\n  <name>Task 1: videos.ts auf die zwei neuen Scribus-Videos umstellen</name>\n  <files>site/src/data/videos.ts</files>\n  <action>\n  In `site/src/data/videos.ts` das gesamte `export const videos`-Array (aktuell vier\n  Eintraege, alle mit `legacyDesign: true`) durch exakt diesen Block ersetzen — woertlich,\n  inklusive Reihenfolge, Anfuehrungszeichen und Trailing Commas:\n\n  export const videos: AnleitungsVideo[] = [\n    {\n      youtube: 'SDT9eM9tReU',\n      title: 'Erste Schritte mit Scribus',\n      duration: '14:38',\n    },\n    {\n      youtube: '3rMFX_VLvpE',\n      title: 'Export einer Scribus Datei',\n      duration: '8:39',\n    },\n  ];\n\n  Regeln dazu:\n  - KEIN `legacyDesign` bei einem der beiden Eintraege — das ist der Schalter, der den\n    Hinweis \"im alten Design aufgenommen\" in `VideoGrid.astro` abschaltet.\n  - KEIN `poster` setzen: `posterFor()` leitet das Bild aus der Video-ID ab\n    (`maxresdefault`, mit `hqdefault`-Fallback). Kein eigenes Bild, kein Download eines\n    Thumbnails ins Repo (Vendoring-Verbot).\n  - KEIN `description` erfinden.\n  - Die Laufzeiten sind verifiziert (YouTube `lengthSeconds`: 878 = 14:38, 519 = 8:39) —\n    nicht weglassen und nicht veraendern. Damit ist die als LOW confidence markierte\n    offene Frage aus RESEARCH.md beantwortet.\n  - Der Titel des zweiten Videos lautet exakt \"Export einer Scribus Datei\" (ohne\n    Bindestrich, nicht \"PDF-Export einer Scribus-Datei\" wie beim alten Video).\n  - Interface `AnleitungsVideo` unveraendert lassen, insbesondere das Feld\n    `legacyDesign?: boolean` samt Doc-Kommentar NICHT entfernen — es bleibt der\n    Mechanismus fuer kuenftige Alt-Aufnahmen.\n  - Den Datei-Kopfkommentar unveraendert lassen (er beschreibt weiterhin korrekt, wie\n    Videos ergaenzt/getauscht werden; die Beispiel-ID `dQw4w9WgXcQ` darin bleibt stehen,\n    der Guard-Test schneidet bewusst nur den Array-Body aus).\n  - `VideoGrid.astro` und `VideoModal.astro` NICHT anfassen.\n\n  Erwartet: `pytest tests/unit/test_site_anleitung_content.py` ist nach diesem Task ROT\n  (alte IDs erwartet, `test_legacy_design_notice_matches_the_data` failt absichtlich).\n  Das ist der geplante Zwischenzustand und wird in Task 2 aufgeloest — hier nicht\n  \"reparieren\", indem `legacyDesign` wieder gesetzt wird.\n\n  Commit: `imtas: feat(site): replace Anleitung videos with the two new recordings`\n  </action>\n  <verify>\n  <automated>\nnpm --prefix site run build\npython3 - <<'PY'\nimport pathlib, re\nhtml = pathlib.Path(\"site/dist/anleitung/index.html\").read_text(encoding=\"utf-8\")\nids = re.findall(r'data-video-id=\"([^\"]+)\"', html)\nassert ids == [\"SDT9eM9tReU\", \"3rMFX_VLvpE\"], ids\nassert \"Aufnahmen zeigen noch das alte\" not in html, \"Legacy-Hinweis wird noch gerendert\"\nfor vid in ids:\n    assert 'href=\"https://www.youtube.com/watch?v=%s\"' % vid in html, vid\nassert \"14:38\" in html and \"8:39\" in html, \"Laufzeiten fehlen auf den Karten\"\nprint(\"Task 1 OK\")\nPY\n  </automated>\n  </verify>\n  <done>\n  - `site/src/data/videos.ts` enthaelt genau zwei Eintraege: `SDT9eM9tReU` / \"Erste Schritte mit Scribus\" / '14:38' und `3rMFX_VLvpE` / \"Export einer Scribus Datei\" / '8:39'\n  - Keine Vorkommen von `legacyDesign: true` mehr im `videos`-Array\n  - `AnleitungsVideo`-Interface inkl. `legacyDesign?: boolean` unveraendert\n  - `npm --prefix site run build` laeuft gruen durch\n  - Das gebaute `site/dist/anleitung/index.html` enthaelt genau zwei `data-video-id`-Karten mit den neuen IDs, die passenden watch-URLs und keinen Alt-Design-Hinweis\n  - `git status` zeigt nur `site/src/data/videos.ts` als geaendert\n  </done>\n</task>\n\n<task type=\"auto\">\n  <name>Task 2: Guard-Test auf die zwei neuen Video-IDs umstellen</name>\n  <files>tests/unit/test_site_anleitung_content.py</files>\n  <action>\n  Zwei Aenderungen in `tests/unit/test_site_anleitung_content.py`, sonst nichts:\n\n  1. Konstante `EXPECTED_VIDEO_IDS` samt Kommentar darueber ersetzen. Aktuell:\n\n     # The four Scribus tutorials that lived on the GGS page. Kept explicit: if\n     # one is dropped or swapped, that should be a deliberate edit here too.\n     EXPECTED_VIDEO_IDS = {\n         \"ZH9z7Cgiuy0\",  # Erste Schritte mit Scribus\n         \"GxKJLRHjvIs\",  # Bilder einfügen und verschieben in Scribus\n         \"uBMazvTPPLI\",  # PDF-Export einer Scribus-Datei\n         \"90rbNKbOlMM\",  # Besonderheiten bei der Flyerbearbeitung\n     }\n\n     Neu — woertlich so:\n\n     # The two Scribus tutorials recorded in the current design. Kept explicit: if\n     # one is dropped or swapped, that should be a deliberate edit here too.\n     EXPECTED_VIDEO_IDS = {\n         \"SDT9eM9tReU\",  # Erste Schritte mit Scribus\n         \"3rMFX_VLvpE\",  # Export einer Scribus Datei\n     }\n\n  2. Die Funktion `test_legacy_design_notice_matches_the_data` vollstaendig entfernen —\n     Signatur, Docstring und Body, inklusive der davor stehenden Leerzeilen, sodass keine\n     doppelten Leerzeilen zurueckbleiben. Das ist genau die Handlungsanweisung aus der\n     eigenen Fail-Message des Tests (\"Kein Video mehr als legacyDesign markiert — Hinweis\n     in VideoGrid.astro und diesen Test entfernen\"). Der Hinweis-Block in\n     `VideoGrid.astro` bleibt dabei stehen (ISSUE.md erlaubt das ausdruecklich) — nur der\n     Test verschwindet.\n\n  Nicht aendern:\n  - `test_video_ids_are_complete` und `test_every_video_has_a_title` bleiben unveraendert;\n    beide sind ueber `EXPECTED_VIDEO_IDS` bzw. dessen Laenge automatisch mitgezogen.\n  - Der Helper `_videos_array()`, die `sections`-Fixture und alle Tests im Abschnitt\n    \"Anleitungs-Abschnitte\" bleiben unveraendert.\n  - `import pytest` bleibt stehen (wird weiterhin von `@pytest.fixture` gebraucht),\n    ebenso die Konstante `SITE` (wird von `ANLEITUNG_DIR`, `VIDEOS_TS`, `PUBLIC`\n    verwendet). Keine ungenutzten Imports zuruecklassen und keine benutzten entfernen.\n  - Keine neuen Tests hinzufuegen.\n\n  Nach diesem Task laeuft die Datei mit 7 statt 8 Tests, alle gruen.\n\n  Commit: `imtas: test(site): point the Anleitung video guard at the new recordings`\n  </action>\n  <verify>\n  <automated>\n/root/.local/bin/pytest tests/unit/test_site_anleitung_content.py -q\n/root/.local/bin/pytest tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py\ngrep -c \"legacyDesign\" tests/unit/test_site_anleitung_content.py || echo \"keine legacyDesign-Referenz mehr im Test - erwartet\"\n  </automated>\n  </verify>\n  <done>\n  - `EXPECTED_VIDEO_IDS` enthaelt genau `{\"SDT9eM9tReU\", \"3rMFX_VLvpE\"}` mit den passenden Titel-Kommentaren\n  - `test_legacy_design_notice_matches_the_data` existiert nicht mehr in der Datei\n  - `/root/.local/bin/pytest tests/unit/test_site_anleitung_content.py -q` meldet 7 passed\n  - Der volle CI-Lauf `/root/.local/bin/pytest tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py` ist gruen\n  - `git status` zeigt ausser der Testdatei keine weiteren Aenderungen in diesem Commit\n  </done>\n</task>\n\n<task type=\"auto\">\n  <name>Task 3: Video-Grid auf auto-fit mit Kartenobergrenze umstellen</name>\n  <files>site/src/styles/app.css</files>\n  <action>\n  In `site/src/styles/app.css` (Bereich `.app-video-grid`, aktuell Zeile ~934-939) den\n  Kommentar und die Grid-Regel ersetzen. Aktuell:\n\n    /* 220px Mindestbreite, damit die vier Tutorials auf Desktop-Breite in\n       einer Reihe stehen — so lagen sie auch auf der GGS-Seite. */\n    .app-video-grid {\n      display: grid;\n      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));\n      gap: 1.5rem;\n      margin-top: 1.5rem;\n    }\n\n  Neu — woertlich so:\n\n    /* 220px Mindest-, 320px Maximalbreite pro Karte. `auto-fit` (nicht\n       `auto-fill`) laesst leere Spuren kollabieren, damit die zwei Tutorials\n       nebeneinander stehen statt in einem halbleeren Raster; die Obergrenze\n       verhindert, dass zwei Karten auf breiten Viewports auseinandergezogen\n       werden. */\n    .app-video-grid {\n      display: grid;\n      grid-template-columns: repeat(auto-fit, minmax(220px, 320px));\n      gap: 1.5rem;\n      margin-top: 1.5rem;\n    }\n\n  Regeln dazu:\n  - Nur dieser eine Regelblock plus der Kommentar darueber wird angefasst. Alle anderen\n    `.app-video-*`-Regeln (`.app-video-notice`, `.app-video-card`, `.app-video-card__media`,\n    `__play`, `__duration`, `__body`, `__title`, `__desc`) bleiben unveraendert.\n  - Der Mobile-Breakpoint `@media (max-width: 640px) { .app-video-grid { grid-template-columns: 1fr; } }`\n    (Zeile ~1132) bleibt unveraendert — auf Handybreite ist eine Spalte weiterhin richtig.\n  - Andere Grids in der Datei (`auto-fill`-Regeln in den Zeilen ~175, 199, 311, 342, 447,\n    452, 577, 881) NICHT mit umstellen — die haben andere Item-Zahlen und sind nicht Teil\n    dieses Issues.\n  - Werte nicht \"verbessern\": 220px/320px sind die aus der Recherche uebernommenen\n    Zielwerte, nicht Verhandlungsmasse.\n\n  Commit: `imtas: fix(site): collapse empty video grid tracks for the two-card layout`\n  </action>\n  <verify>\n  <automated>\nnpm --prefix site run build\npython3 - <<'PY'\nimport pathlib, re\ncss = pathlib.Path(\"site/src/styles/app.css\").read_text(encoding=\"utf-8\")\nm = re.search(r\"\\.app-video-grid \\{(.*?)\\}\", css, re.S)\nassert m, \".app-video-grid nicht gefunden\"\nblock = m.group(1)\nassert \"repeat(auto-fit, minmax(220px, 320px))\" in block, block\nassert \"auto-fill\" not in block, \"auto-fill steht noch in .app-video-grid\"\nassert \"vier Tutorials\" not in css, \"Kommentar spricht noch von vier Tutorials\"\nassert \"grid-template-columns: 1fr\" in css, \"Mobile-Breakpoint fehlt\"\nprint(\"Task 3 OK\")\nPY\n  </automated>\n  </verify>\n  <done>\n  - `.app-video-grid` nutzt `grid-template-columns: repeat(auto-fit, minmax(220px, 320px))`\n  - Der Kommentar darueber begruendet die neuen Werte und spricht nicht mehr von \"vier Tutorials\"\n  - Der 640px-Breakpoint fuer `.app-video-grid` ist unveraendert (`1fr`)\n  - Keine andere `auto-fill`-Regel in `app.css` wurde geaendert\n  - `npm --prefix site run build` laeuft gruen durch\n  </done>\n</task>\n\n<task type=\"auto\">\n  <name>Task 4: Gesamtverifikation gegen die Akzeptanzkriterien</name>\n  <files>site/src/data/videos.ts, site/src/styles/app.css, tests/unit/test_site_anleitung_content.py</files>\n  <action>\n  Kein neuer Code. Abschliessend pruefen, dass die drei Aenderungen zusammen alle\n  Akzeptanzkriterien aus ISSUE.md erfuellen und der Diff sauber ist:\n\n  1. Frischen Build erzeugen und sowohl `/anleitung/` als auch eine Vorlagen-Detailseite\n     (zweiter Renderort desselben `VideoGrid`, in ISSUE.md nicht erwaehnt, aber\n     automatisch mitbetroffen) gegen die Kriterien pruefen: genau zwei Karten, korrekte\n     Titel, watch-URLs als no-JS-Fallback, `data-video-target`/`data-video-id` als\n     Modal-Trigger, kein Alt-Design-Hinweis.\n  2. Die Testsuite exakt so fahren, wie CI es tut\n     (`.github/workflows/ci.yml:75`): `pytest tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py`,\n     mit dem vollen Pfad `/root/.local/bin/pytest`.\n  3. `git status` und `git diff --stat` pruefen: geaendert sein duerfen ausschliesslich\n     `site/src/data/videos.ts`, `site/src/styles/app.css` und\n     `tests/unit/test_site_anleitung_content.py`. Insbesondere duerfen\n     `site/src/components/VideoGrid.astro` und `site/src/components/VideoModal.astro`\n     KEINEN Diff haben, und `site/dist/` darf nicht im Git-Status auftauchen\n     (gitignored).\n\n  Falls eine Assertion fehlschlaegt: die Ursache in dem Task beheben, zu dem sie gehoert\n  (Daten -> Task 1, Test -> Task 2, CSS -> Task 3), nicht die Assertion abschwaechen.\n\n  Kein eigener Commit noetig, sofern nichts nachzubessern war. Falls doch:\n  `imtas: fix(site): <konkrete Nachbesserung>`.\n  </action>\n  <verify>\n  <automated>\nnpm --prefix site run build\n/root/.local/bin/pytest tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py\npython3 - <<'PY'\nimport pathlib, re\nEXPECTED = [\"SDT9eM9tReU\", \"3rMFX_VLvpE\"]\nTITLES = [\"Erste Schritte mit Scribus\", \"Export einer Scribus Datei\"]\npages = [pathlib.Path(\"site/dist/anleitung/index.html\")]\npages += sorted(pathlib.Path(\"site/dist/templates\").glob(\"*/index.html\"))[:1]\nfor page in pages:\n    html = page.read_text(encoding=\"utf-8\")\n    ids = re.findall(r'data-video-id=\"([^\"]+)\"', html)\n    assert ids == EXPECTED, (page, ids)\n    assert html.count('data-video-target=\"') == 2, (page, \"Modal-Trigger fehlen\")\n    for vid in EXPECTED:\n        assert 'href=\"https://www.youtube.com/watch?v=%s\"' % vid in html, (page, vid)\n        assert 'https://i.ytimg.com/vi/%s/maxresdefault.jpg' % vid in html, (page, vid)\n    for title in TITLES:\n        assert title in html, (page, title)\n    assert \"Aufnahmen zeigen noch das alte\" not in html, (page, \"Alt-Design-Hinweis\")\n    assert \"ZH9z7Cgiuy0\" not in html and \"90rbNKbOlMM\" not in html, (page, \"Alt-Video-ID\")\nprint(\"Akzeptanzkriterien OK:\", \", \".join(str(p) for p in pages))\nPY\ngit status --porcelain\ngit diff --stat HEAD -- site/src/components/\n  </automated>\n  </verify>\n  <done>\n  - `npm --prefix site run build` gruen (26 Seiten)\n  - `/root/.local/bin/pytest tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py` gruen\n  - `/anleitung/` und die geprueften Vorlagen-Detailseiten zeigen genau zwei Karten mit den neuen Titeln, korrekten watch-URLs, YouTube-Postern und Modal-Triggern\n  - Nirgends im Build erscheint der Alt-Design-Hinweis oder eine der vier alten Video-IDs\n  - `git diff --stat HEAD -- site/src/components/` ist leer (VideoGrid/VideoModal unangetastet)\n  - `git status --porcelain` listet keine Dateien ausserhalb der drei geplanten\n  </done>\n</task>\n\n</tasks>\n\n<verification>\nAbschliessende Pruefungen von der Worktree-Wurzel aus:\n- `npm --prefix site run build` — Astro-Build muss gruen sein (Baseline: 26 Seiten)\n- `/root/.local/bin/pytest tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py` — identisch zu `.github/workflows/ci.yml:75`\n- HTML-Assertion aus Task 4 gegen `site/dist/anleitung/index.html` und eine Vorlagen-Detailseite\n- `git status --porcelain` — nur `site/src/data/videos.ts`, `site/src/styles/app.css`, `tests/unit/test_site_anleitung_content.py`\n- Kein `python3 -m unittest discover tests/unit` — die Testdatei importiert pytest auf\n  Modulebene und CI faehrt fuer `tests/unit/` ausschliesslich pytest; unittest discover\n  laeuft in diesem Repo nur gegen `tools/sla_lib/tests` (hier nicht beruehrt).\n</verification>\n\n<success_criteria>\nAbgeleitet 1:1 aus den Akzeptanzkriterien in ISSUE.md:\n- `/anleitung/` zeigt genau zwei Video-Karten mit den Titeln \"Erste Schritte mit Scribus\" und \"Export einer Scribus Datei\" (verifiziert ueber `data-video-id`-Zaehlung und Titel-Assertion im gebauten HTML)\n- Der Hinweis auf das alte Design erscheint nirgends mehr — weder auf `/anleitung/` noch auf den Vorlagen-Detailseiten (`legacyDesign` ist in `videos.ts` nirgends mehr gesetzt)\n- Beide Karten tragen `data-video-target`/`data-video-id` als Modal-Trigger, und der no-JS-Fallback-Link zeigt auf `https://www.youtube.com/watch?v=SDT9eM9tReU` bzw. `.../watch?v=3rMFX_VLvpE`\n- Zwei Karten sitzen sauber im Grid: `.app-video-grid` nutzt `repeat(auto-fit, minmax(220px, 320px))`, leere Spuren kollabieren, Mobile-Breakpoint unveraendert\n- Build laeuft durch: `npm --prefix site run build` gruen\n- Zusaetzlich (aus der Recherche, nicht im Issue-Text): `pytest tests/unit/` bleibt gruen, `EXPECTED_VIDEO_IDS` steht auf den zwei neuen IDs, `test_legacy_design_notice_matches_the_data` ist entfernt\n- `VideoGrid.astro` und `VideoModal.astro` sind unveraendert\n</success_criteria>\n"}
+</script>
+
+<script>
+/* Report script - classic script only. No modules, no fetch, no imports. */
+(function () {
+  "use strict";
+  var dataEl = document.getElementById("artifact-source");
+  var target = document.getElementById("artifact-source-target");
+  if (dataEl && target) {
+    try {
+      target.textContent = JSON.parse(dataEl.textContent).source || "";
+    } catch (e) {
+      target.textContent = dataEl.textContent;
+    }
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      if (el) { ev.preventDefault(); el.scrollIntoView({ behavior: "smooth" }); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -929,11 +929,14 @@ h3.gat-headline {
   margin: 1.25rem 0 0 0;
 }
 
-/* 220px Mindestbreite, damit die vier Tutorials auf Desktop-Breite in
-   einer Reihe stehen — so lagen sie auch auf der GGS-Seite. */
+/* 220px Mindest-, 320px Maximalbreite pro Karte. `auto-fit` (nicht
+   `auto-fill`) laesst leere Spuren kollabieren, damit die zwei Tutorials
+   nebeneinander stehen statt in einem halbleeren Raster; die Obergrenze
+   verhindert, dass zwei Karten auf breiten Viewports auseinandergezogen
+   werden. */
 .app-video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
   gap: 1.5rem;
   margin-top: 1.5rem;
 }

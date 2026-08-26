@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Provenance: SHA-256 of the source .md this page was generated from. -->
+<meta name="artifact-source-sha256" content="5c9b9e75f6dcbac22ecbeffbf29115d922472ba653435822d97c1d8cfc516227">
+<meta name="artifact-source-file" content="RESEARCH.md">
+<meta name="artifact-generated-at" content="2026-08-26">
+<!-- Which version of the design system this page was authored against. -->
+<meta name="design-system-version" content="ds-1">
+<title>Research: Anleitungsseite — neue Scribus-Videos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://flomotlik.github.io/claude-code/design-system.css">
+</head>
+<body>
+<div class="page">
+
+<header class="row">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">R</span>Research</p>
+  </div>
+  <div class="body">
+    <h1 class="masthead-title">Anleitungsseite: neue Scribus-Videos statt der vier Alt-Aufnahmen</h1>
+    <p class="masthead-sub">Issue: imtas-anleitungsseite-neue-scribus-videos-statt-der-vier-alt-aufnahmen · Generated 2026-08-26</p>
+  </div>
+</header>
+
+<hr class="rule">
+
+<section class="row" id="strategy">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">01</span>Strategy</p>
+  </div>
+  <div class="body">
+    <h2>Strategy summary</h2>
+    <p>Kleine, datengetriebene Änderung: das <code>videos</code>-Array in
+<code>site/src/data/videos.ts</code> wird von vier Alt-Aufnahmen (alle mit
+<code>legacyDesign: true</code>) auf zwei neue Scribus-Videos umgestellt —
+<span class="mark mark-green">ohne <code>legacyDesign</code> und ohne belastbare
+<code>duration</code></span>. Der Legacy-Hinweis-Callout in
+<code>VideoGrid.astro</code> ist bereits bedingt gebaut
+(<code>hasLegacyDesign = videos.some(v =&gt; v.legacyDesign)</code>) und
+verschwindet automatisch, sobald kein Eintrag mehr das Flag trägt — keine
+Markup-Änderung nötig.</p>
+<p>Zwei Punkte sind nicht offensichtlich aus dem Issue-Text, aber
+code-verifiziert: <code>.app-video-grid</code> nutzt
+<code>repeat(auto-fill, minmax(220px, 1fr))</code>, kein festes
+Vier-Spalten-Grid — mit nur zwei Karten bleiben auf breiten Viewports leere
+Grid-Spuren stehen. Und <code>tests/unit/test_site_anleitung_content.py</code>
+ist hart auf die vier alten IDs gekoppelt; eine Testfunktion ist absichtlich so
+gebaut, dass sie beim Wegfall aller <code>legacyDesign</code>-Flags
+fehlschlägt, mit der expliziten Anweisung, sich selbst zu entfernen.</p>
+<ul class="points">
+  <li class="point">
+    <p class="point-claim">Datenänderung reicht für den Hinweis-Wegfall.</p>
+    <p class="point-detail">Kein Component-Code nötig — <code>hasLegacyDesign</code>
+      ist bereits korrekt aus dem Array abgeleitet.</p>
+  </li>
+  <li class="point is-risk">
+    <p class="point-claim"><code>auto-fill</code> lässt bei zwei Karten Lücken.</p>
+    <p class="point-detail">Fix: <code>auto-fill</code> → <code>auto-fit</code> in
+      <code>app.css</code>, plus moderate Max-Breite pro Karte.</p>
+  </li>
+  <li class="point is-risk">
+    <p class="point-claim">Guard-Test bricht CI trotz grünem Build.</p>
+    <p class="point-detail"><code>npm run build</code> deckt
+      <code>tests/unit/test_site_anleitung_content.py</code> nicht ab — beide
+      müssen laufen.</p>
+  </li>
+  <li class="point is-note">
+    <p class="point-claim"><code>duration</code> nicht verlässlich ermittelbar.</p>
+    <p class="point-detail">Feld ist optional und ungetestet — weglassen statt
+      raten.</p>
+  </li>
+</ul>
+<div class="stats">
+  <div class="stat"><div class="stat-num">2</div><div class="stat-label">Neue Video-Karten</div></div>
+  <div class="stat"><div class="stat-num">4</div><div class="stat-label">Betroffene Quelldateien</div></div>
+  <div class="stat"><div class="stat-num">2</div><div class="stat-label">Render-Orte (Anleitung + Templates)</div></div>
+</div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="flow">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">02</span>Flow</p>
+  </div>
+  <div class="body">
+    <h2>Task flow &amp; dependencies</h2>
+    <div class="flow">
+  <div class="flow-node is-foundation">
+    <span class="n">Schritt 1</span>
+    <span class="t">videos.ts ersetzen</span>
+    <span class="d">Zwei neue Einträge, kein legacyDesign, kein duration.</span>
+  </div>
+  <div class="flow-node is-key">
+    <span class="n">Schritt 2</span>
+    <span class="t">Grid-CSS anpassen</span>
+    <span class="d">app.css: auto-fill → auto-fit, Max-Breite ergänzen.</span>
+  </div>
+  <div class="flow-node">
+    <span class="n">Schritt 3</span>
+    <span class="t">Guard-Test aktualisieren</span>
+    <span class="d">EXPECTED_VIDEO_IDS setzen, Legacy-Test entfernen.</span>
+  </div>
+  <div class="flow-node">
+    <span class="n">Schritt 4</span>
+    <span class="t">Verifikation</span>
+    <span class="d">npm run build + pytest tests/unit/ müssen beide grün sein.</span>
+  </div>
+</div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="decisions">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">03</span>Decisions</p>
+  </div>
+  <div class="body">
+    <h2>Key decisions &amp; options</h2>
+    <div class="decision">
+  <div class="decision-head">
+    <p class="decision-title">Grid-Layout bei nur zwei Karten</p>
+    <span class="lozenge is-chosen">Chosen</span>
+  </div>
+  <p class="decision-body"><code>grid-template-columns: repeat(auto-fit, minmax(220px, 320px))</code>
+    — kollabiert leere Spuren, verteilt den Platz auf die realen Karten, ohne
+    dass sie randlos über die volle Breite gezogen werden.</p>
+  <p class="decision-body rejected">Feste Spaltenzahl per JS/Zähl-Logik — Overkill
+    für ein statisches Zwei-Item-Array.</p>
+</div>
+<div class="decision">
+  <div class="decision-head">
+    <p class="decision-title">Umgang mit dem Legacy-Hinweis-Markup</p>
+    <span class="lozenge is-chosen">Chosen</span>
+  </div>
+  <p class="decision-body">Callout-Block in <code>VideoGrid.astro</code> unverändert
+    lassen — <code>hasLegacyDesign</code> wird automatisch <code>false</code>,
+    sobald kein Eintrag mehr <code>legacyDesign: true</code> trägt. So sieht es
+    das Issue vor.</p>
+  <p class="decision-body rejected">Markup aktiv entfernen — unnötiger Diff,
+    widerspricht der im Code dokumentierten Absicht.</p>
+</div>
+<div class="decision">
+  <div class="decision-head">
+    <p class="decision-title"><code>duration</code> für die neuen Videos</p>
+    <span class="lozenge is-open">Open</span>
+  </div>
+  <p class="decision-body">Weglassen — via YouTube-oEmbed nicht ermittelbar,
+    Feld ist optional und rein kosmetisch (<code>VideoGrid.astro</code> rendert
+    das Duration-Badge nur, wenn gesetzt).</p>
+  <p class="decision-body rejected">Wert schätzen/raten — keine verlässliche
+    Quelle gefunden, würde eine falsche Angabe auf die Karte bringen.</p>
+</div>
+<div class="decision">
+  <div class="decision-head">
+    <p class="decision-title">Guard-Test test_legacy_design_notice_matches_the_data</p>
+    <span class="lozenge is-chosen">Chosen</span>
+  </div>
+  <p class="decision-body">Entfernen — die Testfunktion selbst instruiert das in
+    ihrer <code>pytest.fail</code>-Meldung, sobald kein Video mehr als
+    <code>legacyDesign</code> markiert ist.</p>
+  <p class="decision-body rejected">Test unverändert lassen — würde CI hart rot
+    machen (<code>pytest tests/unit/</code>), obwohl <code>npm run build</code>
+    grün bleibt.</p>
+</div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="detail">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">04</span>Detail</p>
+  </div>
+  <div class="body">
+    <h2>Full detail</h2>
+    <details class="detail">
+      <summary>Show full artifact source
+        <span class="summary-hint">click to expand</span></summary>
+      <div class="detail-body">
+        <pre><code id="artifact-source-target"></code></pre>
+      </div>
+    </details>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="row" id="provenance">
+  <div class="margin">
+    <p class="kicker"><span class="kicker-num">05</span>Provenance</p>
+  </div>
+  <div class="body">
+    <h2>Provenance</h2>
+    <p>Generated from the canonical <code>.md</code>. This HTML is never
+       hand-edited — if the <code>.md</code> changes, regenerate with
+       <code>/issue:view</code>.</p>
+    <footer class="footer">
+      <span>Source: <code>RESEARCH.md</code> ·
+        SHA-256 <code>5c9b9e75f6dcbac22ecbeffbf29115d922472ba653435822d97c1d8cfc516227</code></span>
+      <span>Generated 2026-08-26 · design system ds-1</span>
+    </footer>
+  </div>
+</section>
+
+</div>
+
+<!-- Raw artifact source as DATA, never markup. See Section 6. -->
+<script type="application/json" id="artifact-source">
+{"source": "# Research: Anleitungsseite \u2014 neue Scribus-Videos statt der vier Alt-Aufnahmen\n\n**Researched:** 2026-08-26\n**Issue:** imtas-anleitungsseite-neue-scribus-videos-statt-der-vier-alt-aufnahmen\n**Confidence:** HIGH\n\n<user_constraints>\n## User Constraints (from CONTEXT.md)\nKein CONTEXT.md gefunden \u2014 kein `issue:discuss` durchlaufen. ISSUE.md ist die einzige\nverbindliche Vorgabe (siehe Datei); keine zus\u00e4tzlichen Locked Decisions oder Deferred\nIdeas zu \u00fcbernehmen.\n</user_constraints>\n\n## Summary\n\nKleine, gut umrissene Daten\u00e4nderung mit einem CSS-Nebenaspekt. Der Kern ist der Austausch\ndes `videos`-Arrays in `site/src/data/videos.ts`: vier Alt-Eintr\u00e4ge raus, zwei neue rein,\nkein `legacyDesign` mehr setzen. Der Hinweis-Callout in `VideoGrid.astro` ist bereits\nkorrekt bedingt gebaut (`hasLegacyDesign = videos.some(v => v.legacyDesign)`) \u2014 sobald kein\nEintrag mehr das Flag tr\u00e4gt, verschwindet er automatisch, ohne dass Markup angefasst werden\nmuss. Das ist exakt so von Commit `120c54e` vorgesehen worden.\n\nZwei Dinge sind nicht offensichtlich aus dem Issue-Text, aber code-verifiziert wichtig:\nErstens ist `.app-video-grid` kein festes Vier-Spalten-Grid, sondern\n`repeat(auto-fill, minmax(220px, 1fr))` \u2014 mit nur zwei Karten bleiben bei `auto-fill` auf\nbreiten Viewports leere Grid-Spuren stehen (das ist exakt das im Akzeptanzkriterium\ngenannte \"halbleere Raster\"-Risiko). Der Standard-Fix ist der Wechsel auf `auto-fit`, eine\nEin-Zeilen-\u00c4nderung in `site/src/styles/app.css`. Zweitens gibt es einen Python-Test\n(`tests/unit/test_site_anleitung_content.py`), der hart auf die vier alten Video-IDs\ngekoppelt ist und dessen `test_legacy_design_notice_matches_the_data` beim Wegfall aller\n`legacyDesign`-Flags absichtlich mit einer expliziten Anweisung fehlschl\u00e4gt, sich selbst zu\nentfernen. `npm run build` deckt diesen Test nicht ab \u2014 er muss separat mit `pytest`\nlaufen, sonst ist \"Build l\u00e4uft durch\" tr\u00fcgerisch gr\u00fcn w\u00e4hrend CI rot wird.\n\n`VideoGrid` wird nicht nur auf `/anleitung/` gerendert, sondern auch auf jeder\nVorlagen-Detailseite (`site/src/pages/templates/[...id].astro`), weil beide dieselbe\n`videos`-Datenquelle einbinden \u2014 die \u00c4nderung wirkt sich also automatisch (und korrekt) auf\nbeide Stellen aus.\n\nDie neuen Video-IDs und Titel wurden per YouTube-oEmbed verifiziert (Kanal \"Die Gr\u00fcnen\nNieder\u00f6sterreich\", Titel stimmen exakt mit dem Issue \u00fcberein). Eine verl\u00e4ssliche Laufzeit\n(`duration`) lie\u00df sich mit den verf\u00fcgbaren Tools nicht ermitteln \u2014 oEmbed liefert keine\nDauer, und die Watch-Seite rendert sie clientseitig per JS. Da `duration` ein rein\nkosmetisches, optionales Feld ist (nirgends getestet), empfiehlt sich, es f\u00fcr die neuen\nEintr\u00e4ge wegzulassen, statt einen Wert zu raten.\n\n**Primary recommendation:** `videos.ts` auf die zwei neuen Eintr\u00e4ge ohne `legacyDesign`\nund ohne `duration` reduzieren, `.app-video-grid` von `auto-fill` auf `auto-fit` (plus\nmoderater Max-Breite) umstellen, und `tests/unit/test_site_anleitung_content.py`\n(`EXPECTED_VIDEO_IDS` aktualisieren, `test_legacy_design_notice_matches_der_data`\nentfernen) in derselben \u00c4nderung mitziehen \u2014 sonst bricht CI trotz gr\u00fcnem `npm run build`.\n\n## Codebase Analysis\n\n### Relevant Code\n\n| File | Purpose | Last Modified | Relevance |\n|---|---|---|---|\n| `site/src/data/videos.ts` | `videos`-Array, `AnleitungsVideo`-Interface, Poster/Watch-URL-Helper | zuletzt inhaltlich in `120c54e` (legacyDesign eingef\u00fchrt) | Prim\u00e4rer \u00c4nderungsort \u2014 Array ersetzen |\n| `site/src/components/VideoGrid.astro` | rendert Grid + bedingten Legacy-Hinweis | `120c54e` | Kein Code-\u00c4nderungsbedarf \u2014 Verhalten bereits korrekt bedingt |\n| `site/src/components/VideoModal.astro` | YouTube-Modal, generisch \u00fcber data-Attribute | `c180fcb` (Modal-Zentrierung, unrelated) | Keine \u00c4nderung n\u00f6tig |\n| `site/src/pages/anleitung/index.astro` | bindet `VideoGrid` ein | \u2014 | Keine \u00c4nderung n\u00f6tig, konsumiert nur `videos` |\n| `site/src/pages/templates/[...id].astro` | bindet ebenfalls `VideoGrid` mit derselben `videos`-Quelle ein | \u2014 | Zweiter, im Issue nicht erw\u00e4hnter Renderort \u2014 profitiert automatisch mit |\n| `site/src/styles/app.css` (ab Zeile 934) | `.app-video-grid`-Layout | `c180fcb` (220px-Minimum f\u00fcr 4 Spalten) | Grid-Spaltenlogik anpassen (`auto-fill` \u2192 `auto-fit`) |\n| `tests/unit/test_site_anleitung_content.py` | Guard-Tests f\u00fcr Video-Array & Legacy-Hinweis | `120c54e` | Muss mitge\u00e4ndert werden, sonst CI-Fail |\n\n### Interfaces\n\n<interfaces>\n// From site/src/data/videos.ts\nexport interface AnleitungsVideo {\n  /** YouTube-Video-ID (der `v=`-Parameter der watch-URL). */\n  youtube: string;\n  /** Kartentitel. Standard: der YouTube-Titel des Videos. */\n  title: string;\n  /** Optionale Kurzbeschreibung unter dem Titel. */\n  description?: string;\n  /** Laufzeit als \"M:SS\" \u2014 rein informativ auf der Karte. */\n  duration?: string;\n  /** Poster-Bild-URL. Leer lassen f\u00fcr das YouTube-Thumbnail. */\n  poster?: string;\n  /** true = im alten Corporate Design aufgenommen. */\n  legacyDesign?: boolean;\n}\nexport function posterFor(v: AnleitungsVideo): string;          // -> `https://i.ytimg.com/vi/${v.youtube}/maxresdefault.jpg` (or v.poster)\nexport function posterFallbackFor(v: AnleitungsVideo): string;  // -> `https://i.ytimg.com/vi/${v.youtube}/hqdefault.jpg`\nexport function watchUrl(v: AnleitungsVideo): string;           // -> `https://www.youtube.com/watch?v=${v.youtube}`\nexport const videos: AnleitungsVideo[];  // currently 4 entries, all legacyDesign: true\n\n// From site/src/components/VideoGrid.astro\ninterface Props { videos: AnleitungsVideo[]; modalId: string; }\n// const hasLegacyDesign = videos.some(v => v.legacyDesign);  <- drives the notice <p> \u2014 becomes false, notice unrenders, once no entry has legacyDesign: true\n\n// From site/src/components/VideoModal.astro\ninterface Props { id: string; }\n// trigger contract (any element): data-video-target={modalId} data-video-id={youtube} data-video-title={title}, href = watchUrl(v) as no-JS fallback\n\n// From site/src/styles/app.css (line ~934)\n// .app-video-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }\n// @media (max-width: 640px) { .app-video-grid { grid-template-columns: 1fr; } }  <- mobile breakpoint, unaffected by this issue\n\n// From tests/unit/test_site_anleitung_content.py\nEXPECTED_VIDEO_IDS: set[str]  // hardcoded 4 legacy IDs \u2014 must become {\"SDT9eM9tReU\", \"3rMFX_VLvpE\"}\ndef test_video_ids_are_complete() -> None    // asserts extracted `youtube:` values == EXPECTED_VIDEO_IDS\ndef test_every_video_has_a_title() -> None   // count-coupled to len(EXPECTED_VIDEO_IDS), auto-fixed once constant updated\ndef test_legacy_design_notice_matches_the_data() -> None\n  // any_legacy = \"legacyDesign: true\" in videos_array_source\n  // if not any_legacy: pytest.fail(\"... Hinweis in VideoGrid.astro und diesen Test entfernen.\")\n  // -> WILL fail once legacyDesign is fully removed from videos.ts; delete this test (not the notice markup in VideoGrid.astro, which the issue says may stay)\n</interfaces>\n\n### Reusable Components\n\nAlles Notwendige existiert bereits: `posterFor`/`posterFallbackFor`/`watchUrl` decken das\nPoster/Fallback/No-JS-Link-Verhalten vollautomatisch aus der `youtube`-ID ab \u2014 kein eigenes\nBild, kein zus\u00e4tzlicher Code n\u00f6tig. Der Legacy-Hinweis-Mechanismus (`hasLegacyDesign`) ist\nbereits so gebaut, dass er \"von selbst\" verschwindet \u2014 keine Komponenten\u00e4nderung\nerforderlich, nur Daten\u00e4nderung.\n\n### Potential Conflicts\n\n- CSS: `.app-video-grid`s `auto-fill`-Minimum von 220px wurde in `c180fcb` bewusst f\u00fcr vier\n  Karten gew\u00e4hlt (Kommentar im Code referenziert das explizit) \u2014 dieser Kommentar sollte bei\n  der CSS-\u00c4nderung mit-aktualisiert werden, sonst irref\u00fchrend f\u00fcr k\u00fcnftige Leser.\n- Tests: `tests/unit/test_site_anleitung_content.py` ist hart auf die alten IDs/den\n  Legacy-Zustand gekoppelt (siehe oben) \u2014 ohne Anpassung schl\u00e4gt CI fehl, obwohl\n  `npm run build` gr\u00fcn bleibt.\n- Kein Konflikt mit `VideoModal.astro` \u2014 vollst\u00e4ndig datengetrieben, keine Video-Zahl fest\n  codiert.\n\n### Code Patterns in Use\n\n- Datengetriebene UI: Komponenten leiten Zustand (`hasLegacyDesign`, Karten-Anzahl, Poster)\n  rein aus dem `videos`-Array ab, keine Seiten-spezifische Logik n\u00f6tig.\n- Guard-Tests statt reinem Build-Check: `tests/unit/test_site_anleitung_content.py` pr\u00fcft\n  Content-Integrit\u00e4t, die Astro selbst nicht validiert (Kommentar im Testfile-Header\n  begr\u00fcndet das explizit).\n\n## Standard Stack\n\nKeine neue Library n\u00f6tig \u2014 reine Daten\u00e4nderung in bestehendem Astro/TypeScript-Setup\n(`astro@^5.0.0`, laut `site/package.json`). Kein Grund, vom bestehenden Stack abzuweichen.\n\n## Don't Hand-Roll\n\n| Problem | Don't Build | Use Instead | Why |\n|---|---|---|---|\n| Poster-Bild pro Video | eigener Screenshot/Upload | `posterFor()` (YouTube-Thumbnail-CDN) | existiert bereits, im Issue explizit best\u00e4tigt (\"Poster kommt automatisch\") |\n| Sichtbarkeit des Legacy-Hinweises | manuelles Ein-/Ausblenden pro Seite | bestehendes `hasLegacyDesign`-Derivat in `VideoGrid.astro` | bereits korrekt datengetrieben, keine Seiten-Logik n\u00f6tig |\n| Grid-Spaltenzahl je nach Karten-Anzahl | JS/Z\u00e4hl-Logik | CSS `auto-fit` statt `auto-fill` | Standard-CSS-Grid-L\u00f6sung f\u00fcr \"wenige Items in einem `minmax`-Grid\" |\n\n## Architecture Patterns\n\n### Recommended Approach\n\n1. `site/src/data/videos.ts`: `videos`-Array durch genau die zwei Eintr\u00e4ge ersetzen\n   (`SDT9eM9tReU` \"Erste Schritte mit Scribus\", `3rMFX_VLvpE` \"Export einer Scribus\n   Datei\"), kein `legacyDesign`, `duration` weglassen (siehe Common Pitfalls).\n2. `site/src/styles/app.css`: `.app-video-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }`\n   \u2192 `repeat(auto-fit, minmax(220px, 320px))` (oder \u00e4hnliche moderate Obergrenze), Kommentar\n   direkt dar\u00fcber (aktuell referenziert \"vier Tutorials\") auf den neuen Stand (zwei\n   Tutorials) aktualisieren. Mobile-Breakpoint (`max-width: 640px`) unver\u00e4ndert lassen.\n3. `tests/unit/test_site_anleitung_content.py`: `EXPECTED_VIDEO_IDS` auf die zwei neuen IDs\n   setzen (Kommentare mit Titeln aktualisieren), `test_legacy_design_notice_matches_the_data`\n   entfernen (Fail-Message der Funktion instruiert das explizit).\n4. Verifikation: `cd site && npm run build` UND\n   `/root/.local/bin/pytest tests/unit/test_site_anleitung_content.py -q` (bzw. `pytest\n   tests/unit/ -q --ignore=tests/unit/test_idml_strict_mode.py` wie in CI) \u2014 beide m\u00fcssen\n   gr\u00fcn sein.\n\n### Anti-Patterns to Avoid\n\n- **Legacy-Hinweis-Markup in VideoGrid.astro entfernen:** Issue sagt ausdr\u00fccklich, der Block\n  darf im Markup bleiben (rendert einfach nicht mehr) \u2014 nicht anfassen, spart unn\u00f6tigen Diff.\n- **`duration` raten/erfinden:** kein verl\u00e4sslicher Wert ermittelbar (siehe Pitfalls) \u2014 Feld\n  ist optional und ungetestet, lieber weglassen als falsch angeben.\n- **Nur `npm run build` als Fertig-Kriterium nehmen:** deckt den Python-Testbruch nicht ab.\n\n## Common Pitfalls\n\n### `duration` nicht zuverl\u00e4ssig ermittelbar\n\n**What goes wrong:** Ein erfundener oder veralteter Laufzeit-Wert landet auf der Karte.\n**Why it happens:** YouTube-oEmbed liefert keine Dauer; die Watch-Seite rendert sie\nclientseitig, WebFetch bekommt sie nicht.\n**How to avoid:** Feld weglassen (ist optional, laut Interface-Kommentar \"rein\ninformativ\") \u2014 kein Codepfad h\u00e4ngt daran (`{v.duration && ...}` in `VideoGrid.astro`\nZeile 66 rendert einfach nichts).\n**Warning signs:** Ein Duration-Wert im Diff, der nicht aus einer verifizierten Quelle\nstammt.\n\n### CSS Grid `auto-fill` l\u00e4sst bei wenigen Items L\u00fccken\n\n**What goes wrong:** Zwei Karten stehen mit sichtbarem Leerraum daneben statt den Platz zu\nf\u00fcllen \u2014 genau das im Akzeptanzkriterium ausgeschlossene \"halbleere Raster\".\n**Why it happens:** `auto-fill` reserviert weiterhin so viele Spuren, wie in die\nContainer-Breite passen, auch wenn sie leer bleiben; nur `auto-fit` kollabiert leere\nSpuren und l\u00e4sst `1fr` den realen Items den Platz zuweisen.\n**How to avoid:** `auto-fill` \u2192 `auto-fit`, plus moderate Max-Breite pro Karte, damit zwei\nKarten nicht randlos \u00fcber die volle Breite gezogen werden.\n**Warning signs:** Visuelle Pr\u00fcfung bei typischer Desktop-Breite (~1280px) nach der\n\u00c4nderung \u2014 sollte mit `auto-fit` und den Standard-`app.css`-Werten sauber aussehen.\n\n### Guard-Test bricht CI trotz gr\u00fcnem Build\n\n**What goes wrong:** `npm run build` ist gr\u00fcn, `pytest tests/unit/` ist rot, PR/CI schl\u00e4gt\nfehl.\n**Why it happens:** `tests/unit/test_site_anleitung_content.py` pr\u00fcft Inhalte, die Astro\nselbst nicht validiert; der Test wurde bewusst so gebaut, dass er beim vollst\u00e4ndigen\nWegfall von `legacyDesign` explizit fehlschl\u00e4gt (Fail-Message enth\u00e4lt die\nHandlungsanweisung).\n**How to avoid:** Testdatei im selben Change mitziehen (siehe Architecture Patterns,\nSchritt 3), beide Testl\u00e4ufe vor Abschluss ausf\u00fchren.\n**Warning signs:** `EXPECTED_VIDEO_IDS` noch mit alten IDs im Diff sichtbar.\n\n## Environment Availability\n\n| Dependency | Required By | Available | Version | Fallback |\n|---|---|---|---|---|\n| node/npm | `npm run build` | yes | node v26.7.0, npm 11.19.0 | \u2014 |\n| `site/node_modules` | Astro build | yes, bereits installiert in diesem Worktree | \u2014 | `npm install` falls fehlend |\n| python3 | Testsuite | yes | 3.13.5 | \u2014 |\n| pytest | `tests/unit/` | yes, aber NICHT auf Standard-PATH | `/root/.local/bin/pytest` (auch `/opt/sortition-venv/bin/pytest`) | vollen Pfad verwenden |\n| PyYAML | Testsuite (`import yaml`) | yes | 6.0.3 | \u2014 |\n\n## Project Constraints (from CLAUDE.md)\n\nAus `/root/.config/claude/CLAUDE.md` (Container-weit) und\n`/Users/florianmotlik/Code/GrueneAT/web-apps/CLAUDE.md` (Workspace-weit):\n\n- **Kein Vendoring von Drittabh\u00e4ngigkeiten.** YouTube bleibt eingebettet wie bisher (per\n  `youtube-nocookie.com`-iframe, unver\u00e4ndert) \u2014 keine lokalen Kopien von Thumbnails/Assets.\n  Deckt sich mit dem Issue-Constraint.\n- **Keine Werkzeug-Attribution** in Commits/Code/Kommentaren \u2014 kein \"claude\", kein\n  \"Generated with\", kein `Co-Authored-By`. Gilt f\u00fcr alle Artefakte dieser \u00c4nderung.\n- **Conventional Commit**, englische Bezeichner/Commit-Messages, deutsche Fachtexte wo\n  passend (Issue-Body ist Deutsch, Code-Kommentare im Repo sind bereits gemischt\n  Deutsch/Englisch je nach bestehendem Stil in der jeweiligen Datei \u2014 bestehendem\n  Dateikontext folgen, nicht neu erfinden).\n- **Nicht direkt am main-Checkout arbeiten** \u2014 bereits erf\u00fcllt, diese Recherche l\u00e4uft im\n  korrekten Worktree.\n- Kein `.claude/skills/`-Eintrag ist f\u00fcr dieses Issue einschl\u00e4gig (nur\n  `idml-import`/`idml-scaffold`/`idml-tune`/`experiments` vorhanden \u2014 betreffen die\n  Print-Pipeline, nicht die Astro-Galerie-Site).\n- `.issues/MAP.md` existiert nicht in diesem Repo \u2014 keine Altlast-Staleness zu vermerken.\n\n## Sources\n\n### HIGH confidence\n- Codebase-Analyse: `site/src/data/videos.ts`, `VideoGrid.astro`, `VideoModal.astro`,\n  `app.css`, `tests/unit/test_site_anleitung_content.py`, `pages/anleitung/index.astro`,\n  `pages/templates/[...id].astro` (alle direkt gelesen).\n- `git show c180fcb`, `git show 120c54e` \u2014 Commit-Historie und -Begr\u00fcndung direkt\n  eingesehen.\n- `npm run build` lokal ausgef\u00fchrt \u2014 gr\u00fcne Baseline (26 Seiten, 3.4s) vor jeder \u00c4nderung.\n- `/root/.local/bin/pytest tests/unit/test_site_anleitung_content.py -q` lokal ausgef\u00fchrt \u2014\n  8/8 gr\u00fcn als Baseline.\n- YouTube-oEmbed-Abfrage f\u00fcr beide neuen Video-IDs \u2014 Titel und Kanal best\u00e4tigt\n  (\"Die Gr\u00fcnen Nieder\u00f6sterreich\").\n\n### MEDIUM confidence\n- CSS-`auto-fill`-vs-`auto-fit`-Verhalten \u2014 Standard-CSS-Grid-Spezifikationswissen, nicht\n  gegen eine externe Quelle verifiziert, aber unstrittig und im konkreten Fall durch die\n  Grid-Definition + Kartenzahl direkt nachvollziehbar.\n\n### LOW confidence (needs validation)\n- Video-Laufzeiten (`duration`) f\u00fcr die beiden neuen Videos \u2014 nicht ermittelbar mit den\n  verf\u00fcgbaren Tools (siehe Common Pitfalls). Empfehlung: weglassen statt raten.\n\n## Metadata\n\n**Confidence breakdown:**\n- Codebase: HIGH \u2014 alle relevanten Dateien gelesen, Commit-Historie eingesehen, Build +\n  Tests lokal gr\u00fcn verifiziert.\n- Standard Stack: HIGH \u2014 keine neue Dependency, bestehender Stack ausreichend.\n- Architecture (CSS-Fix): MEDIUM-HIGH \u2014 Standardl\u00f6sung, aber visuelle Feinabstimmung\n  (Max-Breite) ist Geschmackssache, kein exakter Pixelwert vorgeschrieben.\n- Pitfalls: HIGH f\u00fcr Test-Kopplung (Code direkt gelesen), LOW f\u00fcr `duration`-Werte\n  (nicht ermittelbar).\n\n**Research date:** 2026-08-26\n**Sub-agents used:** keine \u2014 Issue klein genug f\u00fcr direkte Recherche (light/standard\nMischform), kein Ecosystem-Sub-Agent n\u00f6tig (keine neue Library), kein separater\nCodebase-Sub-Agent n\u00f6tig (Scope passt in eine Session).\n**Raw research files:** `.issues/imtas-anleitungsseite-neue-scribus-videos-statt-der-vier-alt-aufnahmen/research/` (`codebase.md`, `pitfalls.md`)\n"}
+</script>
+
+<script>
+/* Report script — classic script only. No modules, no fetch, no imports.
+   Permitted: inject the raw artifact source as text + smooth-scroll.
+   FORBIDDEN: any content-revealing logic — the page is fully functional
+   with JavaScript disabled. */
+(function () {
+  "use strict";
+  // Inject the raw artifact source as TEXT (never parsed as markup).
+  var dataEl = document.getElementById("artifact-source");
+  var target = document.getElementById("artifact-source-target");
+  if (dataEl && target) {
+    try {
+      target.textContent = JSON.parse(dataEl.textContent).source || "";
+    } catch (e) {
+      target.textContent = dataEl.textContent;
+    }
+  }
+  // Smooth-scroll for any in-page anchor links.
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      if (el) { ev.preventDefault(); el.scrollIntoView({ behavior: "smooth" }); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
