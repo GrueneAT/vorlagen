@@ -62,27 +62,13 @@ export function watchUrl(v: AnleitungsVideo): string {
 
 export const videos: AnleitungsVideo[] = [
   {
-    youtube: 'ZH9z7Cgiuy0',
+    youtube: 'SDT9eM9tReU',
     title: 'Erste Schritte mit Scribus',
-    legacyDesign: true,
-    duration: '17:52',
+    duration: '14:38',
   },
   {
-    youtube: 'GxKJLRHjvIs',
-    title: 'Bilder einfügen und verschieben in Scribus',
-    legacyDesign: true,
-    duration: '14:45',
-  },
-  {
-    youtube: 'uBMazvTPPLI',
-    title: 'PDF-Export einer Scribus-Datei',
-    legacyDesign: true,
-    duration: '6:54',
-  },
-  {
-    youtube: '90rbNKbOlMM',
-    title: 'Besonderheiten bei der Flyerbearbeitung',
-    legacyDesign: true,
-    duration: '3:57',
+    youtube: '3rMFX_VLvpE',
+    title: 'Export einer Scribus Datei',
+    duration: '8:39',
   },
 ];
